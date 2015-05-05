@@ -30,10 +30,10 @@ class CreateLeavesTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('user_id')->unsigned();
-			$table->integer('type_id')->unsighed();
+			$table->integer('type_id')->unsigned();
 			$table->timestamp('from');
 			$table->timestamp('to');
-			$table->integer('curriculum_id')->unsighed();		
+			$table->integer('curriculum_id')->unsigned();		
 			$table->timestamps();
 
 			$table->foreign('user_id')

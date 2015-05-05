@@ -16,7 +16,7 @@ class CreateSubstitutesTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('user_id')->unsigned();
-			$table->integer('leave_id')->unsighed();
+			$table->integer('leave_id')->unsigned();
 			$table->string('substitute_teacher');
 			$table->integer('duration_type');
 			$table->string('am_pm', 2)->nullable();
