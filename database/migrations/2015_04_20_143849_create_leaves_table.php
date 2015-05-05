@@ -12,6 +12,20 @@ class CreateLeavesTable extends Migration {
 	 */
 	public function up()
 	{
+		Schema::create('leavetypes', function(Blueprint $table)
+		{
+			$table->increments('id');
+			$table->string('title');
+			$table->timestamps();
+		});
+
+		Schema::create('curriculums', function(Blueprint $table)
+		{
+			$table->increments('id');
+			$table->string('title');
+			$table->timestamps();
+		});
+
 		Schema::create('leaves', function(Blueprint $table)
 		{
 			$table->increments('id');
@@ -47,6 +61,8 @@ class CreateLeavesTable extends Migration {
 	public function down()
 	{
 		Schema::drop('leaves');
+		Schema::drop('curriculums');
+		Schema::drop('leavetypes');
 	}
 
 }

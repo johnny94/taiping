@@ -12,6 +12,20 @@ class CreateClassSwitchingsTable extends Migration {
 	 */
 	public function up()
 	{
+		Schema::create('classTitles', function(Blueprint $table)
+		{
+			$table->increments('id');
+			$table->string('title');
+			$table->timestamps();
+		});
+
+		Schema::create('checked_status', function(Blueprint $table)
+		{
+			$table->increments('id');
+			$table->string('title');
+			$table->timestamps();
+		});
+
 		Schema::create('class_switchings', function(Blueprint $table)
 		{
 			$table->increments('id');
@@ -68,6 +82,8 @@ class CreateClassSwitchingsTable extends Migration {
 	public function down()
 	{
 		Schema::drop('class_switchings');
+		Schema::drop('classTitles');
+		Schema::drop('checked_status');
 	}
 
 }
