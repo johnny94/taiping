@@ -58,12 +58,12 @@ class CreateClassSwitchingsTable extends Migration {
 
 			$table->foreign('from_class_id')
 			      ->references('id')
-			      ->on('classTitle')
+			      ->on('classTitles')
 			      ->onDelete('cascade');
 
 			$table->foreign('to_class_id')
 			      ->references('id')
-			      ->on('classTitle')
+			      ->on('classTitles')
 			      ->onDelete('cascade');
 
 			$table->foreign('checked_status_id')
