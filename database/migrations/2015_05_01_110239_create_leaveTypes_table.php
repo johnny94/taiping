@@ -12,7 +12,7 @@ class CreateLeaveTypesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('LeaveTypes', function(Blueprint $table)
+		Schema::create('leavetypes', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->string('title');
@@ -27,7 +27,7 @@ class CreateLeaveTypesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('LeaveTypes');
+		Schema::drop('leavetypes');
 	}
 
 }
