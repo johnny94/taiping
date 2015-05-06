@@ -13,7 +13,7 @@ class TeacherAccount extends Seeder {
 	public function run()
 	{			
 		$file = Storage::disk('local')->get('account.txt');
-		$lines = explode("\r\n", $file);
+		$lines = explode(PHP_EOL, $file);
 
 		foreach ($lines as $line) {
 			$name = explode(':', $line)[4];
