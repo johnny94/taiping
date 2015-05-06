@@ -38,7 +38,7 @@
                     {!! Form::label('teacher', '調課老師', ['class'=>'col-sm-2 control-label']) !!}
                     <div class="col-sm-10">
                         @if (isset($switching->with_user_id))
-                            {{!! Form::select('classSwitching[0][teacher]', [$switching->with_user_id => $switching->withSwitchingTeacher->name], $switching->with_user_id, ['class'=>'form-control teacher_list']) !!}
+                            {!! Form::select('classSwitching[0][teacher]', [$switching->with_user_id => $switching->withSwitchingTeacher->name], $switching->with_user_id, ['class'=>'form-control teacher_list']) !!}
                         @else
                             {!! Form::select('classSwitching[0][teacher]', [], $switching->with_user_id, ['class'=>'form-control teacher_list']) !!}
                         @endif                        
