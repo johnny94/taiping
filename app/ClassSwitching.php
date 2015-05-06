@@ -9,6 +9,7 @@ use \Auth;
 class ClassSwitching extends Model {
 
 	protected $fillable = [
+		'user_id',
 		'with_user_id',
 		'from',
 		'from_period',
@@ -21,10 +22,11 @@ class ClassSwitching extends Model {
 
 	protected $table = 'class_switchings';
 
-	public function __construct()
+	/*public function __construct()
 	{
-		$this->user_id = Auth::user()->id;
-	}
+		$this->user_id = Auth::user()->id;		
+		parent::__construct();
+	}*/
 
 	public function getFromAttribute($from)
 	{

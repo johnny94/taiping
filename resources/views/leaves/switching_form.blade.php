@@ -6,7 +6,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">申請老師</label>
                     <div class="col-sm-10">
-                        <p class="form-control-static">{{$switching->switchingTeacher->name}}</p>
+                        <p class="form-control-static">{{ $switching->switchingTeacher->name }}</p>
                     </div>
                 </div>
                 <div class="form-group">
@@ -37,7 +37,11 @@
                 <div class="form-group">
                     {!! Form::label('teacher', '調課老師', ['class'=>'col-sm-2 control-label']) !!}
                     <div class="col-sm-10">
-                        {!! Form::select('classSwitching[0][teacher]', [$switching->with_user_id => $switching->withSwitchingTeacher->name], $switching->with_user_id, ['class'=>'form-control teacher_list']) !!}
+                        @if (isset($switching->with_user_id))
+                            {{!! Form::select('classSwitching[0][teacher]', [$switching->with_user_id => $switching->withSwitchingTeacher->name], $switching->with_user_id, ['class'=>'form-control teacher_list']) !!}
+                        @else
+                            {!! Form::select('classSwitching[0][teacher]', [], $switching->with_user_id, ['class'=>'form-control teacher_list']) !!}
+                        @endif                        
                     </div>
                 </div>
                 <div class="form-group">

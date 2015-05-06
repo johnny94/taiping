@@ -264,6 +264,7 @@ class LeavesController extends Controller {
 	{
 		$periods = Period::lists('name', 'id');
 		$classes = ClassTitle::lists('title', 'id');
+
 		return view('leaves.create_switching', compact('periods', 'classes'));
 	}
 
