@@ -11,7 +11,8 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
+Route::get('/', ['middleware' => 'auth', 
+	'uses' => 'ClassesController@index']);
 
 Route::get('classes', 'ClassesController@index');
 
