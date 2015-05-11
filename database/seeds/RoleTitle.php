@@ -13,14 +13,14 @@ class RoleTitle extends Seeder {
 	public function run()
 	{
 		$date = Carbon\Carbon::now();
-		DB::table('checked_status')->insert([
+		DB::table('roles')->insert([
 			'id' => 1,
 			'title' => 'user',
 			'created_at' => $date,
 			'updated_at' => $date
 			]);
 
-		DB::table('checked_status')->insert([
+		DB::table('roles')->insert([
 			'id' => 2,
 			'title' => 'admin',
 			'created_at' => $date,

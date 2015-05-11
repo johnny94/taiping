@@ -23,8 +23,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         parent::setUp();
 
         Artisan::call('migrate');
-        $this->seed();
-        //Artisan::call('db:seed');        
+        $this->seed();        
     }
 
     public function tearDown()

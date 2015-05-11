@@ -1,6 +1,7 @@
 <?php
 
 use App\User;
+use App\Role;
 
 class ExampleTest extends TestCase {
 	
@@ -26,6 +27,14 @@ class ExampleTest extends TestCase {
 		return User::find(1);
 	}
 
+	public function fetchManager()
+	{	$ROLE_MANAGER = 2;
+		$managers = Role::where('id', '=', $ROLE_MANAGER)
+					->first()
+					->users;
+
+		return $managers->first();
+	}
 	
 	public function testHomePageAfterLogin()
 	{		
@@ -36,35 +45,33 @@ class ExampleTest extends TestCase {
 		$this->assertResponseOk();
 	}
 
-	/**
-	* @dataProvider userProvider
-	*/
-	public function testClassesPageAfterLogin($user)
+	public function testClassesPageAfterLogin()
 	{		
+		$user = $this->fetchUser();
 		$this->be($user);
 
 		$this->call('GET', 'classes');
 		$this->assertResponseOk();
-	}
+	}	
 	
-	/**
-	* @dataProvider userProvider
-	*/
-	public function testCreateLeavePageAfterLogin($user)
+	public function testCreateLeavePageAfterLogin()
 	{		
+		$user = $this->fetchUser();
 		$this->be($user);
 
 		$this->call('GET', 'leaves/create');
 		$this->assertResponseOk();
 	}
+	
+	public function testLeavesPageAfterLogin()
+	{
+		$user = $this->fetchUser();
+		$this->be($user);
+		$this->call('GET', 'leaves');
+		$this->assertRedirectedTo('classes');
 
-	/**
-	* @dataProvider userManagerProvider
-	*/
-	public function testLeavesPageAfterLogin($user)
-	{		
-		$this->be($user);		
-
+		$user = $this->fetchManager();
+		$this->be($user);
 		$this->call('GET', 'leaves');
 		$this->assertResponseOk();
 	}

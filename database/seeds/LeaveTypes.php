@@ -22,7 +22,7 @@ class LeaveTypes extends Seeder {
 		];
 
 		foreach ($leaveTypes as $type) {
-			DB::table('classTitles')->insert([
+			DB::table('leavetypes')->insert([
 				'title' => $type,
 				'created_at' => $date,
 				'updated_at' => $date

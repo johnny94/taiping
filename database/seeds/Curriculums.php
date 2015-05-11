@@ -20,7 +20,7 @@ class Curriculums extends Seeder {
 		];
 
 		foreach ($curriculums as $curriculum) {
-			DB::table('classTitles')->insert([
+			DB::table('curriculums')->insert([
 				'title' => $curriculum,
 				'created_at' => $date,
 				'updated_at' => $date
