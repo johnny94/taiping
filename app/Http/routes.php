@@ -17,11 +17,12 @@ Route::get('/', ['middleware' => 'auth',
 Route::get('classes', 'ClassesController@index');
 
 Route::get('leaves/create', 'LeavesController@create');
+Route::post('leaves', 'LeavesController@createLeaveStep1');
 Route::get('leaves', 'LeavesController@index');
 Route::post('leaves/all', 'LeavesController@all');
 //Route::get('leaves/all', 'LeavesController@all');
 
-Route::post('leaves', 'LeavesController@createLeaveStep1');
+
 
 Route::get('switchings/{id}', 'LeavesController@switching');
 Route::get('leaves/switching/create', 'LeavesController@createSwitching');

@@ -1,0 +1,360 @@
+{
+    "event": "suiteStart",
+    "suite": "Application Test Suite",
+    "tests": 13
+}{
+    "event": "suiteStart",
+    "suite": "ExampleTest",
+    "tests": 13
+}{
+    "event": "testStart",
+    "suite": "ExampleTest",
+    "test": "ExampleTest::testHomePageAfterLogin"
+}{
+    "event": "test",
+    "suite": "ExampleTest",
+    "test": "ExampleTest::testHomePageAfterLogin",
+    "status": "pass",
+    "time": 0.67647981643677,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "ExampleTest",
+    "test": "ExampleTest::testClassesPageAfterLogin"
+}{
+    "event": "test",
+    "suite": "ExampleTest",
+    "test": "ExampleTest::testClassesPageAfterLogin",
+    "status": "pass",
+    "time": 0.29707598686218,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "ExampleTest",
+    "test": "ExampleTest::testCreateLeavePageAfterLogin"
+}{
+    "event": "test",
+    "suite": "ExampleTest",
+    "test": "ExampleTest::testCreateLeavePageAfterLogin",
+    "status": "pass",
+    "time": 0.32646012306213,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "ExampleTest",
+    "test": "ExampleTest::testLeavesPageAfterLogin"
+}{
+    "event": "test",
+    "suite": "ExampleTest",
+    "test": "ExampleTest::testLeavesPageAfterLogin",
+    "status": "fail",
+    "time": 0.41402387619019,
+    "trace": [
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Testing\\AssertionsTrait.php",
+            "line": 105,
+            "function": "assertInstanceOf",
+            "class": "PHPUnit_Framework_Assert",
+            "type": "::"
+        },
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\tests\\ExampleTest.php",
+            "line": 71,
+            "function": "assertRedirectedTo",
+            "class": "Illuminate\\Foundation\\Testing\\TestCase",
+            "type": "->"
+        }
+    ],
+    "message": "Failed asserting that Symfony\\Component\\HttpFoundation\\Response Object (...) is an instance of class \"Illuminate\\Http\\RedirectResponse\".",
+    "output": ""
+}{
+    "event": "suiteStart",
+    "suite": "ExampleTest::testListAllUserWithLeaves",
+    "tests": 1
+}{
+    "event": "testStart",
+    "suite": "ExampleTest::testListAllUserWithLeaves",
+    "test": "ExampleTest::testListAllUserWithLeaves with data set #0 (App\\User Object (...))"
+}{
+    "event": "test",
+    "suite": "ExampleTest::testListAllUserWithLeaves",
+    "test": "ExampleTest::testListAllUserWithLeaves with data set #0 (App\\User Object (...))",
+    "status": "fail",
+    "time": 0.2894299030304,
+    "trace": [
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Testing\\AssertionsTrait.php",
+            "line": 17,
+            "function": "assertTrue",
+            "class": "PHPUnit_Framework_Assert",
+            "type": "::"
+        },
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\tests\\ExampleTest.php",
+            "line": 87,
+            "function": "assertResponseOk",
+            "class": "Illuminate\\Foundation\\Testing\\TestCase",
+            "type": "->"
+        }
+    ],
+    "message": "Expected status code 200, got 500.\nFailed asserting that false is true.",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "",
+    "test": "ExampleTest::testCreateLeaveStep1"
+}{
+    "event": "test",
+    "suite": "",
+    "test": "ExampleTest::testCreateLeaveStep1",
+    "status": "fail",
+    "time": 0.29336977005005,
+    "trace": [
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Testing\\AssertionsTrait.php",
+            "line": 105,
+            "function": "assertInstanceOf",
+            "class": "PHPUnit_Framework_Assert",
+            "type": "::"
+        },
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\tests\\ExampleTest.php",
+            "line": 99,
+            "function": "assertRedirectedTo",
+            "class": "Illuminate\\Foundation\\Testing\\TestCase",
+            "type": "->"
+        }
+    ],
+    "message": "Failed asserting that Symfony\\Component\\HttpFoundation\\Response Object (...) is an instance of class \"Illuminate\\Http\\RedirectResponse\".",
+    "output": "class Symfony\\Component\\HttpFoundation\\Response#2542 (6) {\n  public $headers =>\n  class Symfony\\Component\\HttpFoundation\\ResponseHeaderBag#2555 (5) {\n    protected $computedCacheControl =>\n    array(1) {\n      'no-cache' =>\n      bool(true)\n    }\n    protected $cookies =>\n    array(0) {\n    }\n    protected $headerNames =>\n    array(2) {\n      'cache-control' =>\n      string(13) \"Cache-Control\"\n      'date' =>\n      string(4) \"Date\"\n    }\n    protected $headers =>\n    array(2) {\n      'cache-control' =>\n      array(1) {\n        ...\n      }\n      'date' =>\n      array(1) {\n        ...\n      }\n    }\n    protected $cacheControl =>\n    array(0) {\n    }\n  }\n  protected $content =>\n  string(17292) \"<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" \/>\n        <meta name=\"robots\" content=\"noindex,nofollow\" \/>\n        <style>\n            \/* Copyright (c) 2010, Yahoo! Inc. All rights reserved. Code licensed under the BSD License: http:\/\/developer.yahoo.com\/yui\/license.html *\/\n            html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing\"...\n  protected $version =>\n  string(3) \"1.0\"\n  protected $statusCode =>\n  int(500)\n  protected $statusText =>\n  string(21) \"Internal Server Error\"\n  protected $charset =>\n  string(5) \"UTF-8\"\n}\n"
+}{
+    "event": "suiteStart",
+    "suite": "ExampleTest::testClassSwitchingPageAfterLogin",
+    "tests": 1
+}{
+    "event": "testStart",
+    "suite": "ExampleTest::testClassSwitchingPageAfterLogin",
+    "test": "ExampleTest::testClassSwitchingPageAfterLogin with data set #0 (App\\User Object (...))"
+}{
+    "event": "test",
+    "suite": "ExampleTest::testClassSwitchingPageAfterLogin",
+    "test": "ExampleTest::testClassSwitchingPageAfterLogin with data set #0 (App\\User Object (...))",
+    "status": "fail",
+    "time": 0.31784796714783,
+    "trace": [
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Testing\\AssertionsTrait.php",
+            "line": 17,
+            "function": "assertTrue",
+            "class": "PHPUnit_Framework_Assert",
+            "type": "::"
+        },
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\tests\\ExampleTest.php",
+            "line": 110,
+            "function": "assertResponseOk",
+            "class": "Illuminate\\Foundation\\Testing\\TestCase",
+            "type": "->"
+        }
+    ],
+    "message": "Expected status code 200, got 500.\nFailed asserting that false is true.",
+    "output": ""
+}{
+    "event": "suiteStart",
+    "suite": "ExampleTest::testCreateSwitchingPageAfterLogin",
+    "tests": 1
+}{
+    "event": "testStart",
+    "suite": "ExampleTest::testCreateSwitchingPageAfterLogin",
+    "test": "ExampleTest::testCreateSwitchingPageAfterLogin with data set #0 (App\\User Object (...))"
+}{
+    "event": "test",
+    "suite": "ExampleTest::testCreateSwitchingPageAfterLogin",
+    "test": "ExampleTest::testCreateSwitchingPageAfterLogin with data set #0 (App\\User Object (...))",
+    "status": "fail",
+    "time": 0.32389712333679,
+    "trace": [
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Testing\\AssertionsTrait.php",
+            "line": 17,
+            "function": "assertTrue",
+            "class": "PHPUnit_Framework_Assert",
+            "type": "::"
+        },
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\tests\\ExampleTest.php",
+            "line": 121,
+            "function": "assertResponseOk",
+            "class": "Illuminate\\Foundation\\Testing\\TestCase",
+            "type": "->"
+        }
+    ],
+    "message": "Expected status code 200, got 500.\nFailed asserting that false is true.",
+    "output": ""
+}{
+    "event": "suiteStart",
+    "suite": "ExampleTest::testStoreClassSwitchingAfterLogin",
+    "tests": 1
+}{
+    "event": "testStart",
+    "suite": "ExampleTest::testStoreClassSwitchingAfterLogin",
+    "test": "ExampleTest::testStoreClassSwitchingAfterLogin with data set #0 (App\\User Object (...))"
+}{
+    "event": "test",
+    "suite": "ExampleTest::testStoreClassSwitchingAfterLogin",
+    "test": "ExampleTest::testStoreClassSwitchingAfterLogin with data set #0 (App\\User Object (...))",
+    "status": "fail",
+    "time": 0.29233312606812,
+    "trace": [
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Testing\\AssertionsTrait.php",
+            "line": 17,
+            "function": "assertTrue",
+            "class": "PHPUnit_Framework_Assert",
+            "type": "::"
+        },
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\tests\\ExampleTest.php",
+            "line": 132,
+            "function": "assertResponseOk",
+            "class": "Illuminate\\Foundation\\Testing\\TestCase",
+            "type": "->"
+        }
+    ],
+    "message": "Expected status code 200, got 500.\nFailed asserting that false is true.",
+    "output": ""
+}{
+    "event": "suiteStart",
+    "suite": "ExampleTest::testEditClassSwitchingAfterLogin",
+    "tests": 1
+}{
+    "event": "testStart",
+    "suite": "ExampleTest::testEditClassSwitchingAfterLogin",
+    "test": "ExampleTest::testEditClassSwitchingAfterLogin with data set #0 (App\\User Object (...))"
+}{
+    "event": "test",
+    "suite": "ExampleTest::testEditClassSwitchingAfterLogin",
+    "test": "ExampleTest::testEditClassSwitchingAfterLogin with data set #0 (App\\User Object (...))",
+    "status": "fail",
+    "time": 0.31048107147217,
+    "trace": [
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Testing\\AssertionsTrait.php",
+            "line": 17,
+            "function": "assertTrue",
+            "class": "PHPUnit_Framework_Assert",
+            "type": "::"
+        },
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\tests\\ExampleTest.php",
+            "line": 143,
+            "function": "assertResponseOk",
+            "class": "Illuminate\\Foundation\\Testing\\TestCase",
+            "type": "->"
+        }
+    ],
+    "message": "Expected status code 200, got 500.\nFailed asserting that false is true.",
+    "output": ""
+}{
+    "event": "suiteStart",
+    "suite": "ExampleTest::testUpdateClassSwitchingAfterLogin",
+    "tests": 1
+}{
+    "event": "testStart",
+    "suite": "ExampleTest::testUpdateClassSwitchingAfterLogin",
+    "test": "ExampleTest::testUpdateClassSwitchingAfterLogin with data set #0 (App\\User Object (...))"
+}{
+    "event": "test",
+    "suite": "ExampleTest::testUpdateClassSwitchingAfterLogin",
+    "test": "ExampleTest::testUpdateClassSwitchingAfterLogin with data set #0 (App\\User Object (...))",
+    "status": "fail",
+    "time": 0.28685402870178,
+    "trace": [
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Testing\\AssertionsTrait.php",
+            "line": 17,
+            "function": "assertTrue",
+            "class": "PHPUnit_Framework_Assert",
+            "type": "::"
+        },
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\tests\\ExampleTest.php",
+            "line": 154,
+            "function": "assertResponseOk",
+            "class": "Illuminate\\Foundation\\Testing\\TestCase",
+            "type": "->"
+        }
+    ],
+    "message": "Expected status code 200, got 500.\nFailed asserting that false is true.",
+    "output": ""
+}{
+    "event": "suiteStart",
+    "suite": "ExampleTest::testPassClassSwitchingAfterLogin",
+    "tests": 1
+}{
+    "event": "testStart",
+    "suite": "ExampleTest::testPassClassSwitchingAfterLogin",
+    "test": "ExampleTest::testPassClassSwitchingAfterLogin with data set #0 (App\\User Object (...))"
+}{
+    "event": "test",
+    "suite": "ExampleTest::testPassClassSwitchingAfterLogin",
+    "test": "ExampleTest::testPassClassSwitchingAfterLogin with data set #0 (App\\User Object (...))",
+    "status": "fail",
+    "time": 0.29254913330078,
+    "trace": [
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Testing\\AssertionsTrait.php",
+            "line": 17,
+            "function": "assertTrue",
+            "class": "PHPUnit_Framework_Assert",
+            "type": "::"
+        },
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\tests\\ExampleTest.php",
+            "line": 165,
+            "function": "assertResponseOk",
+            "class": "Illuminate\\Foundation\\Testing\\TestCase",
+            "type": "->"
+        }
+    ],
+    "message": "Expected status code 200, got 500.\nFailed asserting that false is true.",
+    "output": ""
+}{
+    "event": "suiteStart",
+    "suite": "ExampleTest::testRejectClassSwitchingAfterLogin",
+    "tests": 1
+}{
+    "event": "testStart",
+    "suite": "ExampleTest::testRejectClassSwitchingAfterLogin",
+    "test": "ExampleTest::testRejectClassSwitchingAfterLogin with data set #0 (App\\User Object (...))"
+}{
+    "event": "test",
+    "suite": "ExampleTest::testRejectClassSwitchingAfterLogin",
+    "test": "ExampleTest::testRejectClassSwitchingAfterLogin with data set #0 (App\\User Object (...))",
+    "status": "fail",
+    "time": 0.29133820533752,
+    "trace": [
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Testing\\AssertionsTrait.php",
+            "line": 17,
+            "function": "assertTrue",
+            "class": "PHPUnit_Framework_Assert",
+            "type": "::"
+        },
+        {
+            "file": "C:\\UwAmp\\www\\taiping-class\\tests\\ExampleTest.php",
+            "line": 176,
+            "function": "assertResponseOk",
+            "class": "Illuminate\\Foundation\\Testing\\TestCase",
+            "type": "->"
+        }
+    ],
+    "message": "Expected status code 200, got 500.\nFailed asserting that false is true.",
+    "output": ""
+}

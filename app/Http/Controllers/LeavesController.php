@@ -64,14 +64,14 @@ class LeavesController extends Controller {
 		Session::put('leave', Request::all());
 		
 		if ($curriculum === '1') {
-			$leave = $this->createLeaveFromSession();		
+			$leave = $this->createLeaveFromSession();
 			return redirect('classes');
 		} elseif ($curriculum === '2') {			
-			return redirect('leaves/switching/create');
+			return redirect('leaves/switching/create');			
 		} elseif ($curriculum === '3') {
 			return redirect('leaves/substitute/create');
 		}
-		
+				
 	}
 
 	private function createLeaveFromSession()
@@ -96,7 +96,7 @@ class LeavesController extends Controller {
 	public function createLeaveWithSwitching()
 	{		
 		//TODO: prevent from creating switching without creating leave
-		$leave = $this->createLeaveFromSession();
+		$leave = $this->createLeaveFromSession();		
 
 		//TODO: from_class and to_class are not work properly (need to create the class table in DB)
 		$classSwitchings = Request::input('classSwitching');
@@ -256,7 +256,7 @@ class LeavesController extends Controller {
 
 	public function switching($id)
 	{
-		$switching = ClassSwitching::find($id);
+		$switching = ClassSwitching::findOrFail($id);
 		return view('leaves.switching', compact('switching'));
 	}
 
