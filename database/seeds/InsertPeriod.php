@@ -11,9 +11,14 @@ class InsertPeriod extends Seeder {
 	 * @return void
 	 */
 	public function run()
-	{			
+	{
+		$date = Carbon\Carbon::now();
 		for ($i = 1; $i <= 7 ; $i++) { 
-			DB::insert('insert into periods (name) values (?)', ["第 {$i} 節"]);
+			DB::table('periods')->insert([
+				'name' => "第 {$i} 節",
+				'created_at' => $date,
+				'updated_at' => $date
+			]);			
 		}
 	}
 

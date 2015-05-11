@@ -11,11 +11,22 @@ class LeaveTypes extends Seeder {
 	 * @return void
 	 */
 	public function run()
-	{			
-		DB::insert('insert into leavetypes (title) values (?)', ['事假']);
-		DB::insert('insert into leavetypes (title) values (?)', ['公假']);
-		DB::insert('insert into leavetypes (title) values (?)', ['婚嫁']);
-		DB::insert('insert into leavetypes (title) values (?)', ['喪假']);
-		DB::insert('insert into leavetypes (title) values (?)', ['產假']);		
+	{
+		$date = Carbon\Carbon::now();
+		$leaveTypes = [
+			'事假',
+			'公假',
+			'婚嫁',
+			'喪假',
+			'產假'
+		];
+
+		foreach ($leaveTypes as $type) {
+			DB::table('classTitles')->insert([
+				'title' => $type,
+				'created_at' => $date,
+				'updated_at' => $date
+			]);
+		}	
 	}
 }

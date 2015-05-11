@@ -14,13 +14,13 @@ class DatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 
-		$this->call('CheckedStatusSeeder');
+		$this->call('RoleTitle');
+		$this->call('InsertTestAccount');
 		$this->call('InsertPeriod');
 		$this->call('InsertClassTitle');
 		$this->call('Curriculums');
-		$this->call('LeaveTypes');
-		$this->call('TeacherAccount');
-		$this->call('RoleTitle');
+		$this->call('CheckedStatusSeeder');		
+		$this->call('LeaveTypes');		
 	}
 
 }

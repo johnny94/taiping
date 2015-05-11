@@ -1,5 +1,7 @@
 <?php
 
+use APP\User;
+
 class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
 	/**
@@ -15,5 +17,20 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
 		return $app;
 	}
+
+	public function setUp()
+    {
+        parent::setUp();
+
+        Artisan::call('migrate');
+        $this->seed();
+        //Artisan::call('db:seed');        
+    }
+
+    public function tearDown()
+    {
+        Artisan::call('migrate:reset');
+        parent::tearDown();
+    }    
 
 }

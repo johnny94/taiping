@@ -11,11 +11,25 @@ class CheckedStatusSeeder extends Seeder {
 	 * @return void
 	 */
 	public function run()
-	{	
-		DB::insert('insert into checked_status (title) values (?)', ['pending']);
-		DB::insert('insert into checked_status (title) values (?)', ['pass']);
-		DB::insert('insert into checked_status (title) values (?)', ['reject']);
-		
+	{
+		$date = Carbon\Carbon::now();
+		DB::table('checked_status')->insert([
+			'title' => 'pending',
+			'created_at' => $date,
+			'updated_at' => $date
+			]);
+
+		DB::table('checked_status')->insert([
+			'title' => 'pass',
+			'created_at' => $date,
+			'updated_at' => $date
+			]);
+
+		DB::table('checked_status')->insert([
+			'title' => 'reject',
+			'created_at' => $date,
+			'updated_at' => $date
+			]);		
 	}
 
 }

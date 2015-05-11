@@ -3,27 +3,33 @@
 use App\User;
 
 class ExampleTest extends TestCase {
+	
+	public function userManagerProvider()
+	{
+		$user = new User(['name'=>'Johnny', 
+			'email'=>'johnny@example.com']);
+		$user->id = 1;
 
+		return array(array($user));
+	}
 
 	public function userProvider()
 	{
 		$user = new User(['name'=>'Johnny', 
-			'email'=>'johnny@example.com']);
+			'email'=>'johnny@example.com']);		
 
 		return array(array($user));
-		//$this->be($user);
 	}
-	
-	public function testAllRouteWithoutLogin()
-	{
-		
-	}
-	
-	/**
-	* @dataProvider userProvider
-	*/
-	public function testHomePageAfterLogin($user)
+
+	public function fetchUser()
 	{		
+		return User::find(1);
+	}
+
+	
+	public function testHomePageAfterLogin()
+	{		
+		$user = $this->fetchUser();
 		$this->be($user);
 
 		$this->call('GET', '/');
@@ -53,11 +59,11 @@ class ExampleTest extends TestCase {
 	}
 
 	/**
-	* @dataProvider userProvider
+	* @dataProvider userManagerProvider
 	*/
 	public function testLeavesPageAfterLogin($user)
 	{		
-		$this->be($user);
+		$this->be($user);		
 
 		$this->call('GET', 'leaves');
 		$this->assertResponseOk();
@@ -88,6 +94,72 @@ class ExampleTest extends TestCase {
 		$this->be($user);
 
 		$this->call('GET', 'switchings/1');
+		$this->assertResponseOk();
+	}
+
+	/**
+	* @dataProvider userProvider
+	*/
+	public function testCreateSwitchingPageAfterLogin($user)
+	{
+		$this->be($user);
+
+		$this->call('GET', 'leaves/switching/create');
+		$this->assertResponseOk();
+	}
+
+	/**
+	* @dataProvider userProvider
+	*/
+	public function testStoreClassSwitchingAfterLogin($user)
+	{
+		$this->be($user);
+
+		$this->call('POST', 'leaves/switchings');
+		$this->assertResponseOk();
+	}
+
+	/**
+	* @dataProvider userProvider
+	*/
+	public function testEditClassSwitchingAfterLogin($user)
+	{
+		$this->be($user);
+
+		$this->call('GET', 'switchings/1/edit');
+		$this->assertResponseOk();
+	}
+
+	/**
+	* @dataProvider userProvider
+	*/
+	public function testUpdateClassSwitchingAfterLogin($user)
+	{
+		$this->be($user);
+
+		$this->call('POST', 'switchings/1');
+		$this->assertResponseOk();
+	}
+
+	/**
+	* @dataProvider userProvider
+	*/
+	public function testPassClassSwitchingAfterLogin($user)
+	{
+		$this->be($user);
+
+		$this->call('POST', 'switchings/1/pass');
+		$this->assertResponseOk();
+	}
+
+	/**
+	* @dataProvider userProvider
+	*/
+	public function testRejectClassSwitchingAfterLogin($user)
+	{
+		$this->be($user);
+
+		$this->call('POST', 'switchings/1/reject');
 		$this->assertResponseOk();
 	}
 
