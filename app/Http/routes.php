@@ -22,8 +22,6 @@ Route::get('leaves', 'LeavesController@index');
 Route::post('leaves/all', 'LeavesController@all');
 //Route::get('leaves/all', 'LeavesController@all');
 
-
-
 Route::get('switchings/{id}', 'LeavesController@switching');
 Route::get('leaves/switching/create', 'LeavesController@createSwitching');
 Route::post('leaves/switchings', 'LeavesController@createLeaveWithSwitching');
@@ -37,7 +35,6 @@ Route::get('leaves/substitute/create', 'LeavesController@createSubstitute');
 Route::post('leaves/substitutes', 'LeavesController@createLeaveWithSubstitute');
 
 Route::get('leaves/unchecked_switching', 'LeavesController@uncheckedSwitching');
-
 Route::get('teachers', 'LeavesController@getTeacherNames');
 
 //Route::get('home', 'HomeController@index');

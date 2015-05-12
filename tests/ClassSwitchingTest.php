@@ -5,24 +5,7 @@ use App\Role;
 use App\Leave;
 use App\ClassSwitching;
 
-class ExampleTest extends TestCase {
-	
-	public function userManagerProvider()
-	{
-		$user = new User(['name'=>'Johnny', 
-			'email'=>'johnny@example.com']);
-		$user->id = 1;
-
-		return array(array($user));
-	}
-
-	public function userProvider()
-	{
-		$user = new User(['name'=>'Johnny', 
-			'email'=>'johnny@example.com']);		
-
-		return array(array($user));
-	}
+class ClassSwitchingTest extends TestCase {
 
 	public function fetchUser()
 	{		
@@ -30,7 +13,8 @@ class ExampleTest extends TestCase {
 	}
 
 	public function fetchManager()
-	{	$ROLE_MANAGER = 2;
+	{	
+		$ROLE_MANAGER = 2;
 		$managers = Role::where('id', '=', $ROLE_MANAGER)
 					->first()
 					->users;
@@ -78,15 +62,25 @@ class ExampleTest extends TestCase {
 		$this->assertResponseOk();
 	}
 
-	/**
-	* @dataProvider userProvider
-	*/
-	public function testListAllUserWithLeaves($user)
-	{		
+
+	public function testListAllUserWithLeaves()
+	{
+		Session::start();
+		$user = $this->fetchManager();
 		$this->be($user);
 
-		$this->call('POST', 'leaves/all');
+		$leave = new Leave;
+		$leave->user_id = $user->id;
+		$leave->type_id = 1;
+		$leave->from = Carbon\Carbon::now();
+		$leave->to = Carbon\Carbon::now();
+		$leave->curriculum_id = 1;
+		$leave->save();
+
+		$this->call('POST', 'leaves/all',
+			['_token'=> csrf_token()]);
 		$this->assertResponseOk();
+		$this->assertEquals(1, Leave::all()->count());
 	}
 
 	public function testCreateLeaveWithoutCurriculum()
@@ -223,52 +217,119 @@ class ExampleTest extends TestCase {
 		]);
 
 		$response = $this->call('POST', 'leaves/switchings', 
-			['_token' => csrf_token(), 'classSwitching' => $classSwitchingInput]);		
+			['_token' => csrf_token(), 'classSwitching' => $classSwitchingInput]);
+		
 		$this->assertRedirectedTo('classes');
+
+		return ClassSwitching::first();
 	}
 
 	/**
-	* @dataProvider userProvider
+	* @depends testStoreClassSwitchingAfterLogin
 	*/
-	public function testEditClassSwitchingAfterLogin($user)
+	public function testEditClassSwitchingAfterLogin(ClassSwitching $switching)
 	{
+		$user = $this->fetchUser();
 		$this->be($user);
 
-		$this->call('GET', 'switchings/1/edit');
+		$s = ClassSwitching::create($switching->toArray());
+		$id = $s->id;
+
+		$this->call('GET', "switchings/{$id}/edit");
 		$this->assertResponseOk();
+
+		return $s;
 	}
 
 	/**
-	* @dataProvider userProvider
+	* @depends testEditClassSwitchingAfterLogin
 	*/
-	public function testUpdateClassSwitchingAfterLogin($user)
+	public function testUpdateClassSwitchingAfterLogin(ClassSwitching $switching)
 	{
+		Session::start();
+		$user = $this->fetchUser();
 		$this->be($user);
 
-		$this->call('POST', 'switchings/1');
-		$this->assertResponseOk();
+		$s = ClassSwitching::create($switching->toArray());
+		$id = $s->id;
+
+		$classSwitchingInput = array([			
+			'teacher' => 2,
+			'from_date' => Carbon\Carbon::now()->toDateString(),
+			'from_period' => 1,
+			'from_class' => 1,
+			'to_date' => Carbon\Carbon::now()->toDateString(),
+			'to_period' => 1,
+			'to_class' => 1,
+			'checked_status' => 1
+		]);
+
+		$response = $this->call('PATCH', "switchings/{$id}", 
+			['_token' => csrf_token(), 'classSwitching' => $classSwitchingInput]);		
+		
+		$this->assertRedirectedTo('classes');
+		$this->assertEquals(2, ClassSwitching::first()->with_user_id);
+
 	}
 
 	/**
-	* @dataProvider userProvider
+	* @depends testStoreClassSwitchingAfterLogin
 	*/
-	public function testPassClassSwitchingAfterLogin($user)
+	public function testPassClassSwitchingAfterLogin(ClassSwitching $switching)
 	{
+		Session::start();
+		$user = $this->fetchUser();
 		$this->be($user);
+		$PASS = 2;
 
-		$this->call('POST', 'switchings/1/pass');
-		$this->assertResponseOk();
+		$s = ClassSwitching::create($switching->toArray());
+		$id = $s->id;
+
+		$this->call('PATCH', "switchings/{$id}/pass",
+			['_token' => csrf_token()]);
+		$this->assertRedirectedTo('classes');
+		$this->assertEquals($PASS, ClassSwitching::first()->checked_status_id);
 	}
 
 	/**
-	* @dataProvider userProvider
+	* @depends testStoreClassSwitchingAfterLogin
 	*/
-	public function testRejectClassSwitchingAfterLogin($user)
+	public function testRejectClassSwitchingAfterLogin(ClassSwitching $switching)
 	{
+		Session::start();
+		$user = $this->fetchUser();
+		$this->be($user);
+		$REJECT = 3;
+
+		$s = ClassSwitching::create($switching->toArray());
+		$id = $s->id;
+
+		$this->call('PATCH', "switchings/{$id}/reject",
+			['_token' => csrf_token()]);
+		$this->assertRedirectedTo('classes');
+		$this->assertEquals($REJECT, ClassSwitching::first()->checked_status_id);
+	}
+
+
+	public function testUncheckedSwitchingPageAfterLogin()
+	{
+		$user = $this->fetchUser();
 		$this->be($user);
 
-		$this->call('POST', 'switchings/1/reject');
+		$this->call('GET', 'leaves/unchecked_switching');
 		$this->assertResponseOk();
+		$this->assertViewHas(['pendingSwitchings','rejectedSwitchings','pendingSwitchingsFromOthers']);
+	}
+
+	public function testGetTeacherNames()
+	{
+		$user = $this->fetchUser();
+		$this->be($user);
+
+		$query = ['q' => 'query text'];
+		$response = $this->call('GET', 'teachers', $query); 		
+		$this->assertResponseOk();
+		$this->assertInternalType('array', json_decode($response->getContent()));
 	}
 
 }

@@ -111,7 +111,7 @@ class LeavesController extends Controller {
 			$class_switching->to_period = intval($switching['to_period']);
 			$class_switching->to_class_id = intval($switching['to_class']);
 			$class_switching->checked_status_id = DB::table('checked_status')->where('title', 'pending')->first()->id;
-			Auth::user()->classSwitching()->save($class_switching);
+			Auth::user()->classSwitching()->save($class_switching);			
 		}
 
 		return redirect('classes');
@@ -167,9 +167,7 @@ class LeavesController extends Controller {
 	public function createLeaveWithSubstitute()
 	{
 		//TODO: prevent from creating substitute without creating leave
-		//return Request::all();
-		$leave = $this->createLeaveFromSession();
-
+		$leave = $this->createLeaveFromSession();		
 		$input = Request::all();
 		$substitute = new Substitute;		
 		$substitute->leave_id = $leave->id;

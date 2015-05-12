@@ -1,7 +1,5 @@
 <?php
 
-use APP\User;
-
 class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
 	/**
