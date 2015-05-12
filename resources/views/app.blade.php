@@ -29,6 +29,9 @@
             border-left-color: #d9a62e;
             border-left-width: 5px;
         }
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, "文泉驛正黑", "WenQuanYi Zen Hei", "儷黑 Pro", "LiHei Pro", Meiryo, "Meiryo UI", "微軟正黑體", "Microsoft JhengHei", "標楷體", DFKai-SB, sans-serif;
+        }
     </style>
 
 </head>
@@ -38,9 +41,10 @@
 
     <div class="container">       
         @yield('content')
-    </div>
-
+    </div>    
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.1.4/jquery.bootgrid.min.js"></script>
     @yield('footer')

@@ -90,5 +90,5 @@ class SubstituteTest extends TestCase {
 		$this->assertRedirectedTo('classes');
 
 	}
-	
+
 }

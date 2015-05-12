@@ -1,5 +1,7 @@
 <?php namespace App;
 
+use Carbon\Carbon;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Substitute extends Model {
@@ -14,6 +16,16 @@ class Substitute extends Model {
 		return $this->belongsTo('App\User');
 	}
 
+	public function getFromAttribute($from)
+	{
+		return Carbon::parse($from)->format('Y/m/d');
+	}
+
+	public function getToAttribute($to)
+	{
+		return Carbon::parse($to)->format('Y/m/d');
+	}
+	
 	public function periods()
 	{
 		return $this->belongsToMany('App\Period');
