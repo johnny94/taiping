@@ -47,7 +47,7 @@ class SubstituteTest extends TestCase {
 		$user = $this->fetchUser();
 		$this->be($user);
 
-		$this->call('GET', 'leaves/substitute/create');
+		$this->call('GET', 'substitutes/create');
 		$this->assertResponseOk();
 		$this->assertViewHas('periods');
 	}
@@ -86,7 +86,7 @@ class SubstituteTest extends TestCase {
 			]
 		];
 
-		$this->call('POST', 'leaves/substitutes', $substituteInput);
+		$response = $this->call('POST', 'substitutes', $substituteInput);		
 		$this->assertRedirectedTo('classes');
 
 	}

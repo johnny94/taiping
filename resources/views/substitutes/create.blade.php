@@ -3,7 +3,7 @@
 @section('content')
     <h1>代課老師</h1>   
     <hr>
-    {!! Form::open(['url' => 'leaves/substitutes', 'class' => 'form-horizontal']) !!}
+    {!! Form::open(['url' => 'substitutes', 'class' => 'form-horizontal']) !!}
         <div class="form-group">
           {!! Form::label('substitute_teacher', '代課老師', ['class' => 'col-sm-2 control-label']) !!}
           <div class="col-sm-8">
@@ -91,7 +91,6 @@
 @stop
 
 @section('footer')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
   $('input[name=duration_type]').on('click', function(){

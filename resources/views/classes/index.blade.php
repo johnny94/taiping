@@ -9,14 +9,14 @@
 
 	@unless($isAllSwitchingPass)
 		<div class="alert alert-warning" role="alert">
-			<a href="leaves/unchecked_switching">有新的調課尚未確認</a>
+			<a href="{{ action('ClassSwitchingsController@notChecked') }}">有新的調課尚未確認</a>
 		</div>
 	@endunless
 	
 	@foreach($passedSwitchings as $switching)
 		<div class="panel panel-default panel-switching-class">
 	  		<ul class="list-group">	  			
-	    		<a href="{{ action('LeavesController@switching', [$switching->id]) }}" class="list-group-item">
+	    		<a href="{{ action('ClassSwitchingsController@show', [$switching->id]) }}" class="list-group-item">
 	    			<h3 class="list-group-item-heading">調課 <small>{{ $switching->from }}</small></h3>	    			
 	    			<p class="list-group-item-text">調課申請人 ─ <mark>{{ $switching->switchingTeacher->name }}</mark></p>
 	    		</a>  
@@ -27,9 +27,9 @@
 	@foreach($passedSwitchingsFromOthers as $switching)
 		<div class="panel panel-default panel-switching-class-others">			
 	  		<ul class="list-group">
-	    		<a href="{{ action('LeavesController@switching', [$switching->id]) }}" class="list-group-item">
+	    		<a href="{{ action('ClassSwitchingsController@show', [$switching->id]) }}" class="list-group-item">
 	    			<h3 class="list-group-item-heading">調課 <small>{{ $switching->to }}</small></h3>
-	    			<p class="list-group-item-text">調課申請人 ─ <ins>{{ $switching->switchingTeacher->name }}</ins></p>
+	    			<p class="list-group-item-text">調課申請人 ─ <mark>{{ $switching->switchingTeacher->name }}</mark></p>
 	    		</a>
 	  		</ul>
 		</div>			
@@ -38,7 +38,7 @@
 	@foreach($substitutes as $substitute)
 			<div class="panel panel-default panel-substitute">
   				<ul class="list-group">
-    				<a href="{{ action('LeavesController@substitute', [$substitute->id]) }}" class="list-group-item">
+    				<a href="{{ action('SubstitutesController@show', [$substitute->id]) }}" class="list-group-item">
 						<h3 class="list-group-item-heading">請代課老師 <small>{{$substitute->from}} 至 {{$substitute->to}}</small></h3>
 	    				<p class="list-group-item-text">代課老師 ─ <mark>{{$substitute->substitute_teacher}}</mark></p>
 					</a>  

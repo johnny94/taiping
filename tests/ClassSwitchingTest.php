@@ -116,7 +116,7 @@ class ClassSwitchingTest extends TestCase {
 
 		$this->call('POST', 'leaves', 
 			['_token' => csrf_token(), 'curriculum' => $SWITCHING_ID]);
-		$this->assertRedirectedTo('leaves/switching/create');
+		$this->assertRedirectedToAction('ClassSwitchingsController@create');
 		$this->assertSessionHas('leave');
 	}
 
@@ -174,7 +174,7 @@ class ClassSwitchingTest extends TestCase {
 		$class_switching = $this->createClassSwitching($user->id, $leave->id);
 		$id = $class_switching->id;
 
-		$this->call('GET', "switchings/{$id}");
+		$this->call('GET', "classSwitchings/{$id}");
 		$this->assertResponseOk();
 	}
 
@@ -183,7 +183,7 @@ class ClassSwitchingTest extends TestCase {
 		$user = $this->fetchUser();
 		$this->be($user);
 
-		$this->call('GET', 'leaves/switching/create');
+		$this->call('GET', 'classSwitchings/create');
 		$this->assertResponseOk();
 	}
 
@@ -205,7 +205,7 @@ class ClassSwitchingTest extends TestCase {
 		];		
 		Session::put('leave', $leaveInput);
 
-		$classSwitchingInput = array([			
+		$classSwitchingInput = array([
 			'teacher' => 1,
 			'from_date' => Carbon\Carbon::now()->toDateString(),
 			'from_period' => 1,
@@ -216,8 +216,9 @@ class ClassSwitchingTest extends TestCase {
 			'checked_status' => 1
 		]);
 
-		$response = $this->call('POST', 'leaves/switchings', 
+		$response = $this->call('POST', 'classSwitchings', 
 			['_token' => csrf_token(), 'classSwitching' => $classSwitchingInput]);
+		//dd($response);
 		
 		$this->assertRedirectedTo('classes');
 
@@ -235,7 +236,7 @@ class ClassSwitchingTest extends TestCase {
 		$s = ClassSwitching::create($switching->toArray());
 		$id = $s->id;
 
-		$this->call('GET', "switchings/{$id}/edit");
+		$this->call('GET', "classSwitchings/{$id}/edit");
 		$this->assertResponseOk();
 
 		return $s;
@@ -264,7 +265,7 @@ class ClassSwitchingTest extends TestCase {
 			'checked_status' => 1
 		]);
 
-		$response = $this->call('PATCH', "switchings/{$id}", 
+		$response = $this->call('PATCH', "classSwitchings/{$id}", 
 			['_token' => csrf_token(), 'classSwitching' => $classSwitchingInput]);		
 		
 		$this->assertRedirectedTo('classes');
@@ -285,8 +286,7 @@ class ClassSwitchingTest extends TestCase {
 		$s = ClassSwitching::create($switching->toArray());
 		$id = $s->id;
 
-		$this->call('PATCH', "switchings/{$id}/pass",
-			['_token' => csrf_token()]);
+		$response = $this->call('PATCH', "classSwitchings/{$id}/pass", ['_token' => csrf_token()]);
 		$this->assertRedirectedTo('classes');
 		$this->assertEquals($PASS, ClassSwitching::first()->checked_status_id);
 	}
@@ -304,19 +304,19 @@ class ClassSwitchingTest extends TestCase {
 		$s = ClassSwitching::create($switching->toArray());
 		$id = $s->id;
 
-		$this->call('PATCH', "switchings/{$id}/reject",
+		$this->call('PATCH', "classSwitchings/{$id}/reject",
 			['_token' => csrf_token()]);
 		$this->assertRedirectedTo('classes');
 		$this->assertEquals($REJECT, ClassSwitching::first()->checked_status_id);
 	}
 
 
-	public function testUncheckedSwitchingPageAfterLogin()
+	public function testNotCheckedSwitchingPageAfterLogin()
 	{
 		$user = $this->fetchUser();
 		$this->be($user);
 
-		$this->call('GET', 'leaves/unchecked_switching');
+		$this->call('GET', 'classSwitchings/notChecked');
 		$this->assertResponseOk();
 		$this->assertViewHas(['pendingSwitchings','rejectedSwitchings','pendingSwitchingsFromOthers']);
 	}

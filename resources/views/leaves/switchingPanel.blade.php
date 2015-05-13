@@ -4,7 +4,7 @@
       {{ $switching->withSwitchingTeacher->name }} {{ $title }}
     
 
-      {!! Form::open(['method' => 'GET', 'action'=>['LeavesController@editSwitching', $switching->id], 'style'=>'display: inline']) !!}
+      {!! Form::open(['method' => 'GET', 'action'=>['ClassSwitchingsController@edit', $switching->id], 'style'=>'display: inline']) !!}
 
         <button class="btn btn-primary btn-sm" type="submit">
           <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 修改

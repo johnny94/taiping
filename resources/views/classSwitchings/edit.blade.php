@@ -4,7 +4,7 @@
 	<h1>修改調課</h1>   
     <hr>
     {!! Form::model($switching, ['method' => 'PATCH', 
-                                 'action'=>['LeavesController@updateSwitching', $switching->id],
+                                 'action'=>['ClassSwitchingsController@update', $switching->id],
                                  'class'=> 'form-horizontal']) !!}
 
         <div class="panel panel-default">   

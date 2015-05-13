@@ -4,7 +4,7 @@
     <h1>建立調課</h1>   
     <hr>
 
-    {!! Form::model($switching = new App\ClassSwitching(['user_id' => Auth::user()->id]), ['url' => 'leaves/switchings', 'class'=> 'form-horizontal']) !!}
+    {!! Form::model($switching = new App\ClassSwitching(['user_id' => Auth::user()->id]), ['action'=>['ClassSwitchingsController@store'], 'class'=> 'form-horizontal']) !!}
         
         <div class="panel panel-default classSwitchingForm">   
             <div class="panel-body">

@@ -3,18 +3,18 @@
         <h3 class="panel-title">
           {{ $switching->switchingTeacher->name }} 老師與你調課          
         
-          {!! Form::open(['method' => 'PATCH', 'action'=>['LeavesController@rejectSwitching', $switching->id], 'style'=>'display: inline']) !!}
+          {!! Form::open(['method' => 'PATCH', 'action'=>['ClassSwitchingsController@reject', $switching->id], 'style'=>'display: inline']) !!}
 
             <button class="btn btn-danger btn-sm" type="submit">
-              <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 有問題
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> 有問題
             </button>
 
           {!! Form::close() !!}
 
-          {!! Form::open(['method' => 'PATCH', 'action'=>['LeavesController@passSwitching', $switching->id], 'style'=>'display: inline']) !!}
+          {!! Form::open(['method' => 'PATCH', 'action'=>['ClassSwitchingsController@pass', $switching->id], 'style'=>'display: inline']) !!}
 
-            <button class="btn btn-primary btn-sm" type="submit">
-              <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 確認
+            <button class="btn btn-success btn-sm" type="submit">
+              <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 確認
             </button>
 
           {!! Form::close() !!}

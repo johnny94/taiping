@@ -18,12 +18,12 @@ class Substitute extends Model {
 
 	public function getFromAttribute($from)
 	{
-		return Carbon::parse($from)->format('Y/m/d');
+		return Carbon::parse($from)->format('Y-m-d');
 	}
 
 	public function getToAttribute($to)
 	{
-		return Carbon::parse($to)->format('Y/m/d');
+		return Carbon::parse($to)->format('Y-m-d');
 	}
 	
 	public function periods()

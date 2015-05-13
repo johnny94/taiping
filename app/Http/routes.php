@@ -20,21 +20,20 @@ Route::get('leaves/create', 'LeavesController@create');
 Route::post('leaves', 'LeavesController@createLeaveStep1');
 Route::get('leaves', 'LeavesController@index');
 Route::post('leaves/all', 'LeavesController@all');
-//Route::get('leaves/all', 'LeavesController@all');
 
-Route::get('switchings/{id}', 'LeavesController@switching');
-Route::get('leaves/switching/create', 'LeavesController@createSwitching');
-Route::post('leaves/switchings', 'LeavesController@createLeaveWithSwitching');
-Route::get('switchings/{id}/edit', 'LeavesController@editSwitching');
-Route::patch('switchings/{id}', 'LeavesController@updateSwitching');
-Route::patch('switchings/{id}/pass', 'LeavesController@passSwitching');
-Route::patch('switchings/{id}/reject', 'LeavesController@rejectSwitching');
+Route::get('classSwitchings/create', 'ClassSwitchingsController@create');
+Route::get('classSwitchings/notChecked', 'ClassSwitchingsController@notChecked');
+Route::get('classSwitchings/{id}', 'ClassSwitchingsController@show');
+Route::get('classSwitchings/{id}/edit', 'ClassSwitchingsController@edit');
+Route::post('classSwitchings', 'ClassSwitchingsController@store');
+Route::patch('classSwitchings/{id}', 'ClassSwitchingsController@update');
+Route::patch('classSwitchings/{id}/pass', 'ClassSwitchingsController@pass');
+Route::patch('classSwitchings/{id}/reject', 'ClassSwitchingsController@reject');
 
-Route::get('substitutes/{id}', 'LeavesController@substitute');
-Route::get('leaves/substitute/create', 'LeavesController@createSubstitute');
-Route::post('leaves/substitutes', 'LeavesController@createLeaveWithSubstitute');
+Route::get('substitutes/create', 'SubstitutesController@create');
+Route::get('substitutes/{id}', 'SubstitutesController@show');
+Route::post('substitutes', 'SubstitutesController@store');
 
-Route::get('leaves/unchecked_switching', 'LeavesController@uncheckedSwitching');
 Route::get('teachers', 'LeavesController@getTeacherNames');
 
 //Route::get('home', 'HomeController@index');
