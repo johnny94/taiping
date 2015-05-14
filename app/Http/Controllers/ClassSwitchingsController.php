@@ -1,7 +1,6 @@
 <?php namespace App\Http\Controllers;
 
 use \Auth;
-use Session;
 use Request;
 use DB;
 
@@ -12,15 +11,17 @@ use Carbon\Carbon;
 
 use App\ClassSwitching;
 use App\ClassTitle;
-use App\Leave;
 use App\Period;
 
-
+use App\Taiping\LeaveProcedure\ClassSwitchingProcedure;
 
 class ClassSwitchingsController extends Controller {
 
-	public function __construct()
+	private $leaveApplication;
+
+	public function __construct(ClassSwitchingProcedure $leaveApplication)
 	{
+		$this->leaveApplication = $leaveApplication;
 		$this->middleware('auth');
 	}
 
@@ -48,46 +49,8 @@ class ClassSwitchingsController extends Controller {
 
 	public function store()
 	{		
-		//TODO: prevent from creating switching without creating leave
-		$leave = $this->createLeaveFromSession();		
-
-		//TODO: from_class and to_class are not work properly (need to create the class table in DB)
-		$classSwitchings = Request::input('classSwitching');
-		foreach ($classSwitchings as $switching) {
-			$class_switching = new ClassSwitching;
-			$class_switching->leave_id = $leave->id;
-			$class_switching->with_user_id = $switching['teacher'];
-			$class_switching->from = Carbon::createFromFormat('Y-m-d', $switching['from_date']);
-			$class_switching->from_period = intval($switching['from_period']);
-			$class_switching->from_class_id = intval($switching['from_class']);
-			$class_switching->to = Carbon::createFromFormat('Y-m-d', $switching['to_date']);
-			$class_switching->to_period = intval($switching['to_period']);
-			$class_switching->to_class_id = intval($switching['to_class']);
-			$class_switching->checked_status_id = DB::table('checked_status')->where('title', 'pending')->first()->id;
-			Auth::user()->classSwitching()->save($class_switching);			
-		}
-
+		$this->leaveApplication->applyProcedure();
 		return redirect('classes');
-	}
-
-	//TODO: move this method to a helper class
-	private function createLeaveFromSession()
-	{
-		$leaveFromRequest = Session::get('leave', []);
-		$from_date =  $leaveFromRequest['from_date'];
-		$from_time =  $leaveFromRequest['from_time'];
-		$to_date =  $leaveFromRequest['to_date'];
-		$to_time =  $leaveFromRequest['to_time'];
-
-		$leave = new Leave;
-		$leave->from = Carbon::createFromFormat('Y-m-d H:i', "$from_date $from_time");
-		$leave->to = Carbon::createFromFormat('Y-m-d H:i', "$to_date $to_time");
-		$leave->type_id = $leaveFromRequest['leaveType'];
-		$leave->curriculum_id = $leaveFromRequest['curriculum'];
-
-		Auth::user()->leaves()->save($leave);
-
-		return $leave;
 	}
 
 	public function update($id)

@@ -11,9 +11,6 @@ use Session;
 use Request;
 use DB;
 
-use App\Leave;
-use App\ClassSwitching;
-use App\Substitute;
 use App\CheckedStatus;
 use App\Period;
 use App\ClassTitle;
@@ -21,10 +18,15 @@ use App\User;
 use App\LeaveType;
 use App\Curriculum;
 
+use App\Taiping\LeaveProcedure\NoCurriculumProcedure;
+
 class LeavesController extends Controller {
 
-	public function __construct()
+	private $leaveApplication;
+
+	public function __construct(NoCurriculumProcedure $leaveApplication)
 	{
+		$this->leaveApplication = $leaveApplication;
 		$this->middleware('auth');
 		$this->middleware('manager', ['only' => 'index']);
 	}
@@ -64,7 +66,7 @@ class LeavesController extends Controller {
 		Session::put('leave', Request::all());
 		
 		if ($curriculum === '1') {
-			$leave = $this->createLeaveFromSession();
+			$this->leaveApplication->applyProcedure();			
 			return redirect('classes');
 		} elseif ($curriculum === '2') {			
 			return redirect('classSwitchings/create');			
@@ -73,26 +75,6 @@ class LeavesController extends Controller {
 		}
 				
 	}
-
-	//TODO: move this method to a helper class
-	private function createLeaveFromSession()
-	{
-		$leaveFromRequest = Session::get('leave', []);
-		$from_date =  $leaveFromRequest['from_date'];
-		$from_time =  $leaveFromRequest['from_time'];
-		$to_date =  $leaveFromRequest['to_date'];
-		$to_time =  $leaveFromRequest['to_time'];
-
-		$leave = new Leave;
-		$leave->from = Carbon::createFromFormat('Y-m-d H:i', "$from_date $from_time");
-		$leave->to = Carbon::createFromFormat('Y-m-d H:i', "$to_date $to_time");
-		$leave->type_id = $leaveFromRequest['leaveType'];
-		$leave->curriculum_id = $leaveFromRequest['curriculum'];
-
-		Auth::user()->leaves()->save($leave);
-
-		return $leave;
-	}	
 
 	public function getTeacherNames()
 	{

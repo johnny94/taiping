@@ -130,7 +130,7 @@ class ClassSwitchingTest extends TestCase {
 		
 		$this->call('POST', 'leaves', 
 			['_token' => csrf_token(), 'curriculum' => $SUBSTITUTE_ID]);
-		$this->assertRedirectedTo('leaves/substitute/create');
+		$this->assertRedirectedTo('substitutes/create');
 		$this->assertSessionHas('leave');
 	}
 

@@ -5,6 +5,8 @@ use App\User;
 use App\Leave;
 use App\Substitute;
 
+use App\Taiping\LeaveApplication\NoCurriculum;
+
 
 class SubstituteTest extends TestCase {
 
