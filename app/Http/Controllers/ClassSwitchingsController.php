@@ -48,7 +48,7 @@ class ClassSwitchingsController extends Controller {
 	}
 
 	public function store()
-	{		
+	{
 		$this->leaveApplication->applyProcedure();
 		return redirect('classes');
 	}
@@ -71,6 +71,17 @@ class ClassSwitchingsController extends Controller {
 		$oldSwitching->update($class_switching->toArray());
 
 		return redirect('classes');
+
+	}
+
+	public function destroy($id)
+	{
+		$classSwitching = ClassSwitching::findOrFail($id);
+		if ($classSwitching->user_id === Auth::user()->id) {
+			$classSwitching->delete();			
+		}
+
+		return redirect('classSwitchings/notChecked');
 
 	}
 

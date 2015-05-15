@@ -77,11 +77,13 @@
           <div class="col-sm-8">
           {!! Form::select('period[periods][]', $periods, null, ['class'=>'form-control', 'multiple']) !!}
           </div>
-        </div>
+        </div>        
       </div>
 
+      
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
+          <a class="btn btn-primary" href="{{ action('LeavesController@create') }}" role="button">上一步</a>
           {!! Form::submit('完成', ['class'=>'btn btn-primary ']) !!}      
         </div>       
       </div>

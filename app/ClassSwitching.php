@@ -73,4 +73,15 @@ class ClassSwitching extends Model {
 	{
 		return $this->attributes['checked_status_id'] === DB::table('checked_status')->where('title', 'pass')->first()->id;
 	}
+
+	protected static function boot() {
+        parent::boot();
+
+        static::deleting(function($classSwitching) {
+             $leave = $classSwitching->leave;
+             if ($leave->classSwitchings->count() === 1) {
+             	$leave->delete();
+             }             
+        });
+    }
 }

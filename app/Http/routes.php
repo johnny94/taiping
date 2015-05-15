@@ -29,6 +29,7 @@ Route::post('classSwitchings', 'ClassSwitchingsController@store');
 Route::patch('classSwitchings/{id}', 'ClassSwitchingsController@update');
 Route::patch('classSwitchings/{id}/pass', 'ClassSwitchingsController@pass');
 Route::patch('classSwitchings/{id}/reject', 'ClassSwitchingsController@reject');
+Route::delete('classSwitchings/{id}', 'ClassSwitchingsController@destroy');
 
 Route::get('substitutes/create', 'SubstitutesController@create');
 Route::get('substitutes/{id}', 'SubstitutesController@show');
