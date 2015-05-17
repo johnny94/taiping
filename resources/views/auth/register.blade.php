@@ -9,7 +9,7 @@
 				<div class="panel-body">
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
-							<strong>Whoops!</strong> There were some problems with your input.<br><br>
+							<strong>噢！</strong> 似乎發生了一點問題...<br><br>
 							<ul>
 								@foreach ($errors->all() as $error)
 									<li>{{ $error }}</li>
@@ -29,9 +29,9 @@
 						</div>
 
 						<div class="form-group">
-							<label class="col-md-4 control-label">帳號</label>
+							<label class="col-md-4 control-label">E-Mail</label>
 							<div class="col-md-6">
-								<input class="form-control" name="email" value="{{ old('email') }}">
+								<input type="email" class="form-control" name="email" value="{{ old('email') }}">
 							</div>
 						</div>
 

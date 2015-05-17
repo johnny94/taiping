@@ -15,19 +15,44 @@ class SubstituteTest extends TestCase {
 		return User::find(1);
 	}
 
+	// TODO: Need To move to other place (ex. Helper class).
+	public function createLeave($userId)
+	{
+		$leave = new Leave;
+		$leave->user_id = $userId;
+		$leave->from = Carbon::now()->format('Y-m-d H:i');
+		$leave->to = Carbon::now()->format('Y-m-d H:i');
+		$leave->type_id = 1;
+		$leave->curriculum_id = 1;
+		$leave->reason = 'Reason';
+		$leave->save();
+
+		return $leave;
+	}
+
+	// TODO: Need To move to other place (ex. Helper class).
+	public function getCreateLeaveInput($type, $curriculum, $reason = 'Reason')
+	{
+		return [
+			'_token' => csrf_token(),
+			'leaveType' => $type,
+			'from_date' => Carbon::now()->toDateString(),
+			'from_time' => Carbon::now()->format('H:i'),
+			'to_date' => Carbon::now()->toDateString(),
+			'to_time' => Carbon::now()->format('H:i'),
+			'reason' => $reason,
+			'curriculum' => $curriculum
+		];
+	}
+
+
 	public function testSubstitutePageAfterLogin()
 	{
 		$user = $this->fetchUser();
 		$this->be($user);
 		$HALF_DAY = 1;
 
-		$leave = new Leave;
-		$leave->user_id = $user->id;
-		$leave->type_id = 1;
-		$leave->from = Carbon::now();
-		$leave->to = Carbon::now();
-		$leave->curriculum_id = 3;
-		$leave->save();
+		$leave = $this->createLeave($user->id);
 
 		$substitute = new Substitute;
 		$substitute->user_id = $user->id;
@@ -60,15 +85,8 @@ class SubstituteTest extends TestCase {
 		$user = $this->fetchUser();
 		$this->be($user);
 
-		$leaveInput = [
-			'_token' => csrf_token(),
-			'leaveType' => '1',
-			'from_date' => Carbon::now()->toDateString(),
-			'from_time' => Carbon::now()->format('H:i'),
-			'to_date' => Carbon::now()->toDateString(),
-			'to_time' => Carbon::now()->format('H:i'),
-			'curriculum' => '1'
-		];		
+		$leaveInput = $this->getCreateLeaveInput('1', '1');
+
 		Session::put('leave', $leaveInput);
 
 		$substituteInput = [

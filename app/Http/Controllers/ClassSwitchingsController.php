@@ -6,6 +6,7 @@ use DB;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateClassSwitchingRequest;
 
 use Carbon\Carbon;
 
@@ -47,8 +48,8 @@ class ClassSwitchingsController extends Controller {
 		return view('classSwitchings.edit', compact('switching', 'periods', 'classes'));
 	}
 
-	public function store()
-	{
+	public function store(CreateClassSwitchingRequest $request)	
+	{	
 		$this->leaveApplication->applyProcedure();
 		return redirect('classes');
 	}

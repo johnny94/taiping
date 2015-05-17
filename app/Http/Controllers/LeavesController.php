@@ -4,6 +4,7 @@ use \Auth;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateLeaveRequest;
 
 use Carbon\Carbon;
 
@@ -44,7 +45,7 @@ class LeavesController extends Controller {
 				->join('curriculums', 'leaves.curriculum_id', '=', 'curriculums.id')
 				->leftJoin('class_switchings', 'leaves.id', '=', 'class_switchings.leave_id')
 				->leftJoin('substitutes', 'leaves.id', '=', 'substitutes.leave_id')
-				->select('users.name', 'leaves.from', 'leaves.to', 'leavetypes.title as leavetype', 'curriculums.title as curriculum', 'class_switchings.id as switchingID', 'substitutes.id as substituteID')
+				->select('users.name', 'leaves.from', 'leaves.reason', 'leaves.to', 'leavetypes.title as leavetype', 'curriculums.title as curriculum', 'class_switchings.id as switchingID', 'substitutes.id as substituteID')
 				->get();
 
 		$response = ['current' => 1, 'rowCount' => 10, 'rows' => $queryResult, 'total' => count($queryResult)];
@@ -59,11 +60,11 @@ class LeavesController extends Controller {
 		return view('leaves.create_leave', compact('leaveTypes', 'curriculum'));
 	}
 
-	public function createLeaveStep1()
-	{
-		$curriculum = Request::input('curriculum');
+	public function createLeaveStep1(CreateLeaveRequest $request)
+	{		
+		$curriculum = $request->input('curriculum');
 
-		Session::put('leave', Request::all());
+		Session::put('leave', $request->all());
 		
 		if ($curriculum === '1') {
 			$this->leaveApplication->applyProcedure();			

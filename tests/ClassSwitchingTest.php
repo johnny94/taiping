@@ -7,6 +7,20 @@ use App\ClassSwitching;
 
 class ClassSwitchingTest extends TestCase {
 
+	public function getCreateLeaveInput($type, $curriculum, $reason = 'Reason')
+	{
+		return [
+			'_token' => csrf_token(),
+			'leaveType' => $type,
+			'from_date' => Carbon\Carbon::now()->toDateString(),
+			'from_time' => Carbon\Carbon::now()->format('H:i'),
+			'to_date' => Carbon\Carbon::now()->toDateString(),
+			'to_time' => Carbon\Carbon::now()->format('H:i'),
+			'reason' => $reason,
+			'curriculum' => $curriculum
+		];
+	}
+
 	public function fetchUser()
 	{		
 		return User::find(1);
@@ -69,13 +83,7 @@ class ClassSwitchingTest extends TestCase {
 		$user = $this->fetchManager();
 		$this->be($user);
 
-		$leave = new Leave;
-		$leave->user_id = $user->id;
-		$leave->type_id = 1;
-		$leave->from = Carbon\Carbon::now();
-		$leave->to = Carbon\Carbon::now();
-		$leave->curriculum_id = 1;
-		$leave->save();
+		$leave = $this->createLeave($user->id);		
 
 		$this->call('POST', 'leaves/all',
 			['_token'=> csrf_token()]);
@@ -89,17 +97,10 @@ class ClassSwitchingTest extends TestCase {
 		$user = $this->fetchUser();
 		$this->be($user);
 
+		$LEAVE_TYPE = '1';
 		$NO_CURRICULUM = '1';
 
-		$input = [
-			'_token' => csrf_token(),
-			'leaveType' => '1',
-			'from_date' => Carbon\Carbon::now()->toDateString(),
-			'from_time' => Carbon\Carbon::now()->format('H:i'),
-			'to_date' => Carbon\Carbon::now()->toDateString(),
-			'to_time' => Carbon\Carbon::now()->format('H:i'),
-			'curriculum' => $NO_CURRICULUM
-		];
+		$input = $this->getCreateLeaveInput($LEAVE_TYPE, $NO_CURRICULUM);
 
 		$response = $this->call('POST', 'leaves', $input);		
 		$this->assertRedirectedTo('classes');
@@ -134,6 +135,7 @@ class ClassSwitchingTest extends TestCase {
 		$this->assertSessionHas('leave');
 	}
 
+	// Need To move to other place.
 	public function createLeave($userId)
 	{
 		$leave = new Leave;
@@ -142,6 +144,7 @@ class ClassSwitchingTest extends TestCase {
 		$leave->to = Carbon\Carbon::now()->format('Y-m-d H:i');
 		$leave->type_id = 1;
 		$leave->curriculum_id = 1;
+		$leave->reason = 'Reason';
 		$leave->save();
 
 		return $leave;
@@ -194,15 +197,7 @@ class ClassSwitchingTest extends TestCase {
 		$user = $this->fetchUser();
 		$this->be($user);		
 
-		$leaveInput = [
-			'_token' => csrf_token(),
-			'leaveType' => '1',
-			'from_date' => Carbon\Carbon::now()->toDateString(),
-			'from_time' => Carbon\Carbon::now()->format('H:i'),
-			'to_date' => Carbon\Carbon::now()->toDateString(),
-			'to_time' => Carbon\Carbon::now()->format('H:i'),
-			'curriculum' => '1'
-		];		
+		$leaveInput = $this->getCreateLeaveInput('1', '1');
 		Session::put('leave', $leaveInput);
 
 		$classSwitchingInput = array([
@@ -218,7 +213,6 @@ class ClassSwitchingTest extends TestCase {
 
 		$response = $this->call('POST', 'classSwitchings', 
 			['_token' => csrf_token(), 'classSwitching' => $classSwitchingInput]);
-		//dd($response);
 		
 		$this->assertRedirectedTo('classes');
 
@@ -319,6 +313,20 @@ class ClassSwitchingTest extends TestCase {
 		$this->call('GET', 'classSwitchings/notChecked');
 		$this->assertResponseOk();
 		$this->assertViewHas(['pendingSwitchings','rejectedSwitchings','pendingSwitchingsFromOthers']);
+	}
+
+	public function testDestroyClassSwitching()
+	{
+		Session::start();
+		$user = $this->fetchUser();
+		$this->be($user);
+
+		$leave = $this->createLeave($user->id);
+		$class_switching = $this->createClassSwitching($user->id, $leave->id);
+		$id = $class_switching->id;
+		$this->call('DELETE', "classSwitchings/{$id}", ['_token' => csrf_token()]);
+		$this->assertRedirectedTo('classSwitchings/notChecked');
+
 	}
 
 	public function testGetTeacherNames()

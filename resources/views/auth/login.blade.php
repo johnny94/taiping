@@ -9,7 +9,7 @@
 				<div class="panel-body">
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
-							<strong>噢！</strong> 你的輸入似乎有些不正確。<br><br>
+							<strong>噢！</strong> 似乎發生了一點問題...<br><br>
 							<ul>
 								@foreach ($errors->all() as $error)
 									<li>{{ $error }}</li>
@@ -21,17 +21,10 @@
 					<form class="form-horizontal" role="form" method="POST" action="{{ url('/auth/login') }}">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-						<!--<div class="form-group">
-							<label class="col-md-4 control-label">帳號</label>
+						<div class="form-group">
+							<label class="col-md-4 control-label">E-Mail</label>
 							<div class="col-md-6">
 								<input type="email" class="form-control" name="email" value="{{ old('email') }}">
-							</div>
-						</div> -->
-
-						<div class="form-group">
-							<label class="col-md-4 control-label">帳號</label>
-							<div class="col-md-6">
-								<input class="form-control" name="email" value="{{ old('email') }}">
 							</div>
 						</div>
 
@@ -55,8 +48,7 @@
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">登入</button>
-
-								 <!--<a class="btn btn-link" href="{{ url('/password/email') }}">Forgot Your Password?</a>-->
+								<a class="btn btn-link" href="{{ url('/password/email') }}">忘記密碼？</a>
 							</div>
 						</div>
 					</form>

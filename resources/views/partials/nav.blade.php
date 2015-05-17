@@ -8,8 +8,14 @@
             </a>
         </div>
 
+
         @if (Auth::user())
-        <div id="navbar" class="collapse navbar-collapse">            
+        <div id="navbar" class="collapse navbar-collapse">
+            @if (Auth::user()->isManager())
+            <ul class="nav navbar-nav">
+                <li {{ Request::is('leaves') ? 'class=active' : '' }}><a href="/leaves">管理者頁面</a></li>
+            </ul>
+            @endif
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
 

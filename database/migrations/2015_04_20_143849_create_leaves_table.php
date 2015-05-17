@@ -33,6 +33,7 @@ class CreateLeavesTable extends Migration {
 			$table->integer('type_id')->unsigned();
 			$table->timestamp('from');
 			$table->timestamp('to');
+			$table->text('reason');
 			$table->integer('curriculum_id')->unsigned();		
 			$table->timestamps();
 

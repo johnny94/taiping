@@ -26,6 +26,7 @@ abstract class LeaveProcedure {
 		$leave = new Leave;
 		$leave->from = Carbon::createFromFormat('Y-m-d H:i', "$from_date $from_time");
 		$leave->to = Carbon::createFromFormat('Y-m-d H:i', "$to_date $to_time");
+		$leave->reason = $leaveFromRequest['reason'];
 		$leave->type_id = $leaveFromRequest['leaveType'];
 		$leave->curriculum_id = $leaveFromRequest['curriculum'];
 

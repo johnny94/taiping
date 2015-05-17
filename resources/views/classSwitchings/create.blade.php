@@ -3,6 +3,15 @@
 @section('content')
     <h1>建立調課</h1>   
     <hr>
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">            
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     {!! Form::model($switching = new App\ClassSwitching(['user_id' => Auth::user()->id]), ['action'=>['ClassSwitchingsController@store'], 'class'=> 'form-horizontal']) !!}
         
@@ -15,9 +24,17 @@
             </div>
         </div>
 
-    <a id="back" class="btn btn-primary" href="{{ action('LeavesController@create') }}" role="button">上一步</a>
-    {!! Form::button('新增一節', ['id' => 'addClassSwitchingForm', 'class'=>'btn btn-success']) !!}
-    {!! Form::submit('完成', ['class'=>'btn btn-primary']) !!}
+    <a id="back" class="btn btn-primary" href="{{ action('LeavesController@create') }}" role="button">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> 上一步
+    </a>
+
+    <button id="addClassSwitchingForm" class="btn btn-success" type="button">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增一節
+    </button>       
+
+    <button class="btn btn-primary" type="submit">
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 完成
+    </button>
 
     {!! Form::close() !!}
   
@@ -34,7 +51,7 @@ $(document).ready(function() {
         count--;
     });
 
-    $('input[type=submit]').click(function(event){
+    $('button[type=submit]').click(function(event) {        
 
         $('.class_list').each(function(index, element) {
             $(this).select2('destroy');
@@ -48,7 +65,7 @@ $(document).ready(function() {
             $(val).find('.form-control').attr('name', function(i, val) {
                 return val.replace(/(classSwitching)\[\d+\]\[(\w+)\]/g, '$1[' + index + '][$2]');
             });
-        });        
+        });     
         
     });
 

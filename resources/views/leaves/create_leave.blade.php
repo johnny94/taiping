@@ -3,11 +3,29 @@
 @section('content')
     <h1>請假</h1>		
     <hr>
+
+    @if (count($errors) > 0)
+            <div class="alert alert-danger">              
+              <ul>
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+    @endif
+
   {!! Form::open(['url'=>'leaves', 'class' => 'form-horizontal']) !!}
     <div class="form-group">
         {!! Form::label('leaveType', '假別', ['class' => 'col-sm-2 control-label']) !!}
         <div class="col-sm-8">
         {!! Form::select('leaveType', $leaveTypes, null, ['class'=>'form-control']) !!}        
+        </div>        
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('reason', '事由', ['class' => 'col-sm-2 control-label']) !!}
+        <div class="col-sm-8">
+        {!! Form::textarea('reason', null, ['class'=>'form-control', 'rows' => 3, 'placeholder' => '請輸入請假事由']) !!}        
         </div>        
     </div>
 
@@ -41,7 +59,9 @@
 
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
-        {!! Form::submit('下一步', ['class'=>'btn btn-primary']) !!}      
+          <button class="btn btn-primary" type="submit">
+            下一步 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> 
+          </button>
       </div>     
     </div>  
 

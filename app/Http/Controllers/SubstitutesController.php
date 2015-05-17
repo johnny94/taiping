@@ -4,6 +4,7 @@ use \Auth;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateSubstituteRequest;
 
 use Carbon\Carbon;
 
@@ -35,7 +36,7 @@ class SubstitutesController extends Controller {
 		return view('substitutes.create', compact('periods'));
 	}
 
-	public function store()
+	public function store(CreateSubstituteRequest $request)
 	{
 		$this->leaveProcedure->applyProcedure();
 		return redirect('classes');

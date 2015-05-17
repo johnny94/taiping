@@ -3,6 +3,15 @@
 @section('content')
     <h1>代課老師</h1>   
     <hr>
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">            
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     {!! Form::open(['url' => 'substitutes', 'class' => 'form-horizontal']) !!}
         <div class="form-group">
           {!! Form::label('substitute_teacher', '代課老師', ['class' => 'col-sm-2 control-label']) !!}
@@ -75,7 +84,7 @@
         <div class="form-group">
           {!! Form::label('period[periods][]', '節次 (按住 ctrl 多選)', ['class' => 'col-sm-2 control-label']) !!}
           <div class="col-sm-8">
-          {!! Form::select('period[periods][]', $periods, null, ['class'=>'form-control', 'multiple']) !!}
+          {!! Form::select('period[periods][]', $periods, [1], ['class'=>'form-control', 'multiple']) !!}
           </div>
         </div>        
       </div>
@@ -83,8 +92,13 @@
       
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <a class="btn btn-primary" href="{{ action('LeavesController@create') }}" role="button">上一步</a>
-          {!! Form::submit('完成', ['class'=>'btn btn-primary ']) !!}      
+          <a class="btn btn-primary" href="{{ action('LeavesController@create') }}" role="button">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> 上一步
+          </a>
+          
+          <button class="btn btn-primary" type="submit">
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 完成
+          </button>
         </div>       
       </div>
 

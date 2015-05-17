@@ -29,6 +29,12 @@
             border-left-color: #d9a62e;
             border-left-width: 5px;
         }
+
+        .panrl-no-curriculum {
+            border-left-color: #00a381;
+            border-left-width: 5px;
+        }
+        
         body {
             font-family: "Helvetica Neue", Helvetica, Arial, "文泉驛正黑", "WenQuanYi Zen Hei", "儷黑 Pro", "LiHei Pro", Meiryo, "Meiryo UI", "微軟正黑體", "Microsoft JhengHei", "標楷體", DFKai-SB, sans-serif;
         }

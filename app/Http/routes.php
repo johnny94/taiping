@@ -37,12 +37,7 @@ Route::post('substitutes', 'SubstitutesController@store');
 
 Route::get('teachers', 'LeavesController@getTeacherNames');
 
-//Route::get('home', 'HomeController@index');
-
-Route::get('password/reset', 'PasswordController@index');
-Route::post('password/reset', 'PasswordController@reset');
-
 Route::controllers([
 	'auth' => 'Auth\AuthController',
-	//'password' => 'Auth\PasswordController',
+	'password' => 'Auth\PasswordController',
 ]);

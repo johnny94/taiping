@@ -9,7 +9,7 @@
 				<div class="panel-body">
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
-							<strong>噢！</strong>你的輸入似乎有些不正確。<br><br>
+							<strong>噢！</strong> 似乎發生了一點問題...<br><br>
 							<ul>
 								@foreach ($errors->all() as $error)
 									<li>{{ $error }}</li>
@@ -23,12 +23,11 @@
 						<input type="hidden" name="token" value="{{ $token }}">
 
 						<div class="form-group">
-							<label class="col-md-4 control-label">帳號</label>
+							<label class="col-md-4 control-label">E-Mail</label>
 							<div class="col-md-6">
-								<input class="form-control" name="email" value="{{ old('email') }}">
+								<input type="email" class="form-control" name="email" value="{{ old('email') }}">
 							</div>
 						</div>
-
 						<div class="form-group">
 							<label class="col-md-4 control-label">密碼</label>
 							<div class="col-md-6">
@@ -46,7 +45,7 @@
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">
-									修改密碼
+									重設密碼
 								</button>
 							</div>
 						</div>
