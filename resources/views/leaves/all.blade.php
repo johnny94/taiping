@@ -9,7 +9,7 @@
             <th data-column-id="name">老師</th>
             <th data-column-id="from" data-order="desc">請假時間 (起)</th>
             <th data-column-id="to">請假時間 (訖)</th>
-            <th data-column-id="leavetype" data-formatter="leavetype">假別</th>
+            <th data-column-id="leavetype" data-formatter="leavetype" data-sortable="false">假別</th>
             <th data-column-id="curriculum" data-formatter="curriculum" data-sortable="false">課務處裡</th>
         </tr>
     </thead>
@@ -22,8 +22,12 @@
 	$(document).ready(function() {
 		
 		$('#grid-basic').bootgrid({
-			labels : {
-				refresh:'重新載入'
+			labels: {
+				refresh: '重新載入',
+				loading: '載入中...',
+				search: '搜尋老師',
+				noResults: '無搜尋結果！',
+				infos: '第 @{{ctx.start}} 筆 至 第 @{{ctx.end}} 筆，共 @{{ctx.total}} 筆'
 			},
 		  	post: function() {
 				return {

@@ -102,7 +102,8 @@ class SubstituteTest extends TestCase {
 				'to_date' => Carbon::now()->toDateString()
 			],
 			'period' => [
-				'date' => Carbon::now()->toDateString()
+				'date' => Carbon::now()->toDateString(),
+				'periods' => ['1']
 			]
 		];
 

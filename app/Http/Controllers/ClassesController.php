@@ -46,9 +46,7 @@ class ClassesController extends Controller {
 		$leaves = $leaves->unique();
 		$leaves->sortByDesc('from');
 
-		return view('classes.index', compact('leaves', 'isAllSwitchingPass'));
-		
-		
+		return view('classes.index', compact('leaves', 'isAllSwitchingPass'));		
 	}
 
 }

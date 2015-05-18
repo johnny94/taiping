@@ -6,6 +6,10 @@ use App\Taiping\CurriculumRenderer;
 
 class Leave extends Model {
 
+	const NO_CURRICULUM = '1';
+	const CLASS_SWITCHING = '2';
+	const SUBSTITUTE = '3';
+
 	public function substitutes()
 	{
 		return $this->hasMany('App\Substitute');

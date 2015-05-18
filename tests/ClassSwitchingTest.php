@@ -77,18 +77,21 @@ class ClassSwitchingTest extends TestCase {
 	}
 
 
-	public function testListAllUserWithLeaves()
+	public function testQueryAllUserWithLeavesFromJqueryBootGrid()
 	{
 		Session::start();
 		$user = $this->fetchManager();
-		$this->be($user);
-
-		$leave = $this->createLeave($user->id);		
-
-		$this->call('POST', 'leaves/all',
-			['_token'=> csrf_token()]);
-		$this->assertResponseOk();
-		$this->assertEquals(1, Leave::all()->count());
+		$this->be($user);		
+		
+		$response = $this->call('POST', 'leaves/all',
+			['_token' => csrf_token(),
+			 'current' => '1',
+			 'rowCount' => '10',
+			 'searchPhrase' => '',
+			 'sort' => ['from' => 'desc'] ]);
+		
+		$this->assertResponseOk();	
+		
 	}
 
 	public function testCreateLeaveWithoutCurriculum()
@@ -113,10 +116,9 @@ class ClassSwitchingTest extends TestCase {
 		$user = $this->fetchUser();
 		$this->be($user);
 
-		$SWITCHING_ID = '2';
+		$SWITCHING_ID = '2';		
 
-		$this->call('POST', 'leaves', 
-			['_token' => csrf_token(), 'curriculum' => $SWITCHING_ID]);
+		$this->call('POST', 'leaves', $this->getCreateLeaveInput('1', $SWITCHING_ID));
 		$this->assertRedirectedToAction('ClassSwitchingsController@create');
 		$this->assertSessionHas('leave');
 	}
@@ -129,8 +131,7 @@ class ClassSwitchingTest extends TestCase {
 
 		$SUBSTITUTE_ID = '3';
 		
-		$this->call('POST', 'leaves', 
-			['_token' => csrf_token(), 'curriculum' => $SUBSTITUTE_ID]);
+		$this->call('POST', 'leaves', $this->getCreateLeaveInput('1', $SUBSTITUTE_ID));
 		$this->assertRedirectedTo('substitutes/create');
 		$this->assertSessionHas('leave');
 	}

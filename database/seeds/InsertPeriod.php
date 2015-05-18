@@ -12,14 +12,33 @@ class InsertPeriod extends Seeder {
 	 */
 	public function run()
 	{
+		
+		
+		for ($i = 1; $i <= 7 ; $i++) {
+			if ($i === 1) {
+				$this->insertPeriodNameToDatabase("早自修");
+				$this->insertPeriodNameToDatabase("第 {$i} 節");
+				continue;
+			}
+
+			if ($i === 5) {
+				$this->insertPeriodNameToDatabase("午休");
+				$this->insertPeriodNameToDatabase("第 {$i} 節");
+				continue;
+			}
+
+			$this->insertPeriodNameToDatabase("第 {$i} 節");
+		}
+	}
+
+	private function insertPeriodNameToDatabase($name)
+	{
 		$date = Carbon\Carbon::now();
-		for ($i = 1; $i <= 7 ; $i++) { 
-			DB::table('periods')->insert([
-				'name' => "第 {$i} 節",
+		DB::table('periods')->insert([
+				'name' => $name,
 				'created_at' => $date,
 				'updated_at' => $date
-			]);			
-		}
+		]);
 	}
 
 }
