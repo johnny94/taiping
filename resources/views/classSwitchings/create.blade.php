@@ -20,7 +20,7 @@
                 <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="panel-heading">
                 </div>   
-            @include('leaves.switching_form')
+                @include('classSwitchings.form')
             </div>
         </div>
 
@@ -132,6 +132,10 @@ $(document).ready(function() {
             }
         },
         minimumInputLength: 1
+    });
+
+    $(".period").select2({
+        minimumResultsForSearch: Infinity
     });
 
 });

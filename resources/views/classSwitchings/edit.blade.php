@@ -9,7 +9,7 @@
 
         <div class="panel panel-default">   
             <div class="panel-body">
-        @include('leaves.switching_form')
+        @include('classSwitchings.form')
         </div>
         </div>
 

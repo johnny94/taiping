@@ -13,7 +13,13 @@
         <div id="navbar" class="collapse navbar-collapse">
             @if (Auth::user()->isManager())
             <ul class="nav navbar-nav">
-                <li {{ Request::is('leaves') ? 'class=active' : '' }}><a href="/leaves">管理者頁面</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">管理者頁面 <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li {{ Request::is('leaves') ? 'class=active' : '' }}><a href="/leaves">全校請假名單</a></li>
+                    </ul>
+                </li>
+                
             </ul>
             @endif
             <ul class="nav navbar-nav navbar-right">

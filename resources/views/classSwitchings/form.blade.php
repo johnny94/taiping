@@ -4,26 +4,26 @@
             <div class="panel-heading">調課申請老師</div>
             <div class="panel-body">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">申請老師</label>
-                    <div class="col-sm-10">
+                    <label class="col-md-3 control-label">申請老師</label>
+                    <div class="col-md-9">
                         <p class="form-control-static">{{ $switching->switchingTeacher->name }}</p>
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('from_date', '日期', ['class'=>'col-sm-2 control-label']) !!}
-                    <div class="col-sm-10">
-                        {!! Form::input('date', 'classSwitching[0][from_date]', $switching->from, ['class'=>'form-control input-sm']) !!}
+                    {!! Form::label('from_date', '日期', ['class'=>'col-md-3 control-label']) !!}
+                    <div class="col-md-9">
+                        {!! Form::input('date', 'classSwitching[0][from_date]', $switching->from, ['class'=>'form-control']) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('from_period', '節次', ['class'=>'col-sm-2 control-label']) !!}
-                    <div class="col-sm-10">
-                        {!! Form::select('classSwitching[0][from_period]', $periods, $switching->from_period, ['class'=>'form-control input-sm']) !!}
+                    {!! Form::label('from_period', '節次', ['class'=>'col-md-3 control-label']) !!}
+                    <div class="col-md-9">
+                        {!! Form::select('classSwitching[0][from_period]', $periods, $switching->from_period, ['class'=>'form-control period']) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('from_class', '課務', ['class'=>'col-sm-2 control-label']) !!}
-                    <div class="col-sm-10">
+                    {!! Form::label('from_class', '課務', ['class'=>'col-md-3 control-label']) !!}
+                    <div class="col-md-9">
                         {!! Form::select('classSwitching[0][from_class]', $classes, $switching->from_class, ['class'=>'form-control class_list']) !!}
                     </div>
                 </div>
@@ -35,8 +35,8 @@
             <div class="panel-heading">被調課老師</div>
             <div class="panel-body">
                 <div class="form-group">
-                    {!! Form::label('teacher', '被調課老師', ['class'=>'col-sm-2 control-label']) !!}
-                    <div class="col-sm-10">
+                    {!! Form::label('teacher', '被調課老師', ['class'=>'col-md-3 control-label']) !!}
+                    <div class="col-md-9">
                         @if (isset($switching->with_user_id))
                             {!! Form::select('classSwitching[0][teacher]', [$switching->with_user_id => $switching->withSwitchingTeacher->name], $switching->with_user_id, ['class'=>'form-control teacher_list']) !!}
                         @else
@@ -45,20 +45,20 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('to_date', '日期', ['class'=>'col-sm-2 control-label']) !!}
-                    <div class="col-sm-10">
-                        {!! Form::input('date', 'classSwitching[0][to_date]', $switching->to, ['class'=>'form-control input-sm']) !!}
+                    {!! Form::label('to_date', '日期', ['class'=>'col-md-3 control-label']) !!}
+                    <div class="col-md-9">
+                        {!! Form::input('date', 'classSwitching[0][to_date]', $switching->to, ['class'=>'form-control']) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('to_period', '節次', ['class'=>'col-sm-2 control-label']) !!}
-                    <div class="col-sm-10">
-                        {!! Form::select('classSwitching[0][to_period]', $periods, $switching->to_period, ['class'=>'form-control input-sm']) !!}
+                    {!! Form::label('to_period', '節次', ['class'=>'col-md-3 control-label']) !!}
+                    <div class="col-md-9">
+                        {!! Form::select('classSwitching[0][to_period]', $periods, $switching->to_period, ['class'=>'form-control period']) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('to_class', '課務', ['class'=>'col-sm-2 control-label']) !!}
-                    <div class="col-sm-10">
+                    {!! Form::label('to_class', '課務', ['class'=>'col-md-3 control-label']) !!}
+                    <div class="col-md-9">
                         {!! Form::select('classSwitching[0][to_class]', $classes, $switching->to_class, ['class'=>'form-control class_list']) !!}
                     </div>
                 </div>

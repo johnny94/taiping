@@ -14,11 +14,20 @@ class LeaveTypes extends Seeder {
 	{
 		$date = Carbon\Carbon::now();
 		$leaveTypes = [
-			'事假',
+			'補假',
 			'公假',
-			'婚嫁',
+			'休假',
+			'病假',
+			'事假',
+			'婚假',
 			'喪假',
-			'產假'
+			'分娩假',
+			'產前假',
+			'陪產假',
+			'流產假',
+			'生理假',
+			'家庭照顧假',
+			'捐贈器官骨髓假'
 		];
 
 		foreach ($leaveTypes as $type) {
