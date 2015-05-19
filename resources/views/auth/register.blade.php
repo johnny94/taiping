@@ -52,7 +52,7 @@
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">
-									註冊
+									建立新帳號
 								</button>
 							</div>
 						</div>

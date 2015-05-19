@@ -48,6 +48,7 @@
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">登入</button>
+								<button id="register" type="submit" class="btn btn-primary" formaction="{{url('/auth/register')}}">註冊</button>
 								<a class="btn btn-link" href="{{ url('/password/email') }}">忘記密碼？</a>
 							</div>
 						</div>
@@ -58,3 +59,14 @@
 	</div>
 </div>
 @endsection
+
+@section('footer')
+	<script type="text/javascript">
+	$(document).ready(function() {
+
+		$('#register').click(function(){
+			$('form').attr('method', 'GET');
+		});
+	});
+	</script>
+@stop
