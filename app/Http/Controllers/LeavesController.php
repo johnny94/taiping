@@ -38,6 +38,12 @@ class LeavesController extends Controller {
 		return view('leaves.all');
 	}
 
+	public function listLeaves()
+	{
+		$leaves = Auth::user()->leaves;
+		return view('leaves.list', compact('leaves'));
+	}
+
 	public function all()
 	{
 		

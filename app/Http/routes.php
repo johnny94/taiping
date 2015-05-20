@@ -20,6 +20,7 @@ Route::get('leaves/create', 'LeavesController@create');
 Route::post('leaves', 'LeavesController@createLeaveStep1');
 Route::get('leaves', 'LeavesController@index');
 Route::post('leaves/all', 'LeavesController@all');
+Route::get('leaves/list', 'LeavesController@listLeaves');
 
 Route::get('classSwitchings/create', 'ClassSwitchingsController@create');
 Route::get('classSwitchings/notChecked', 'ClassSwitchingsController@notChecked');

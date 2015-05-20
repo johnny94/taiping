@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Taiping\CurriculumRenderer;
 
+use DB;
+
 class Leave extends Model {
 
 	const NO_CURRICULUM = '1';
@@ -30,6 +32,16 @@ class Leave extends Model {
 	{
 		$renderer = $this->getRenderer();
 		return $renderer->render($this);
+	}
+
+	public function getLeaveType()
+	{
+		$type = DB::table('leavetypes')->where('id', '=', $this->attributes['type_id'])->get();
+		if (count($type) != 0) {
+			return $type[0]->title;
+		}
+
+		return 'Unknown Type';
 	}
 
 	private function getRenderer()
