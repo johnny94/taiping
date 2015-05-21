@@ -16,7 +16,12 @@
     <link rel="stylesheet" type="text/css" href="/css/app.css">
     <style type="text/css">
         .panel-switching-class {
-            border-left-color: #337ab7;
+            border-left-color: #d9a62e;
+            border-left-width: 5px;
+        }
+
+        .panel-substitute{
+            border-left-color: #884898;
             border-left-width: 5px;
         }
 
@@ -25,14 +30,14 @@
             border-left-width: 5px;
         }
 
-        .panel-substitute {
-            border-left-color: #d9a62e;
+        .panel-no-curriculum {
+            border-left-color: #00a381;
             border-left-width: 5px;
         }
 
-        .panrl-no-curriculum {
-            border-left-color: #00a381;
-            border-left-width: 5px;
+        .panel-leave {
+            border-left-color: #96514d;
+            border-left-width: 5px;            
         }
 
         .leave-description dt, .leave-description dd {
@@ -40,7 +45,10 @@
             margin-right: 10px;           
             padding-right: 4px;
         }
-       
+
+        .badge {
+            background-color: #c9171e;
+        }       
                 
         body {
             font-family: "Helvetica Neue", Helvetica, Arial, "文泉驛正黑", "WenQuanYi Zen Hei", "儷黑 Pro", "LiHei Pro", Meiryo, "Meiryo UI", "微軟正黑體", "Microsoft JhengHei", "標楷體", DFKai-SB, sans-serif;
@@ -62,9 +70,15 @@
         <div class="row">
             <div class="col-md-3">
                 <ul class="nav nav-pills nav-stacked">
-                    <li role="presentation" {{ Request::is('classSwitchings/notChecked') ? 'class=active' : '' }}><a href="{{ action('ClassSwitchingsController@notChecked') }}">確認調課<span class="badge">42</span></a></li>
-                    <li role="presentation" {{ Request::is('classes') ? 'class=active' : '' }}><a href="/classes">課務列表</a></li>
-                    <li role="presentation" {{ Request::is('leaves/list') ? 'class=active' : '' }}><a href="/leaves/list">請假列表</a></li>
+                    <li role="presentation" {{ Request::is('classSwitchings/notChecked') ? 'class=active' : '' }}>
+                    <a href="{{ action('ClassSwitchingsController@notChecked') }}"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> 確認調課
+                    @if(Auth::user()->numberOfUncheckedClassSwitching() !== 0)
+                        <span class="badge">{{ Auth::user()->numberOfUncheckedClassSwitching() }}</span>
+                    @endif
+                    </a>
+                    </li>
+                    <li role="presentation" {{ Request::is('classes') ? 'class=active' : '' }}><a href="/classes"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 課務列表</a></li>
+                    <li role="presentation" {{ Request::is('leaves/list') ? 'class=active' : '' }}><a href="/leaves/list"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 請假列表</a></li>
                 </ul>
             </div>
 

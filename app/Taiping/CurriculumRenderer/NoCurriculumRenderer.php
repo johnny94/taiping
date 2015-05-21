@@ -4,7 +4,7 @@ class NoCurriculumRenderer implements CurriculumRenderer {
 
 	public function render($leave) {
 			
-		$html = '<div class="panel panel-default panrl-no-curriculum">
+		$html = '<div class="panel panel-default panel-no-curriculum">
 					<ul class="list-group">
 						<a href="#" class="list-group-item">
 							<h3 class="list-group-item-heading">無課務</h3>

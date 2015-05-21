@@ -8,9 +8,9 @@ use DB;
 
 class Leave extends Model {
 
-	const NO_CURRICULUM = '1';
-	const CLASS_SWITCHING = '2';
-	const SUBSTITUTE = '3';
+	const NO_CURRICULUM = 1;
+	const CLASS_SWITCHING = 2;
+	const SUBSTITUTE = 3;
 
 	public function substitutes()
 	{
@@ -28,10 +28,29 @@ class Leave extends Model {
 
 	}
 
+	// Deprecated
 	public function renderCurriculum()
 	{
 		$renderer = $this->getRenderer();
 		return $renderer->render($this);
+	}
+
+	private function getRenderer()
+	{
+		$curriculumType = $this->attributes['curriculum_id'];
+		if ($curriculumType === self::NO_CURRICULUM) {
+			return new CurriculumRenderer\NoCurriculumRenderer();			
+		}
+
+		if ($curriculumType === self::CLASS_SWITCHING) {
+			return new CurriculumRenderer\ClassSwitchingRenderer();
+		}
+
+		if ($curriculumType === self::SUBSTITUTE) {
+			return new CurriculumRenderer\SubstituteRenderer();
+		}
+
+		return 'error';
 	}
 
 	public function getLeaveType()
@@ -58,24 +77,6 @@ class Leave extends Model {
 		}
 
 		return 'Unknown Curriculum';
-	}
-
-	private function getRenderer()
-	{
-		$curriculumType = $this->attributes['curriculum_id'];
-		if ($curriculumType === 1) {
-			return new CurriculumRenderer\NoCurriculumRenderer();			
-		}
-
-		if ($curriculumType === 2) {
-			return new CurriculumRenderer\ClassSwitchingRenderer();
-		}
-
-		if ($curriculumType === 3) {
-			return new CurriculumRenderer\SubstituteRenderer();
-		}
-
-		return 'error';
-	}
+	}	
 	
 }

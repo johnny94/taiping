@@ -11,7 +11,7 @@
 		
 @section('content')	
 	@foreach($leaves as $leave)
-		<div class="panel panel-default">
+		<div class="panel panel-default panel-leave">
 			<div class="panel-body leave-description">
     			<h3 class="list-group-item-heading">請假</h3>
 				<dl class="dl-horizontal">
@@ -27,7 +27,7 @@
   					@elseif ($leave->curriculum_id === 2) {{-- Class Switching --}}
   						<dd>
                 <a href="{{action('LeavesController@showCurriculums', $leave->id)}}">{{ $leave->getCurriculum() }} (共 {{$leave->classSwitchings->count()}} 節)</a>
-                <a href="{{action('LeavesController@updateClassSwitchings', $leave->id)}}">新增</a>
+                <a class="btn btn-default btn-xs" href="{{action('LeavesController@updateClassSwitchings', $leave->id)}}" data-toggle="tooltip" data-placement="top" title="在這天請假新增調課" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增</a>
               </dd>
   					@elseif ($leave->curriculum_id === 3) {{-- Substitute --}}
   						<dd><a href="{{action('LeavesController@showCurriculums', $leave->id)}}">{{ $leave->getCurriculum() }}</a></dd>
@@ -37,4 +37,12 @@
 		</div>
 	@endforeach
 
+@stop
+
+@section('footer')
+  <script type="text/javascript">
+  $(document).ready(function() {
+    $('[data-toggle="tooltip"]').tooltip();    
+  });
+  </script>
 @stop

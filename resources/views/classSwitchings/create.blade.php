@@ -60,6 +60,8 @@ $(document).ready(function() {
         $('.teacher_list').each(function(index, element) {
             $(this).select2('destroy');
         });
+
+        $('.period').select2('destroy');
        
         $('.classSwitchingForm').each(function(index, val) {
             $(val).find('.form-control').attr('name', function(i, val) {
@@ -78,6 +80,12 @@ $(document).ready(function() {
         $('.teacher_list').each(function(index, element) {
             $(this).select2('destroy');
         });
+
+        $('.period').each(function(index, element) {
+            $(this).select2('destroy');
+        });
+
+        
 
         var $cloneForm = $('.classSwitchingForm').first().clone(true);
         count++;
@@ -106,6 +114,10 @@ $(document).ready(function() {
                 }
             },
             minimumInputLength: 1
+        });
+
+        $('.period').select2({
+            minimumResultsForSearch: Infinity
         });
 
     });

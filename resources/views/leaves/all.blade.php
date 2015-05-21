@@ -9,8 +9,8 @@
             <th data-column-id="name">老師</th>
             <th data-column-id="from" data-order="desc">請假時間 (起)</th>
             <th data-column-id="to">請假時間 (訖)</th>
-            <th data-column-id="leavetype" data-formatter="leavetype" data-sortable="false">假別</th>
-            <th data-column-id="curriculum" data-formatter="curriculum" data-sortable="false">課務處裡</th>
+            <th data-column-id="leavetype" data-formatter="leavetype">假別</th>
+            <th data-column-id="curriculum" data-formatter="curriculum">課務處裡</th>
         </tr>
     </thead>
 	</table>	
@@ -40,15 +40,11 @@
 
 				},
 				curriculum :function(column, row) {
-					if (row.switchingID) {
-						return '<a href="' + '/classSwitchings/' + row.switchingID + '">'+ row.curriculum +'</a>';
+					if(row.curriculum !== '無課務'){
+						return '<a href="' + '/leaves/' + row.leaveID + '/curriculums">'+ row.curriculum +'</a>';
 					}
-
-					if (row.substituteID) {
-						return '<a href=\"' + '/substitutes/' + row.substituteID + '\">'+ row.curriculum +'</a>';
-					}
-
-					return row.curriculum;					
+					
+					return row.curriculum;
 				}
 			}
 		}).on('loaded.rs.jquery.bootgrid', function(e){

@@ -20,33 +20,20 @@ class ClassesController extends Controller {
 
 	public function index()
 	{		
-		$isAllSelfSwitchingPass = Auth::user()->classSwitching->filter(function($item){
-			return $item->checked_status_id != 2; //id = 2 means the switching class has passed.
-		})->isEmpty();
-
-		$hasNoPendingSwitchingFromOther = Auth::user()->withClassSwitching->filter(function($item){
-			return $item->checked_status_id == 1; //id = 1 means the switching class is pending.
-		})->isEmpty();
-
-		$isAllSwitchingPass = $isAllSelfSwitchingPass && $hasNoPendingSwitchingFromOther;
-
-		
 		$CHECK_STATUS_PASS = 2;
-		$passedSwitchingsFromOthers = Auth::user()->withClassSwitching->where('checked_status_id', $CHECK_STATUS_PASS);
-		$leaves = Auth::user()->leaves->filter(function($item){
-			return Carbon\Carbon::now()->subMonth() <= $item->to;
-		});
+		$passedSwitchingsFromOthers = Auth::user()->withClassSwitching
+												  ->where('checked_status_id', $CHECK_STATUS_PASS)
+												  ->sortByDesc('to');
+		$passedSwitchings = Auth::user()->classSwitching
+										->where('checked_status_id', $CHECK_STATUS_PASS)
+										->sortByDesc('from');
+		$substitutes = Auth::user()->substitute
+								   ->sortByDesc('from');
+		$noCurriculums = Auth::user()->leaves
+									 ->where('curriculum_id', 1)
+									 ->sortByDesc('from');
 
-		foreach($passedSwitchingsFromOthers as $switching) {
-			if (Carbon\Carbon::now()->subMonth() <= $switching->leave->to) {
-				$leaves->push($switching->leave);
-			}			
-		}
-
-		$leaves = $leaves->unique();
-		$leaves->sortByDesc('from');
-
-		return view('classes.index', compact('leaves', 'isAllSwitchingPass'));		
+		return view('classes.index', compact('passedSwitchingsFromOthers', 'passedSwitchings', 'substitutes', 'noCurriculums'));		
 	}
 
 }

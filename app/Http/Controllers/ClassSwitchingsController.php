@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use \Auth;
+use Session;
 use Request;
 use DB;
 
@@ -23,7 +24,7 @@ class ClassSwitchingsController extends Controller {
 	public function __construct(ClassSwitchingProcedure $leaveApplication)
 	{
 		$this->leaveApplication = $leaveApplication;
-		$this->middleware('auth');
+		$this->middleware('auth');		
 	}
 
 	public function show($id)
@@ -51,7 +52,7 @@ class ClassSwitchingsController extends Controller {
 	}
 
 	public function store(CreateClassSwitchingRequest $request)	
-	{	
+	{			
 		$this->leaveApplication->applyProcedure();
 		return redirect('classes');
 	}

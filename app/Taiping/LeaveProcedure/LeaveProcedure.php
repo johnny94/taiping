@@ -10,16 +10,16 @@ abstract class LeaveProcedure {
 
 	public function applyProcedure()
 	{
-		$leave = $this->applyLeave();		
+		$leave = $this->applyLeave();
 		$this->handleCurriculum($leave);
-
+		$this->clearLeaveSession();
 	}
 
 	protected function applyLeave()
 	{
 		//TODO: prevent from creating switching without creating leave first
-		if (Session::has('leaveId')) {
-			return Leave::findOrFail(Session::get('leaveId'));
+		if (Session::has('leaveID')) {			
+			return Leave::findOrFail(intval(Session::get('leaveID')));
 		}
 
 		$leaveFromRequest = Session::get('leave', []);
@@ -40,6 +40,15 @@ abstract class LeaveProcedure {
 		return $leave;
 	}
 
-	abstract protected function handleCurriculum($leave);	
+	abstract protected function handleCurriculum($leave);
+
+	private function clearLeaveSession()
+	{
+		// The session was created when user add new class switshings to a created leave.
+		Session::forget('leaveID');
+
+		// The session was created when user add new leave.
+		Session::forget('leave');
+	}
 
 }

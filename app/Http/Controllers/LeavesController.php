@@ -65,18 +65,27 @@ class LeavesController extends Controller {
 		$currentPage = intval(Request::input('current'));
 		$rowCount = intval(Request::input('rowCount'));
 		$searchPhrase = Request::input('searchPhrase');
+
 		$sort = Request::input('sort');
 		$sort = each($sort);
+		$sortedColumn = 'leaves.';
+		if($sort['key'] === 'from' || $sort['key'] === 'to') {
+			$sortedColumn .= $sort['key'];
+		} elseif($sort['key'] === 'leavetype') {
+			$sortedColumn = 'leavetypes.title';
+		} elseif($sort['key'] === 'curriculum') {
+			$sortedColumn = 'curriculums.title';
+		} elseif($sort['key'] === 'name') {
+			$sortedColumn = 'users.name';
+		}
 
 		$query = DB::table('users')
 				->join('leaves', 'users.id', '=', 'leaves.user_id')
 				->join('leavetypes', 'leaves.type_id', '=', 'leavetypes.id')
-				->join('curriculums', 'leaves.curriculum_id', '=', 'curriculums.id')
-				->leftJoin('class_switchings', 'leaves.id', '=', 'class_switchings.leave_id')
-				->leftJoin('substitutes', 'leaves.id', '=', 'substitutes.leave_id')
+				->join('curriculums', 'leaves.curriculum_id', '=', 'curriculums.id')				
 				->where('users.name', 'LIKE', "%{$searchPhrase}%")
-				->orderBy('leaves.' . $sort['key'], $sort['value'])
-				->select('users.name', 'leaves.from', 'leaves.reason', 'leaves.to', 'leavetypes.title as leavetype', 'curriculums.title as curriculum', 'class_switchings.id as switchingID', 'substitutes.id as substituteID');
+				->orderBy($sortedColumn, $sort['value'])
+				->select('users.name', 'leaves.id as leaveID', 'leaves.from', 'leaves.reason', 'leaves.to', 'leavetypes.title as leavetype', 'curriculums.title as curriculum');
 		$total = count($query->get());
 		$result = $query->skip( $currentPage*$rowCount - $rowCount )
 						->take($rowCount)
@@ -100,12 +109,12 @@ class LeavesController extends Controller {
 
 		Session::put('leave', $request->all());
 		
-		if ($curriculum === Leave::NO_CURRICULUM) {
+		if ($curriculum == Leave::NO_CURRICULUM) {
 			$this->leaveApplication->applyProcedure();			
 			return redirect('classes');
-		} elseif ($curriculum === Leave::CLASS_SWITCHING) {			
+		} elseif ($curriculum == Leave::CLASS_SWITCHING) {			
 			return redirect('classSwitchings/create');
-		} elseif ($curriculum === Leave::SUBSTITUTE) {
+		} elseif ($curriculum == Leave::SUBSTITUTE) {
 			return redirect('substitutes/create');
 		}				
 	}

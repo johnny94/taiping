@@ -53,6 +53,21 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return $this->hasMany('App\Substitute');
 	}
 
+	public function numberOfUncheckedClassSwitching()
+	{
+		$number = 0;
+		$number += $this->withClassSwitching->filter(function($classSwitching){
+			return !$classSwitching->isPass();
+		})->count();
+
+		$number += $this->classSwitching->filter(function($classSwitching){
+			return !$classSwitching->isPass();
+		})->count();
+
+		return $number;
+
+	}
+
 	public function isManager()
 	{
 		return DB::table('role_user')
