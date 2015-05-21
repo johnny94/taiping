@@ -57,8 +57,22 @@
 <body>
     @include('partials.nav')
 
-    <div class="container">            
-        @yield('content')
+    <div class="container">
+        @yield('title')
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation" {{ Request::is('classSwitchings/notChecked') ? 'class=active' : '' }}><a href="{{ action('ClassSwitchingsController@notChecked') }}">確認調課<span class="badge">42</span></a></li>
+                    <li role="presentation" {{ Request::is('classes') ? 'class=active' : '' }}><a href="/classes">課務列表</a></li>
+                    <li role="presentation" {{ Request::is('leaves/list') ? 'class=active' : '' }}><a href="/leaves/list">請假列表</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-9">
+                @yield('content')
+            </div>      
+        </div>
+        
     </div>    
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

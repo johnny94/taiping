@@ -40,8 +40,23 @@ class LeavesController extends Controller {
 
 	public function listLeaves()
 	{
-		$leaves = Auth::user()->leaves;
+		$leaves = Auth::user()->leaves->sortByDesc('from');
 		return view('leaves.list', compact('leaves'));
+	}
+
+	public function showCurriculums($id)
+	{
+		$leave = Leave::findOrFail($id);
+		if ($leave->curriculum_id === 2)
+		{			
+			return view('classSwitchings.show', 
+				['switchings' => $leave->classSwitchings]);
+		} elseif ($leave->curriculum_id === 3) {
+			return view('substitutes.show', 
+				['substitutes' => $leave->substitutes]);
+		}
+
+		return redirect()->back();		
 	}
 
 	public function all()
@@ -92,9 +107,15 @@ class LeavesController extends Controller {
 			return redirect('classSwitchings/create');
 		} elseif ($curriculum === Leave::SUBSTITUTE) {
 			return redirect('substitutes/create');
-		}
-				
+		}				
 	}
+
+	public function updateClassSwitchings($id)
+	{
+		Session::put('leaveID', $id);
+		return redirect('classSwitchings/create');
+	}
+
 
 	public function getTeacherNames()
 	{		

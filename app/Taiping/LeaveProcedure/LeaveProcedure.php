@@ -11,12 +11,17 @@ abstract class LeaveProcedure {
 	public function applyProcedure()
 	{
 		$leave = $this->applyLeave();		
-		$this->handleCurriculum($leave);			
+		$this->handleCurriculum($leave);
+
 	}
 
 	protected function applyLeave()
 	{
 		//TODO: prevent from creating switching without creating leave first
+		if (Session::has('leaveId')) {
+			return Leave::findOrFail(Session::get('leaveId'));
+		}
+
 		$leaveFromRequest = Session::get('leave', []);
 		$from_date =  $leaveFromRequest['from_date'];
 		$from_time =  $leaveFromRequest['from_time'];

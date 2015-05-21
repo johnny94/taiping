@@ -36,12 +36,28 @@ class Leave extends Model {
 
 	public function getLeaveType()
 	{
-		$type = DB::table('leavetypes')->where('id', '=', $this->attributes['type_id'])->get();
+		$type = DB::table('leavetypes')
+					->where('id', '=', $this->attributes['type_id'])
+					->get();
+
 		if (count($type) != 0) {
 			return $type[0]->title;
 		}
 
 		return 'Unknown Type';
+	}
+
+	public function getCurriculum()
+	{
+		$type = DB::table('curriculums')
+					->where('id', '=', $this->attributes['curriculum_id'])
+					->get();
+					
+		if (count($type) != 0) {
+			return $type[0]->title;
+		}
+
+		return 'Unknown Curriculum';
 	}
 
 	private function getRenderer()

@@ -25,9 +25,10 @@ class SubstitutesController extends Controller {
 
 	public function show($id)
 	{
-		$substitute = Substitute::find($id);
-
-		return view('substitutes.show', compact('substitute'));
+		// Ugly Implementation: Why should I covert 'an' object 
+		// to an 'array' just for representation.
+		$substitutes = array(Substitute::find($id));
+		return view('substitutes.show', compact('substitutes'));
 	}
 
 	public function create()

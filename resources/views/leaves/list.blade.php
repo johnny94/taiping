@@ -1,40 +1,40 @@
-@extends('app')
+@extends('main')
 
-@section('content')
-		<div class="page-header">
-  			<h1>請假與課務狀況 <small>請假列表</small></h1>
-  			<a class="btn btn-default" href="/leaves/create">
-  			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增請假
+@section('title')
+	<div class="page-header">
+  		<h1>請假與課務狀況 <small>請假列表</small></h1>
+  		<a class="btn btn-default" href="/leaves/create">
+  		<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增請假
 		</a>
-		</div>		
-		
-		
-	<div class="row">
-		<div class="col-md-3">
-			<ul class="nav nav-pills nav-stacked">
-  				<li role="presentation" class="active"><a href="#">確認調課<span class="badge">42</span></a></li>
- 				<li role="presentation"><a href="#">課務列表</a></li>
- 				<li role="presentation"><a href="#">請假列表</a></li>
-			</ul>
-		</div>
-
-		<div class="col-md-9">
-			@foreach($leaves as $leave)
-				<div class="panel panel-default">
-					<ul class="list-group leave-description">
-						<a href="#" class="list-group-item">
-							<h3 class="list-group-item-heading">請假</h3>
-							<dl class="dl-horizontal" >
-  								<dt>請假時間</dt>
-  								<dd>{{$leave->from}} 至 {{$leave->to}}</dd>
-  								<dt>假別</dt>
-  								<dd>{{$leave->getLeaveType()}}</dd>
-							</dl>
-						</a>						
-					</ul>
-				</div>
-			@endforeach
-		</div>		
 	</div>
+@stop		
+		
+@section('content')	
+	@foreach($leaves as $leave)
+		<div class="panel panel-default">
+			<div class="panel-body leave-description">
+    			<h3 class="list-group-item-heading">請假</h3>
+				<dl class="dl-horizontal">
+  					<dt>請假時間</dt>
+  					<dd>{{ $leave->from }} 至 {{ $leave->to }}</dd>
+  					<dt>假別</dt>
+  					<dd>{{ $leave->getLeaveType() }}</dd>
+  					<dt>事由</dt>
+  					<dd>{{ $leave->reason }}</dd>
+  					<dt>課務處理</dt>
+  					@if($leave->curriculum_id === 1) {{-- No Curriculum --}}
+  						<dd><a href="#">{{ $leave->getCurriculum() }}</a></dd>
+  					@elseif ($leave->curriculum_id === 2) {{-- Class Switching --}}
+  						<dd>
+                <a href="{{action('LeavesController@showCurriculums', $leave->id)}}">{{ $leave->getCurriculum() }} (共 {{$leave->classSwitchings->count()}} 節)</a>
+                <a href="{{action('LeavesController@updateClassSwitchings', $leave->id)}}">新增</a>
+              </dd>
+  					@elseif ($leave->curriculum_id === 3) {{-- Substitute --}}
+  						<dd><a href="{{action('LeavesController@showCurriculums', $leave->id)}}">{{ $leave->getCurriculum() }}</a></dd>
+  					@endif  							
+				</dl>
+  			</div>					
+		</div>
+	@endforeach
 
 @stop

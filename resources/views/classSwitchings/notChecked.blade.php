@@ -1,8 +1,16 @@
-@extends('app')
+@extends('main')
+
+@section('title')
+	<div class="page-header">
+        <h1>請假與課務狀況 <small>確認調課</small></h1>
+        <a class="btn btn-default" href="/leaves/create">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增請假
+    </a>
+    </div>
+@stop
 
 @section('content')
-	<h1>尚未確認的調課</h1>		
-	<hr>
+
   @if ($rejectedSwitchings->isEmpty() && $pendingSwitchings->isEmpty() && $pendingSwitchingsFromOthers->isEmpty())
     <div class="panel panel-default">
       <div class="panel-body">

@@ -1,13 +1,14 @@
 @extends('app')
 
 @section('content')
-		<h1>代課老師細節</h1>		
+	<h1>代課老師細節</h1>		
 	<hr>
-  <div class="row">
+  @foreach($substitutes as $substitute)
+    <div class="row">
     <div class="col-md-8">
         <div class="panel panel-primary">
-        <div class="panel-heading">代課資訊</div>        
-        <table class="table">
+          <div class="panel-heading">代課資訊</div>        
+          <table class="table">
               <tbody>
               <tr>
                   <th>代課老師</th>
@@ -43,9 +44,10 @@
                 @endif                
                 
               </tbody>              
-            </table>
-  </div>  
+          </table>
+        </div>  
     </div>
-  </div>
+    </div>
+  @endforeach
 
 @stop

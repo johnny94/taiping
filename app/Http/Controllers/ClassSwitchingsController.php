@@ -28,8 +28,10 @@ class ClassSwitchingsController extends Controller {
 
 	public function show($id)
 	{
-		$switching = ClassSwitching::findOrFail($id);
-		return view('classSwitchings.show', compact('switching'));
+		// Ugly Implementation: Why should I covert 'an' object 
+		// to an 'array' just for representation.
+		$switchings = array(ClassSwitching::findOrFail($id));
+		return view('classSwitchings.show', compact('switchings'));
 	}
 
 	public function create()
