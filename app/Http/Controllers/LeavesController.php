@@ -104,15 +104,17 @@ class LeavesController extends Controller {
 	}
 
 	public function createLeaveStep1(CreateLeaveRequest $request)
-	{		
+	{
+		// TODO: Check if a leave on same date has existed in database here.
+
 		$curriculum = $request->input('curriculum');
 
 		Session::put('leave', $request->all());
 		
 		if ($curriculum == Leave::NO_CURRICULUM) {
-			$this->leaveApplication->applyProcedure();			
+			$this->leaveApplication->applyProcedure();
 			return redirect('classes');
-		} elseif ($curriculum == Leave::CLASS_SWITCHING) {			
+		} elseif ($curriculum == Leave::CLASS_SWITCHING) {
 			return redirect('classSwitchings/create');
 		} elseif ($curriculum == Leave::SUBSTITUTE) {
 			return redirect('substitutes/create');
