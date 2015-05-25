@@ -5,7 +5,7 @@
   			<h1>請假與課務狀況 <small>課務列表</small></h1>
   			<a class="btn btn-default" href="/leaves/create">
   			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增請假
-		</a>
+			</a>
 		</div>
 @stop
 		

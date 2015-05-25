@@ -103,8 +103,23 @@ class LeavesController extends Controller {
 		return view('leaves.create_leave', compact('leaveTypes', 'curriculum'));
 	}
 
+	public function delete($id)
+	{
+		$leave = Leave::findOrFail($id);
+		$leave->delete();
+	}
+
 	public function createLeaveStep1(CreateLeaveRequest $request)
-	{		
+	{	
+		
+		$date = $this->createDateStringFromRequest($request);
+		if ($this->applyLeaveOnSameDate($date)) {
+			return redirect()->back()
+							 ->withInput()
+							 ->withErrors(
+							 	['Invalid Date'=>'不可在同時段請假！']);
+		}
+
 		$curriculum = $request->input('curriculum');
 
 		Session::put('leave', $request->all());
@@ -117,6 +132,19 @@ class LeavesController extends Controller {
 		} elseif ($curriculum == Leave::SUBSTITUTE) {
 			return redirect('substitutes/create');
 		}				
+	}
+
+	private function createDateStringFromRequest($request)
+	{
+		return sprintf('%s %s', 
+			$request->input('from_date'), 
+			$request->input('from_time'));
+	}
+
+	private function applyLeaveOnSameDate($date) {
+		return DB::table('leaves')->where('from', $date)
+								  ->where('user_id', Auth::user()->id)
+								  ->count() != 0;
 	}
 
 	public function updateClassSwitchings($id)

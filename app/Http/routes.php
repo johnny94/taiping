@@ -23,7 +23,7 @@ Route::post('leaves/all', 'LeavesController@all');
 Route::get('leaves/list', 'LeavesController@listLeaves');
 Route::get('leaves/{id}/curriculums', 'LeavesController@showCurriculums');
 Route::get('leaves/{id}/updateClassSwitchings', 'LeavesController@updateClassSwitchings');
-
+Route::delete('leaves/{id}', 'LeavesController@delete');
 
 Route::get('classSwitchings/create', 'ClassSwitchingsController@create');
 Route::get('classSwitchings/notChecked', 'ClassSwitchingsController@notChecked');
