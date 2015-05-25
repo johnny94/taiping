@@ -77,7 +77,7 @@ class ClassSwitching extends Model {
 	protected static function boot() {
         parent::boot();
 
-        static::deleting(function($classSwitching) {
+        static::deleted(function($classSwitching) {
              $leave = $classSwitching->leave;
              if ($leave->classSwitchings->count() === 1) {
              	$leave->delete();
