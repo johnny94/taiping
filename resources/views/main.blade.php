@@ -71,7 +71,7 @@
             <div class="col-md-3">
                 <ul class="nav nav-pills nav-stacked">
                     <li role="presentation" {{ Request::is('classSwitchings/notChecked') ? 'class=active' : '' }}>
-                    <a href="{{ action('ClassSwitchingsController@notChecked') }}"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> 確認調課
+                    <a href="{{ action('ClassSwitchingsController@notChecked') }}"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> 未確認調課
                     @if(Auth::user()->numberOfUncheckedClassSwitching() !== 0)
                         <span class="badge">{{ Auth::user()->numberOfUncheckedClassSwitching() }}</span>
                     @endif
