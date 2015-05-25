@@ -77,6 +77,22 @@ class Leave extends Model {
 		}
 
 		return 'Unknown Curriculum';
-	}	
+	}
+
+	protected static function boot() {
+        parent::boot();
+
+        static::deleting(function($leave) {
+             
+             foreach ($leave->classSwitchings as $classSwitching) {
+             	$classSwitching->delete();
+             }
+
+             foreach ($leave->substitutes as $substitute) {
+             	$substitute->delete();
+             }
+                        
+        });
+    }
 	
 }

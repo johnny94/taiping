@@ -107,6 +107,7 @@ class LeavesController extends Controller {
 	{
 		$leave = Leave::findOrFail($id);
 		$leave->delete();
+		return ['message'=>'ok'];
 	}
 
 	public function createLeaveStep1(CreateLeaveRequest $request)
