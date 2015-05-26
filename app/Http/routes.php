@@ -43,6 +43,8 @@ Route::get('manager/users', 'ManagerController@users');
 Route::post('manager/fetchRegisteredUser', 'ManagerController@fetchRegisteredUser');
 Route::delete('manager/deleteUser/{id}', 'ManagerController@deleteUser');
 Route::get('manager/setManager', 'ManagerController@setManager');
+Route::post('manager/setManager', 'ManagerController@setAsManager');
+Route::get('manager/exportLog', 'ManagerController@exportLog');
 
 Route::get('teachers', 'LeavesController@getTeacherNames');
 

@@ -63,4 +63,52 @@ class ManagerController extends Controller {
 		return view('manager.setAsManager');
 	}
 
+	public function setAsManager()
+	{
+		$user = User::find(Request::input('teacher'));
+
+		if (!is_null($user)) {
+			$this->storeManagerRole($user);
+		} 
+
+		flash()->error('找不到這位使用者。');
+		return redirect()->back();
+	}
+
+	private function storeManagerRole($user)
+	{
+		if ($user->isManager()) {
+			flash($user->name . ' 已經是管理者。');			
+		} else {			
+			DB::table('role_user')->insert([
+				'role_id' => 2,
+				'user_id' => $user->id
+			]);
+
+			flash()->success('成功將 ' . $user->name . ' 設為管理者。');
+		}
+
+		return redirect()->back();
+	}
+
+	public function exportLog()
+	{
+		\Excel::create('Filename', function($excel) {
+			
+			// Set the title
+    		$excel->setTitle('Our new awesome title');
+
+			$excel->sheet('Excel sheet', function($sheet) {
+
+				$sheet->fromArray(
+					array(
+            			array('data1', 'data2'),
+            			array('data3', 'data4')
+            		), null, 'A1', false, false);
+    		});
+
+		})->export('csv');
+
+	}
+
 }

@@ -40,7 +40,10 @@ class LeavesController extends Controller {
 
 	public function listLeaves()
 	{
-		$leaves = Auth::user()->leaves->sortByDesc('from');
+		$leaves = Auth::user()->leaves->filter(function($item) {
+			return $item->to >= Carbon::now()->subMonth();
+		})->sortByDesc('from');
+
 		return view('leaves.list', compact('leaves'));
 	}
 

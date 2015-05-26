@@ -101,8 +101,6 @@ $(document).ready(function() {
                 delay: 250,
                 processResults: function(data, page) {
                     // parse the results into the format expected by Select2.
-                    // since we are using custom formatting functions we do not need to
-                    // alter the remote JSON data
                     return {
                         results: $.map(data, function(item) {
                             return {
@@ -113,16 +111,18 @@ $(document).ready(function() {
                     };
                 }
             },
+            language: { 
+                inputTooShort: function () {
+                    return "最少須輸入 1 個字";
+                }
+            },
             minimumInputLength: 1
         });
 
         $('.period').select2({
             minimumResultsForSearch: Infinity
         });
-
     });
-
-
 
     $('.class_list').select2();
 
@@ -141,6 +141,11 @@ $(document).ready(function() {
                         };
                     })
                 };
+            }
+        },
+        language: { 
+            inputTooShort: function () {
+                return "最少須輸入 1 個字";
             }
         },
         minimumInputLength: 1

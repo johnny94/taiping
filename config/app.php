@@ -146,6 +146,12 @@ return [
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
 
+		/*
+		 * Custom Service Providers
+		 */
+		'Laracasts\Flash\FlashServiceProvider',
+		'Maatwebsite\Excel\ExcelServiceProvider',
+
 	],
 
 	/*
@@ -195,6 +201,8 @@ return [
 		'View'      => 'Illuminate\Support\Facades\View',
 		'Form'      => 'Illuminate\Html\FormFacade',
 		'Html'      => 'Illuminate\Html\HtmlFacade',
+		'Flash'     => 'Laracasts\Flash\Flash',
+		'Excel' => 'Maatwebsite\Excel\Facades\Excel',
 
 	],
 
