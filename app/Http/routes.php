@@ -39,6 +39,11 @@ Route::get('substitutes/create', 'SubstitutesController@create');
 Route::get('substitutes/{id}', 'SubstitutesController@show');
 Route::post('substitutes', 'SubstitutesController@store');
 
+Route::get('manager/users', 'ManagerController@users');
+Route::post('manager/fetchRegisteredUser', 'ManagerController@fetchRegisteredUser');
+Route::delete('manager/deleteUser/{id}', 'ManagerController@deleteUser');
+Route::get('manager/setManager', 'ManagerController@setManager');
+
 Route::get('teachers', 'LeavesController@getTeacherNames');
 
 Route::controllers([

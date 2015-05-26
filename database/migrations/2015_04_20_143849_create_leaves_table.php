@@ -34,7 +34,8 @@ class CreateLeavesTable extends Migration {
 			$table->timestamp('from');
 			$table->timestamp('to');
 			$table->text('reason');
-			$table->integer('curriculum_id')->unsigned();		
+			$table->integer('curriculum_id')->unsigned();
+			$table->softDeletes();		
 			$table->timestamps();
 
 			$table->foreign('user_id')

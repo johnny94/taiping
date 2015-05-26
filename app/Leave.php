@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Taiping\CurriculumRenderer;
 
@@ -11,6 +12,9 @@ class Leave extends Model {
 	const NO_CURRICULUM = 1;
 	const CLASS_SWITCHING = 2;
 	const SUBSTITUTE = 3;
+
+	use SoftDeletes;
+    protected $dates = ['deleted_at'];	
 
 	public function substitutes()
 	{

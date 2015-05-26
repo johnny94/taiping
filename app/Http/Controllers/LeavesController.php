@@ -84,6 +84,7 @@ class LeavesController extends Controller {
 				->join('leavetypes', 'leaves.type_id', '=', 'leavetypes.id')
 				->join('curriculums', 'leaves.curriculum_id', '=', 'curriculums.id')				
 				->where('users.name', 'LIKE', "%{$searchPhrase}%")
+				->whereNull('leaves.deleted_at')
 				->orderBy($sortedColumn, $sort['value'])
 				->select('users.name', 'leaves.id as leaveID', 'leaves.from', 'leaves.reason', 'leaves.to', 'leavetypes.title as leavetype', 'curriculums.title as curriculum');
 		$total = count($query->get());
@@ -106,8 +107,21 @@ class LeavesController extends Controller {
 	public function delete($id)
 	{
 		$leave = Leave::findOrFail($id);
-		$leave->delete();
-		return ['message'=>'ok'];
+		if ($leave->delete()) {
+			$this->logLeaveDeletion(Auth::user()->id, $id);
+			return ['message' => true];
+		}
+
+		return abort(500);		
+	}
+
+	private function logLeaveDeletion($managerID, $leaveID) {
+		DB::table('delete_leave_log')->insert([
+				'manager_id' => $managerID,
+				'leave_id' => $leaveID,
+				'created_at' => Carbon::now(),
+				'updated_at' => Carbon::now()
+			]);
 	}
 
 	public function createLeaveStep1(CreateLeaveRequest $request)
@@ -145,6 +159,7 @@ class LeavesController extends Controller {
 	private function applyLeaveOnSameDate($date) {
 		return DB::table('leaves')->where('from', $date)
 								  ->where('user_id', Auth::user()->id)
+								  ->whereNull('deleted_at')
 								  ->count() != 0;
 	}
 

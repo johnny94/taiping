@@ -5,12 +5,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use DB;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
 	use Authenticatable, CanResetPassword;
+
+	use SoftDeletes;
+    protected $dates = ['deleted_at'];	
 
 	/**
 	 * The database table used by the model.
@@ -75,5 +79,20 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 					->where('user_id', '=', $this->id)
 					->count() != 0;
 	}
+
+	protected static function boot() {
+        parent::boot();
+
+        static::deleting(function($user) {
+        	foreach ($user->leaves as $leave) {
+        		$leave->delete();
+        	}
+
+            foreach ($user->withClassSwitching as $classSwitching) {
+            	$classSwitching->delete();
+            } 
+                        
+        });
+    }
 
 }

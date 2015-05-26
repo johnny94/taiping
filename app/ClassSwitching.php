@@ -79,7 +79,7 @@ class ClassSwitching extends Model {
 
         static::deleted(function($classSwitching) {
              $leave = $classSwitching->leave;
-             if ($leave->classSwitchings->count() === 1) {
+             if ($leave->classSwitchings->count() === 0) {
              	$leave->delete();
              }             
         });

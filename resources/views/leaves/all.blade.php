@@ -55,7 +55,7 @@
 			$('[data-toggle="popover"]').popover();
 
 			$('.command-delete').on('click', function() {
-				$('#myModal').attr('data-leave-id', $(this).data("row-id"));
+				$('#myModal').data('target-id', $(this).data('row-id'));
 				$('#myModal').modal('show');
 				
 			});
@@ -64,42 +64,28 @@
 
 		$('#myModal .modal-footer .confirm-delete').on('click', function() {
 			
+			
 			$.ajax({
 					method: 'DELETE',
-  					url: '/leaves/' + $('#myModal').data('leave-id'),
+  					url: '/leaves/' + $('#myModal').data('target-id'),
   					data: {
   						_token: "{{ csrf_token() }}"
   					},
   					dataType: 'json',
   					success: function(data) {
   						$('#myModal').modal('hide');
-  						$('#myModal').attr('data-leave-id', '-1');
+  						$('#myModal').data('target-id', '-1');
   						$('#grid-basic').bootgrid('reload');
   					},
   					error: function(xhr, textStatus) {
   						alert(textStatus);
+  						alert(xhr.responseText);  						
   					}
 			});
 		});
 	});
 	</script>
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-leave-id="-1">
-  		<div class="modal-dialog">
-    		<div class="modal-content">
-      			<div class="modal-header">
-        			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        			<h4 class="modal-title" id="myModalLabel">確定刪除？</h4>
-      			</div>
-
-	      		<div class="modal-body">
-	        		你確定要刪除這筆請假紀錄？ (與請假相關的課務會一併刪除，且無法復原)
-	      		</div>
-
-	      		<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
-	        		<button type="button" class="btn btn-primary confirm-delete">刪除</button>
-	      		</div>
-    		</div>
- 		</div>
-	</div>
+	@include('partials.modal', 
+		['message' => '你確定要刪除這筆請假紀錄？ (與請假相關的課務會一併刪除，且無法復原)'])
+	
 @stop
