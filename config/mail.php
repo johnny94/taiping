@@ -57,7 +57,7 @@ return [
 	|
 	*/
 
-	'from' => ['address' => null, 'name' => null],
+	'from' => ['address' => 'leave@gm.tpps.kh.edu.tw', 'name' => 'Manager'],
 
 	/*
 	|--------------------------------------------------------------------------

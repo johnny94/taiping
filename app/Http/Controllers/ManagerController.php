@@ -67,12 +67,12 @@ class ManagerController extends Controller {
 	{
 		$user = User::find(Request::input('teacher'));
 
-		if (!is_null($user)) {
-			$this->storeManagerRole($user);
-		} 
+		if (is_null($user)) {
+			flash()->error('找不到這位使用者。');
+			return redirect()->back();
+		}
 
-		flash()->error('找不到這位使用者。');
-		return redirect()->back();
+		return $this->storeManagerRole($user);		
 	}
 
 	private function storeManagerRole($user)
@@ -93,21 +93,82 @@ class ManagerController extends Controller {
 
 	public function exportLog()
 	{
-		\Excel::create('Filename', function($excel) {
-			
-			// Set the title
-    		$excel->setTitle('Our new awesome title');
+		return view('manager.exportLog');
+	}
 
-			$excel->sheet('Excel sheet', function($sheet) {
+	public function exportLeaveDeletionLog()
+	{		
+		$date = $this->createDatePeriod(Request::input('start'), Request::input('end'));
+
+		$rows = DB::table('delete_leave_log')
+					  ->join('users as manager', 'delete_leave_log.manager_id', '=', 'manager.id')
+					  ->join('leaves', 'delete_leave_log.leave_id', '=', 'leaves.id')
+					  ->join('leavetypes', 'leaves.type_id', '=', 'leavetypes.id')
+					  ->join('users as deletedUser', 'leaves.user_id', '=', 'deletedUser.id')
+					  ->where('leaves.deleted_at', '>=', $date['start'])
+					  ->where('leaves.deleted_at', '<=', $date['end'])
+					  ->select('manager.name as manager', 'deletedUser.name as user', 'leavetypes.title', 'leaves.from', 'leaves.to', 'leaves.deleted_at')->get();
+
+		$data = $this->queryResultToExportData($rows);
+
+		\Excel::create('刪除請假日誌', function($excel) use($data) {
+			
+			$excel->sheet('Excel sheet', function($sheet) use($data) {
+
+				$sheet->row(1,				
+            			array('管理者', '請假人員', '假別', '請假時間(起)', '請假時間(訖)', '刪除時間'));
 
 				$sheet->fromArray(
-					array(
-            			array('data1', 'data2'),
-            			array('data3', 'data4')
-            		), null, 'A1', false, false);
+					$data, null, 'A2', false, false);
     		});
 
-		})->export('csv');
+		})->export('xls');
+
+	}
+
+	private function createDatePeriod($start, $end)
+	{
+		// To create the date between Y-m-d 00:00:00 and Y-m-d 23:59:59.
+		$start = Carbon::createFromFormat('Y-m-d H' ,sprintf('%s 0', $start));
+		$end = Carbon::createFromFormat('Y-m-d H' ,sprintf('%s 0', $end))->addDay()->subSecond();
+
+		return ['start'=>$start, 'end'=>$end];
+	}
+
+	private function queryResultToExportData($rows)
+	{
+		$data = [];
+		foreach ($rows as $row) {
+			$data[] = array_values((array)$row);			
+		}
+
+		return $data;
+	}
+
+	public function exportUserDeletionLog()
+	{
+		$date = $this->createDatePeriod(Request::input('start'), Request::input('end'));
+
+		$rows = DB::table('delete_user_log')
+					  ->join('users as manager', 'delete_user_log.manager_id', '=', 'manager.id')
+					  ->join('users as deletedUser', 'delete_user_log.user_id', '=', 'deletedUser.id')
+					  ->where('deletedUser.deleted_at', '>=', $date['start'])
+					  ->where('deletedUser.deleted_at', '<=', $date['end'])
+					  ->select('manager.name as manager', 'deletedUser.name as user', 'deletedUser.email', 'deletedUser.created_at', 'deletedUser.deleted_at')->get();
+
+		$data = $this->queryResultToExportData($rows);
+
+		\Excel::create('刪除帳號日誌', function($excel) use($data) {
+			
+			$excel->sheet('Excel sheet', function($sheet) use($data) {
+
+				$sheet->row(1,				
+            			array('管理者', '使用者姓名', 'E-Mail', '註冊時間', '刪除時間'));
+
+				$sheet->fromArray($data, null, 'A2', false, false);
+    		});
+
+		})->export('xls');
 
 	}
 

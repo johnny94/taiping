@@ -20,6 +20,8 @@
                         <li {{ Request::is('manager/users') ? 'class=active' : '' }}><a href="/manager/users">系統使用者名單</a></li>
                         <li class="divider"></li>
                         <li {{ Request::is('manager/setManager') ? 'class=active' : '' }}><a href="/manager/setManager">設定管理者權限</a></li>
+                        <li class="divider"></li>
+                        <li {{ Request::is('manager/exportLog') ? 'class=active' : '' }}><a href="/manager/exportLog">匯出日誌檔</a></li>
                     </ul>
                 </li>                
             </ul>
