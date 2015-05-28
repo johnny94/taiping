@@ -92,5 +92,5 @@ function generateDownloadLink(url, startDate, endDate) {
     $('#export-deletion-log').unblock();
   };
 }
-</script
+</script>
 @stop

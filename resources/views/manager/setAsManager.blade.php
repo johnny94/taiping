@@ -57,5 +57,5 @@ $(document).ready(function() {
             placeholder: "請輸入使用者的姓名"
         });
 });
-</script
+</script>
 @stop

@@ -21,7 +21,8 @@ class InsertTestAccount extends Seeder {
 
 		$user = User::create([
 			'name' => 'user',
-			'email' => 'test@example.com',
+			'email' => 'user@example.com',
+			'active' => true,
 			'password' => bcrypt('password')
 		]);
 
@@ -35,6 +36,7 @@ class InsertTestAccount extends Seeder {
 		$user = User::create([
 			'name' => 'manager',
 			'email' => 'manager@example.com',
+			'active' => true,
 			'password' => bcrypt('password')
 		]);
 

@@ -38,7 +38,7 @@ class CreateDeleteLeaveLogTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('deleteLeaveLog');
+		Schema::drop('delete_leave_log');
 	}
 
 }

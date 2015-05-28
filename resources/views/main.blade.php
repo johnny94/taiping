@@ -66,6 +66,7 @@
     @include('partials.nav')
 
     <div class="container">
+        @include('flash::message')
         @yield('title')
         <div class="row">
             <div class="col-md-3">

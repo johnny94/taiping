@@ -1,1 +1,1 @@
-Click here to active your account: {{ url('/activate/' . $activationCode) }}
+請點擊連結來認證您的帳號：<br> {{ url('/activate/' . $activationCode) }}

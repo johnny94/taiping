@@ -63,3 +63,32 @@
 	</div>
 </div>
 @endsection
+
+@section('footer')
+<script src="/js/jquery.blockUI.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $('button[type=submit]').click(function(e) {
+    	e.preventDefault();
+
+    	$.blockUI(
+    		{ message: '處理中...',
+    		  css: {
+    		  	border: 'none',
+    		  	padding: '15px', 
+    		  	backgroundColor: '#000', 
+            	'-webkit-border-radius': '10px', 
+            	'-moz-border-radius': '10px', 
+            	opacity: .5, 
+            	color: '#fff' 
+        		}
+        	});
+
+       $('form').submit();
+
+    });
+	
+});
+</script>
+@stop

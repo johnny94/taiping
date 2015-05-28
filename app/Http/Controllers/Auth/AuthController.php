@@ -64,45 +64,87 @@ class AuthController extends Controller {
 
 		// E-Mail activation
 
-		$activationCode = hash_hmac('sha256', str_random(40), env('APP_KEY'));		
+		$activationCode = hash_hmac('sha256', str_random(40), env('APP_KEY'));
 
-		Mail::send('emails.account', compact('activationCode'), function($message) use($request) {
-		    $message->to($request->input('email'), $request->input('name'))
-		    	    ->subject('Welcome!');
+		$email = $request->input('email');
+		$name = $request->input('name');
+
+		Mail::queue('emails.account', compact('activationCode'), function($message) use ($email, $name) {
+		    $message->to($email, $name)
+		    	    ->subject('帳號認證連結');
 		});
 		
 		$user = new User;
-		$user->name = $request->input('name');
-		$user->email = $request->input('email');
+		$user->name = $name;
+		$user->email = $email;
 		$user->password = bcrypt($request->input('password'));
 		$user->save();
 		
-		$payLoad = ['email' => $request->input('email'), 
+		$payLoad = ['email' => $email, 
 		            'activation_code' => $activationCode, 
 		            'created_at' => new Carbon];
 
 		DB::table('account_confirm')->insert($payLoad);
 		
-		flash()->success('註冊成功！認證信已寄送至：' . $request->input('email'));
+		flash()->success('註冊成功！認證信已寄送至：' . $email);
 
 		return redirect('/auth/login');
 	}
 
-	public function activateAccount($code)
-	{		
-		$activateUser = User::from('users')->whereExists(function($query) use($code) {
-			$query->select(DB::raw(1))
-				  ->from('account_confirm')
-				  ->where('account_confirm.email', '=', 'users.email')
-				  ->where('account_confirm.activation_code', '=', $code);
-		})->first();
+	/**
+	 * Handle a login request to the application.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function postLogin(Request $request)
+	{
+		$this->validate($request, [
+			'email' => 'required|email|exists:users', 'password' => 'required',
+		]);
 
-		dd($activateUser);
+		$credentials = $request->only('email', 'password');
+		$credentials['active'] = 1;
 
-		$this->auth->login($activateUser);
+		if ($this->auth->attempt($credentials, $request->has('remember')))
+		{
+			return redirect()->intended($this->redirectPath());
+		}
 
-		return redirect('/classes');
-
+		return redirect($this->loginPath())
+					->withInput($request->only('email', 'remember'))
+					->withErrors([						
+						'active'=> '此帳號尚未通過認證，請至 E-Mail 收取認證信。'
+					]);
 	}
 
+
+	public function activateAccount($code)
+	{
+		$this->auth->logout();
+
+		$activateUser = DB::table('users')->join('account_confirm', function($join) use($code) {
+
+			$join->on('account_confirm.email', '=', 'users.email')
+			     ->where('account_confirm.activation_code', '=', $code);
+
+		})->first();
+
+		if (is_null($activateUser)) {
+			flash()->error('無效的驗證碼或帳號不存在！');
+			return redirect('/auth/login');
+		}
+
+		$user = User::findOrFail($activateUser->id);
+		
+		if (!$user->active) {
+			$user->active = true;
+			$user->save();
+			flash('認證成功！');
+		}
+
+		$this->auth->login($user);	
+
+		return redirect('/classes');
+	}
 }
