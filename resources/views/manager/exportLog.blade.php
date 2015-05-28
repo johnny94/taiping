@@ -5,15 +5,15 @@
   			<h1>匯出日誌檔</h1>  			
 		</div>
 
-		<div id="export-deletion-log" class="panel panel-default">
+		<div class="panel panel-default export-deletion-log">
       <div class="panel-heading">
-        <h3 class="panel-title">匯出刪除日誌</h3>
+        <h3 class="panel-title">匯出請假日誌</h3>
       </div>
       <div class="panel-body">
         {!! Form::open(['url'=>'manager/export/userDeletionLog', 'class' => 'form-inline']) !!}
           
           <div class="form-group">
-            <span class="h3">輸出</span>
+            <span class="h3">匯出</span>
             {!! Form::input('date', 'start', Carbon\Carbon::now()->toDateString(), ['class'=>'form-control']) !!}        
           </div>
 
@@ -23,27 +23,39 @@
             {!! Form::input('date', 'end', Carbon\Carbon::now()->toDateString(), ['class'=>'form-control']) !!}        
           </div>
         
-        <span class="h3">的</span>
-        <div class="form-group">
+          <span class="h3">所有被刪除請假</span>
+          <!--<div class="form-group">
             <div class="btn-group">
               <button type="button" class="btn btn-primary">什麼</button>
               <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
-              </button>
+              </button>            
 
-            <ul class="dropdown-menu" role="menu">
-              <li><a class="export-log" href="export/leaveDeletionLog">被刪除的請假</a></li>
-              <li><a class="export-log" href="export/userDeletionLog">被刪除的帳號</a></li>
-            </ul>
-        </div>  
+              <ul class="dropdown-menu" role="menu">
+                <li><a class="export-log" href="export/leaveDeletionLog">被刪除的請假</a></li>
+                <li><a class="export-log" href="export/userDeletionLog">被刪除的帳號</a></li>
+              </ul>
+            </div>
+          </div>-->
 
-        <span class="h3">的日誌檔。</span>      
+          <span class="h3">的日誌檔。</span>
+          <a class="btn btn-primary export-log" href="export/leaveDeletionLog" role="button">確定</a>   
 
-  {!! Form::close() !!} 
+        {!! Form::close() !!} 
       </div>
     </div>
 
+        <div class="panel panel-default export-deletion-log">
+      <div class="panel-heading">
+        <h3 class="panel-title">匯出帳號日誌</h3>
+      </div>
+      <div class="panel-body">
+        <span class="h3">匯出所有被刪除帳號的日誌檔。</span>
+        <a class="btn btn-primary export-log" href="export/userDeletionLog">確定</a>
+
+      </div>
+    </div>
 		
 @stop
 
@@ -57,7 +69,7 @@ $(document).ready(function() {
       var startDate = $('input[name=start]').val();
       var endDate = $('input[name=end]').val();
 
-      $('#export-deletion-log').block(
+      $(this).parents('div.panel').block(
         { message: '輸出中...',
           css: { 
             border: 'none', 
@@ -68,7 +80,7 @@ $(document).ready(function() {
             opacity: .5, 
             color: '#fff' 
         }});
-
+   
       $.ajax({
           method: 'GET',
           url: $(this).attr('href'),
@@ -89,7 +101,7 @@ $(document).ready(function() {
 function generateDownloadLink(url, startDate, endDate) {
   return function(data){
     window.location = url + '?start=' + startDate + '&end=' + endDate;
-    $('#export-deletion-log').unblock();
+    $('div.panel').unblock();
   };
 }
 </script>

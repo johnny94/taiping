@@ -105,8 +105,13 @@ class ManagerController extends Controller {
 					  ->join('leaves', 'delete_leave_log.leave_id', '=', 'leaves.id')
 					  ->join('leavetypes', 'leaves.type_id', '=', 'leavetypes.id')
 					  ->join('users as deletedUser', 'leaves.user_id', '=', 'deletedUser.id')
-					  ->where('leaves.deleted_at', '>=', $date['start'])
-					  ->where('leaves.deleted_at', '<=', $date['end'])
+					  ->where('leaves.from', '>=', $date['start'])
+					  ->where('leaves.from', '<=', $date['end'])
+					  ->orWhere( function($query) use ($date) {
+
+					  		$query->where('leaves.to', '>=', $date['start'])
+					  		      ->where('leaves.to', '<=', $date['end']);
+					  })
 					  ->select('manager.name as manager', 'deletedUser.name as user', 'leavetypes.title', 'leaves.from', 'leaves.to', 'leaves.deleted_at')->get();
 
 		$data = $this->queryResultToExportData($rows);
@@ -147,13 +152,13 @@ class ManagerController extends Controller {
 
 	public function exportUserDeletionLog()
 	{
+		// TODO: We don't need date for removing user' account
+		// TOTO: refactor exportLog.blade.php (remove date when perform delete user request)
 		$date = $this->createDatePeriod(Request::input('start'), Request::input('end'));
 
 		$rows = DB::table('delete_user_log')
 					  ->join('users as manager', 'delete_user_log.manager_id', '=', 'manager.id')
 					  ->join('users as deletedUser', 'delete_user_log.user_id', '=', 'deletedUser.id')
-					  ->where('deletedUser.deleted_at', '>=', $date['start'])
-					  ->where('deletedUser.deleted_at', '<=', $date['end'])
 					  ->select('manager.name as manager', 'deletedUser.name as user', 'deletedUser.email', 'deletedUser.created_at', 'deletedUser.deleted_at')->get();
 
 		$data = $this->queryResultToExportData($rows);

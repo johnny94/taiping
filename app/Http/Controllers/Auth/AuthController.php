@@ -98,7 +98,7 @@ class AuthController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function postLogin(Request $request)
-	{
+	{		
 		$this->validate($request, [
 			'email' => 'required|email|exists:users', 'password' => 'required',
 		]);
