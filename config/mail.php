@@ -57,7 +57,7 @@ return [
 	|
 	*/
 
-	'from' => ['address' => 'leave@gm.tpps.kh.edu.tw', 'name' => 'Manager'],
+	'from' => ['address' => 'leave@gm.tpps.kh.edu.tw', 'name' => '高雄市太平國小請假課務系統'],
 
 	/*
 	|--------------------------------------------------------------------------

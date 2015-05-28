@@ -7,6 +7,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">登入</div>
 				<div class="panel-body">
+					@include('flash::message')
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
 							<strong>噢！</strong> 似乎發生了一點問題...<br><br>
