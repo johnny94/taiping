@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Role;
 use Carbon\Carbon;
 
 class AuthController extends Controller {
@@ -79,6 +80,15 @@ class AuthController extends Controller {
 		$user->email = $email;
 		$user->password = bcrypt($request->input('password'));
 		$user->save();
+
+		DB::table('role_user')->insert(
+    		[
+    			'role_id' => Role::USER, 
+    			'user_id' => $user->id,
+    			'created_at' => new Carbon,
+				'updated_at' => new Carbon
+    		]
+		);
 		
 		$payLoad = ['email' => $email, 
 		            'activation_code' => $activationCode, 
