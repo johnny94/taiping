@@ -33,18 +33,7 @@ class ClassesController extends Controller {
 								   			return $item->from >= Carbon::now()->subMonth();
 								   		})->sortByDesc('from');
 
-		$substitutes = Auth::user()->substitute								   
-								   ->filter(function($item){
-								   		return $item->from >= Carbon::now()->subMonth();
-								   })->sortByDesc('from');
-
-		$noCurriculums = Auth::user()->leaves
-									 ->where('curriculum_id', Leave::NO_CURRICULUM)
-									 ->filter(function($item){
-									 	return $item->to >= Carbon::now()->subMonth();
-									 })->sortByDesc('from');
-
-		return view('classes.index', compact('passedSwitchingsFromOthers', 'passedSwitchings', 'substitutes', 'noCurriculums'));		
+		return view('classes.index', compact('passedSwitchingsFromOthers', 'passedSwitchings'));		
 	}
 
 }

@@ -14,16 +14,14 @@ use Carbon\Carbon;
 use App\ClassSwitching;
 use App\ClassTitle;
 use App\Period;
+use App\User;
 
 use App\Taiping\LeaveProcedure\ClassSwitchingProcedure;
 
 class ClassSwitchingsController extends Controller {
-
-	private $leaveApplication;
-
-	public function __construct(ClassSwitchingProcedure $leaveApplication)
-	{
-		$this->leaveApplication = $leaveApplication;
+	
+	public function __construct()
+	{		
 		$this->middleware('auth');		
 	}
 
@@ -53,7 +51,20 @@ class ClassSwitchingsController extends Controller {
 
 	public function store(CreateClassSwitchingRequest $request)	
 	{			
-		$this->leaveApplication->applyProcedure();
+		//$this->leaveApplication->applyProcedure();
+		$classSwitchings = $request->input('classSwitching');
+		foreach ($classSwitchings as $switching) {
+			$class_switching = new ClassSwitching;			
+			$class_switching->with_user_id = $switching['teacher'];
+			$class_switching->from = Carbon::createFromFormat('Y-m-d', $switching['from_date']);
+			$class_switching->from_period = intval($switching['from_period']);
+			$class_switching->from_class_id = intval($switching['from_class']);
+			$class_switching->to = Carbon::createFromFormat('Y-m-d', $switching['to_date']);
+			$class_switching->to_period = intval($switching['to_period']);
+			$class_switching->to_class_id = intval($switching['to_class']);
+			$class_switching->checked_status_id = DB::table('checked_status')->where('title', 'pending')->first()->id;
+			Auth::user()->classSwitching()->save($class_switching);			
+		}
 		return redirect('classes');
 	}
 
@@ -124,6 +135,12 @@ class ClassSwitchingsController extends Controller {
 		$notPassSwitchings = compact('pendingSwitchings','rejectedSwitchings','pendingSwitchingsFromOthers');
 
 		return view('classSwitchings.notChecked', $notPassSwitchings);
+	}
+
+	public function getTeacherNames()
+	{		
+		$query = Request::input('q');
+		return User::where('name', 'LIKE', "%{$query}%")->select('id', 'name')->get();
 	}
 
 }

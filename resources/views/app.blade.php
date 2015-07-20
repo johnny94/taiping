@@ -24,17 +24,8 @@
             border-left-color: #ee827c;
             border-left-width: 5px;
         }
-
-        .panel-substitute {
-            border-left-color: #d9a62e;
-            border-left-width: 5px;
-        }
-
-        .panrl-no-curriculum {
-            border-left-color: #00a381;
-            border-left-width: 5px;
-        }
-
+       
+        /* Can reuse. */
         .leave-description dt, .leave-description dd {
             margin-left: -100px;
             margin-right: 10px;           

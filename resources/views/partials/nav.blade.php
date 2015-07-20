@@ -4,7 +4,7 @@
 
             <a class="navbar-brand" href="/classes">            
             <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-            高雄市太平國小請假課務系統
+            高雄市太平國小調課系統
             </a>
         </div>
 
@@ -15,8 +15,7 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">管理者頁面 <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li {{ Request::is('leaves') ? 'class=active' : '' }}><a href="/leaves">全校請假名單</a></li>
+                    <ul class="dropdown-menu" role="menu">                    
                         <li {{ Request::is('manager/users') ? 'class=active' : '' }}><a href="/manager/users">系統使用者名單</a></li>
                         <li class="divider"></li>
                         <li {{ Request::is('manager/setManager') ? 'class=active' : '' }}><a href="/manager/setManager">設定管理者權限</a></li>

@@ -1,12 +1,7 @@
 @extends('main')
 
 @section('title')
-	<div class="page-header">
-        <h1>請假與課務狀況 <small>確認調課</small></h1>
-        <a class="btn btn-default" href="/leaves/create">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增請假
-    </a>
-    </div>
+  @include('partials.title', ['title' => '調課確認'])
 @stop
 
 @section('content')

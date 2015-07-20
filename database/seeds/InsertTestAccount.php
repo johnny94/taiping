@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 use App\User;
+use App\Role;
 
 class InsertTestAccount extends Seeder {
 
@@ -14,10 +15,7 @@ class InsertTestAccount extends Seeder {
 	 */
 	public function run()
 	{
-		$ROLE_USER = 1;
-		$ROLE_MANAGER = 2;
 		$date = Carbon\Carbon::now();
-
 
 		$user = User::create([
 			'name' => 'user',
@@ -27,7 +25,7 @@ class InsertTestAccount extends Seeder {
 		]);
 
 		DB::table('role_user')->insert([			
-			'role_id' => $ROLE_USER,
+			'role_id' => Role::USER,
 			'user_id' => $user->id,
 			'created_at' => $date,
 			'updated_at' => $date
@@ -40,15 +38,15 @@ class InsertTestAccount extends Seeder {
 			'password' => bcrypt('password')
 		]);
 
-		DB::table('role_user')->insert([			
-			'role_id' => $ROLE_USER,
+		DB::table('role_user')->insert([
+			'role_id' => Role::USER,
 			'user_id' => $user->id,
 			'created_at' => $date,
 			'updated_at' => $date
 			]);
 
 		DB::table('role_user')->insert([			
-			'role_id' => $ROLE_MANAGER,
+			'role_id' => Role::ADMIN,
 			'user_id' => $user->id,
 			'created_at' => $date,
 			'updated_at' => $date

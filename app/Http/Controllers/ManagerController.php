@@ -27,8 +27,9 @@ class ManagerController extends Controller {
 		$sort = Request::input('sort');
 		$sort = each($sort);
 		
-		$total = count(User::all()->count());
-		$result = User::orderBy($sort['key'], $sort['value'])->skip($currentPage*$rowCount - $rowCount)
+		$users = User::where('name', 'like', '%' . $searchPhrase . '%');
+		$total = $users->count();
+		$result = $users->orderBy($sort['key'], $sort['value'])->skip($currentPage*$rowCount - $rowCount)
 						->take($rowCount)						
 						->get();
 
@@ -152,10 +153,6 @@ class ManagerController extends Controller {
 
 	public function exportUserDeletionLog()
 	{
-		// TODO: We don't need date for removing user' account
-		// TOTO: refactor exportLog.blade.php (remove date when perform delete user request)
-		$date = $this->createDatePeriod(Request::input('start'), Request::input('end'));
-
 		$rows = DB::table('delete_user_log')
 					  ->join('users as manager', 'delete_user_log.manager_id', '=', 'manager.id')
 					  ->join('users as deletedUser', 'delete_user_log.user_id', '=', 'deletedUser.id')
@@ -174,7 +171,6 @@ class ManagerController extends Controller {
     		});
 
 		})->export('xls');
-
 	}
 
 }

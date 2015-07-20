@@ -37,11 +37,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	protected $hidden = ['password', 'remember_token'];
 
-	public function leaves()
-	{
-		return $this->hasMany('App\Leave');
-	}
-
 	public function classSwitching()
 	{
 		return $this->hasMany('App\ClassSwitching', 'user_id');
@@ -51,12 +46,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	{
 		return $this->hasMany('App\ClassSwitching', 'with_user_id');
 	}
-
-	public function substitute()
-	{
-		return $this->hasMany('App\Substitute');
-	}
-
+	
 	public function numberOfUncheckedClassSwitching()
 	{
 		$number = 0;
@@ -84,10 +74,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         parent::boot();
 
         static::deleting(function($user) {
-        	foreach ($user->leaves as $leave) {
-        		$leave->delete();
-        	}
-
+        	
             foreach ($user->withClassSwitching as $classSwitching) {
             	$classSwitching->delete();
             } 

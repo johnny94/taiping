@@ -3,6 +3,8 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Role;
+
 class RoleTitle extends Seeder {
 
 	/**
@@ -14,14 +16,14 @@ class RoleTitle extends Seeder {
 	{
 		$date = Carbon\Carbon::now();
 		DB::table('roles')->insert([
-			'id' => 1,
+			'id' => Role::USER,
 			'title' => 'user',
 			'created_at' => $date,
 			'updated_at' => $date
 			]);
 
 		DB::table('roles')->insert([
-			'id' => 2,
+			'id' => Role::ADMIN,
 			'title' => 'admin',
 			'created_at' => $date,
 			'updated_at' => $date

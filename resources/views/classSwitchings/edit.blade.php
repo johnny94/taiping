@@ -9,9 +9,10 @@
 
         <div class="panel panel-default">   
             <div class="panel-body">
-        @include('classSwitchings.form')
+                @include('classSwitchings.form')
+            </div>
         </div>
-        </div>
+
 
     {!! Form::submit('完成', ['class'=>'btn btn-primary']) !!}
 

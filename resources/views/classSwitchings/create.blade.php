@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('content')
-    <h1>建立調課</h1>   
+    <h1>新增調課</h1>   
     <hr>
     @if (count($errors) > 0)
         <div class="alert alert-danger">            
@@ -24,7 +24,7 @@
             </div>
         </div>
 
-    <a id="back" class="btn btn-primary" href="{{ action('LeavesController@create') }}" role="button">
+    <a id="back" class="btn btn-primary" href="#" role="button">
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> 上一步
     </a>
 

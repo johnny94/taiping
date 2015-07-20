@@ -1,3 +1,4 @@
+{{-- TODO: extract "Add class switching" part. --}}
 @extends('main')
 
 @section('title')

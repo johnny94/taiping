@@ -17,18 +17,7 @@ class CreatePeriodsTable extends Migration {
 			$table->increments('id');
 			$table->string('name');
 			$table->timestamps();
-		});
-
-		Schema::create('period_substitute', function(Blueprint $table)
-		{
-			$table->integer('period_id')->unsigned();
-			$table->foreign('period_id')->references('id')->on('periods')->onDelete('cascade');
-
-			$table->integer('substitute_id')->unsigned();
-			$table->foreign('substitute_id')->references('id')->on('substitutes')->onDelete('cascade');
-
-			$table->timestamps();
-		});
+		});		
 	}
 
 	/**
@@ -38,8 +27,7 @@ class CreatePeriodsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('periods');
-		Schema::drop('period_substitute');
+		Schema::drop('periods');		
 	}
 
 }

@@ -28,8 +28,7 @@ class CreateClassSwitchingsTable extends Migration {
 
 		Schema::create('class_switchings', function(Blueprint $table)
 		{
-			$table->increments('id');
-			$table->integer('leave_id')->unsigned();
+			$table->increments('id');			
 			$table->integer('user_id')->unsigned();			
 			$table->integer('with_user_id')->unsigned();
 			$table->date('from');
@@ -39,12 +38,7 @@ class CreateClassSwitchingsTable extends Migration {
 			$table->integer('to_period')->unsigned();
 			$table->integer('to_class_id')->unsigned();
 			$table->integer('checked_status_id')->unsigned();
-			$table->timestamps();
-
-			$table->foreign('leave_id')
-			      ->references('id')
-			      ->on('leaves')
-			      ->onDelete('cascade');
+			$table->timestamps();			
 
 			$table->foreign('user_id')
 			      ->references('id')

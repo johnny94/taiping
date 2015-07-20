@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>高市太平請假課務系統</title>
+    <title>高市太平調課系統</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
@@ -78,8 +78,7 @@
                     @endif
                     </a>
                     </li>
-                    <li role="presentation" {{ Request::is('classes') ? 'class=active' : '' }}><a href="/classes"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 課務列表</a></li>
-                    <li role="presentation" {{ Request::is('leaves/list') ? 'class=active' : '' }}><a href="/leaves/list"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 請假列表</a></li>
+                    <li role="presentation" {{ Request::is('classes') ? 'class=active' : '' }}><a href="/classes"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 調課列表</a></li>
                 </ul>
             </div>
 

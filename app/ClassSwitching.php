@@ -22,12 +22,6 @@ class ClassSwitching extends Model {
 
 	protected $table = 'class_switchings';
 
-	/*public function __construct()
-	{
-		$this->user_id = Auth::user()->id;		
-		parent::__construct();
-	}*/
-
 	public function getFromAttribute($from)
 	{
 		return Carbon::parse($from)->format('Y-m-d');
@@ -36,11 +30,6 @@ class ClassSwitching extends Model {
 	public function getToAttribute($to)
 	{
 		return Carbon::parse($to)->format('Y-m-d');
-	}
-
-	public function leave()
-	{
-		return $this->belongsTo('App\Leave');
 	}
 
 	public function switchingTeacher()
@@ -73,15 +62,5 @@ class ClassSwitching extends Model {
 	{
 		return $this->attributes['checked_status_id'] === DB::table('checked_status')->where('title', 'pass')->first()->id;
 	}
-
-	protected static function boot() {
-        parent::boot();
-
-        static::deleted(function($classSwitching) {
-             $leave = $classSwitching->leave;
-             if ($leave->classSwitchings->count() === 0) {
-             	$leave->delete();
-             }             
-        });
-    }
+	
 }

@@ -22,9 +22,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('from_class', '課務', ['class'=>'col-md-3 control-label']) !!}
+                    {!! Form::label('from_class', '科目', ['class'=>'col-md-3 control-label']) !!}
                     <div class="col-md-9">
-                        {!! Form::select('classSwitching[0][from_class]', $classes, $switching->from_class, ['class'=>'form-control class_list']) !!}
+                        {!! Form::select('classSwitching[0][from_class]', $classes, $switching->from_class_id, ['class'=>'form-control class_list']) !!}
                     </div>
                 </div>
             </div>
@@ -58,9 +58,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('to_class', '課務', ['class'=>'col-md-3 control-label']) !!}
+                    {!! Form::label('to_class', '科目', ['class'=>'col-md-3 control-label']) !!}
                     <div class="col-md-9">
-                        {!! Form::select('classSwitching[0][to_class]', $classes, $switching->to_class, ['class'=>'form-control class_list']) !!}
+                        {!! Form::select('classSwitching[0][to_class]', $classes, $switching->to_class_id, ['class'=>'form-control class_list']) !!}
                     </div>
                 </div>
             </div>
