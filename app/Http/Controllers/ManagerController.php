@@ -13,6 +13,12 @@ use App\User;
 
 class ManagerController extends Controller {
 
+	
+	public function __construct()
+	{
+		$this->middleware('manager');
+	}
+
 	public function users()
 	{
 		return view('manager.users');
