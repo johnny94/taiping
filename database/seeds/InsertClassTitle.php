@@ -34,7 +34,7 @@ class InsertClassTitle extends Seeder {
 		];
 
 		foreach ($classTitles as $title) {
-			DB::table('classTitles')->insert([
+			DB::table('classtitles')->insert([
 				'title' => $title,
 				'created_at' => $date,
 				'updated_at' => $date
