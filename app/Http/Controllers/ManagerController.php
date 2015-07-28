@@ -10,6 +10,7 @@ use DB;
 use Request;
 
 use App\User;
+use App\ClassSwitching;
 
 class ManagerController extends Controller {
 
@@ -17,6 +18,119 @@ class ManagerController extends Controller {
 	public function __construct()
 	{
 		$this->middleware('manager');
+	}
+
+	public function switchings()
+	{
+		return view('manager.switchings');
+	}
+
+	public function fetchSwitchings() {
+
+		$currentPage = intval(Request::input('current'));
+		$rowCount = intval(Request::input('rowCount'));		
+
+		$query = $this->buildSwitchingQuery(
+							Request::input('searchPhrase'), 
+							Request::input('filterByDate'), 
+							Request::input('filterFrom'), 
+							Request::input('filterTo'));
+
+		$total = $query->count();
+		$result = $query->skip($currentPage*$rowCount - $rowCount)
+						->take($rowCount)
+						->get();
+
+		// -1 indicates that the user want to fetch all data without pagination.
+		if($rowCount == -1) {
+			$result = $query->get();
+		}		
+
+		$response = ['current' => $currentPage, 'rowCount' => $rowCount, 'rows' => $result, 'total' => $total];
+
+		return $response;
+	}
+
+	private function buildSwitchingQuery($searchPhrase, $filterByDate, $filterFrom, $filterTo) {
+		$query = DB::table('class_switchings')
+				    ->join('users as from_user', 'class_switchings.user_id', '=', 'from_user.id')
+					->join('periods as from_period', 'class_switchings.from_period', '=', 'from_period.id')
+					->join('classtitles as from_class', 'class_switchings.from_class_id', '=', 'from_class.id')
+					->join('users as with_user', 'class_switchings.with_user_id', '=', 'with_user.id')
+					->join('periods as to_period', 'class_switchings.to_period', '=', 'to_period.id')
+					->join('classtitles as to_class', 'class_switchings.to_class_id', '=', 'to_class.id')
+					->join('checked_status', 'class_switchings.checked_status_id', '=', 'checked_status.id')
+					->whereNull('class_switchings.deleted_at')
+					->where(function($q) use($searchPhrase) {
+						$q->where('from_user.name', 'LIKE', "%{$searchPhrase}%")
+						  ->orWhere('with_user.name', 'LIKE', "%{$searchPhrase}%");
+					});
+		
+		if($filterByDate === 'true') {
+			$date = $this->createDatePeriod($filterFrom, $filterTo);
+
+			$query = $query->where(
+						function($query) use($date){
+
+							$query->where(function($query) use($date) {
+										$query->where('class_switchings.from', '>=', $date['start'])
+									  		  ->where('class_switchings.from', '<=', $date['end']);
+									})
+									->orWhere(function($query) use($date) {
+					       				$query->where('class_switchings.to', '>=', $date['start'])
+					  		          	      ->where('class_switchings.to', '<=', $date['end']);
+									});
+						});		
+		}
+
+		$query = $query->select('class_switchings.id', 'from_user.name as teacher', 'from_period.name as from_period', 'from_class.title as from_class', 'class_switchings.from', 'with_user.name as with_teacher', 'to_period.name as to_period', 'to_class.title as to_class', 'class_switchings.to', 'checked_status.title as status');
+
+		return $query;
+	}
+
+	public function exportSwitchingLog() {		
+		$rows = $this->buildSwitchingQuery(
+							Request::input('searchPhrase'),
+							Request::input('filterByDate'), 
+							Request::input('filterFrom'), 
+							Request::input('filterTo'))->get();
+
+		$data = $this->queryResultToExportData($rows);
+
+		\Excel::create('調課紀錄日誌', function($excel) use($data) {
+			
+			$excel->sheet('Excel sheet', function($sheet) use($data) {
+
+				$sheet->row(1,				
+            			array('ID', '調課老師', '上課日期', '科目', '節次', '被調課老師', '上課日期', '科目', '節次', '調課情況'));
+
+				$sheet->fromArray(
+					$data, null, 'A2', false, false);
+    		});
+
+		})->export('xls');
+
+	}
+
+	public function deleteSwitching($id)
+	{
+		$switching = ClassSwitching::findOrFail($id);
+		if ($switching->delete()) {
+			$this->logSwitchingDeletion(Auth::user()->id, $id);
+			return ['message' => true];
+		}
+
+		return abort(500);
+	}
+
+	private function logSwitchingDeletion($managerID, $switchingID)
+	{
+		DB::table('delete_switching_log')->insert([
+				'manager_id' => $managerID,
+				'switching_id' => $switchingID,
+				'created_at' => Carbon::now(),
+				'updated_at' => Carbon::now()
+			]);
 	}
 
 	public function users()
@@ -103,23 +217,32 @@ class ManagerController extends Controller {
 		return view('manager.exportLog');
 	}
 
-	public function exportLeaveDeletionLog()
+	public function exportSwitchingDeletionLog()
 	{		
 		$date = $this->createDatePeriod(Request::input('start'), Request::input('end'));
 
-		$rows = DB::table('delete_leave_log')
-					  ->join('users as manager', 'delete_leave_log.manager_id', '=', 'manager.id')
-					  ->join('leaves', 'delete_leave_log.leave_id', '=', 'leaves.id')
-					  ->join('leavetypes', 'leaves.type_id', '=', 'leavetypes.id')
-					  ->join('users as deletedUser', 'leaves.user_id', '=', 'deletedUser.id')
-					  ->where('leaves.from', '>=', $date['start'])
-					  ->where('leaves.from', '<=', $date['end'])
-					  ->orWhere( function($query) use ($date) {
+		$rows = DB::table('delete_switching_log as log')
+					  ->join('users as manager', 'log.manager_id', '=', 'manager.id')
+					  ->join('class_switchings as switching', 'log.switching_id', '=', 'switching.id')
+					  ->join('users as from_user', 'switching.user_id', '=', 'from_user.id')
+					  ->join('periods as from_period', 'switching.from_period', '=', 'from_period.id')
+					  ->join('classtitles as from_class', 'switching.from_class_id', '=', 'from_class.id')
+					  ->join('users as with_user', 'switching.with_user_id', '=', 'with_user.id')
+					  ->join('periods as to_period', 'switching.to_period', '=', 'to_period.id')
+					  ->join('classtitles as to_class', 'switching.to_class_id', '=', 'to_class.id')
+					  ->join('checked_status', 'switching.checked_status_id', '=', 'checked_status.id')
+					  ->where(function($query) use($date) {
 
-					  		$query->where('leaves.to', '>=', $date['start'])
-					  		      ->where('leaves.to', '<=', $date['end']);
+					  		$query->where('switching.from', '>=', $date['start'])
+								  ->where('switching.from', '<=', $date['end']);
 					  })
-					  ->select('manager.name as manager', 'deletedUser.name as user', 'leavetypes.title', 'leaves.from', 'leaves.to', 'leaves.deleted_at')->get();
+					  ->orWhere(function($query) use($date) {
+
+					       	$query->where('switching.to', '>=', $date['start'])
+					  		      ->where('switching.to', '<=', $date['end']);
+
+					  })
+					  ->select('manager.name', 'from_user.name as teacher', 'switching.from', 'from_class.title as from_class', 'from_period.name as from_period', 'with_user.name as with_teacher', 'switching.to', 'to_class.title as to_class', 'to_period.name as to_period', 'checked_status.title as status', 'switching.deleted_at')->get();
 
 		$data = $this->queryResultToExportData($rows);
 
@@ -128,14 +251,13 @@ class ManagerController extends Controller {
 			$excel->sheet('Excel sheet', function($sheet) use($data) {
 
 				$sheet->row(1,				
-            			array('管理者', '請假人員', '假別', '請假時間(起)', '請假時間(訖)', '刪除時間'));
+            			array('管理者(刪除人)', '調課老師', '上課日期', '科目', '節次', '被調課老師', '上課日期', '科目', '節次', '調課情況', '刪除時間'));
 
 				$sheet->fromArray(
 					$data, null, 'A2', false, false);
     		});
 
 		})->export('xls');
-
 	}
 
 	private function createDatePeriod($start, $end)

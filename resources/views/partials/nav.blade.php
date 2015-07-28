@@ -16,11 +16,12 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">管理者頁面 <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">                    
-                        <li {{ Request::is('manager/users') ? 'class=active' : '' }}><a href="/manager/users">系統使用者名單</a></li>
+                        <li {{ Request::is('manager/switchings') ? 'class=active' : '' }}><a href="/manager/switchings">調課列表</a></li>
+                        <li {{ Request::is('manager/users') ? 'class=active' : '' }}><a href="/manager/users">使用者名單</a></li>
                         <li class="divider"></li>
                         <li {{ Request::is('manager/setManager') ? 'class=active' : '' }}><a href="/manager/setManager">設定管理者權限</a></li>
                         <li class="divider"></li>
-                        <li {{ Request::is('manager/exportLog') ? 'class=active' : '' }}><a href="/manager/exportLog">匯出日誌檔</a></li>
+                        <li {{ Request::is('manager/exportLog') ? 'class=active' : '' }}><a href="/manager/exportLog">匯出刪除紀錄</a></li>
                     </ul>
                 </li>                
             </ul>

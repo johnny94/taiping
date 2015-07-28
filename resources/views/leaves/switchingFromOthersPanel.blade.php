@@ -5,7 +5,7 @@
         
           {!! Form::open(['method' => 'PATCH', 'action'=>['ClassSwitchingsController@reject', $switching->id], 'style'=>'display: inline']) !!}
 
-            <button class="btn btn-danger btn-sm" type="submit">
+            <button class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="退回調課單並請調課老師修改" type="submit">
               <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> 有問題
             </button>
 

@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('content')
-	<h1>系統使用者名單</h1>
+	<h1>使用者名單</h1>
 	<hr>
 	<table id="grid-basic" class="table table-condensed table-hover table-striped" data-ajax="true" data-url="fetchRegisteredUser">
     <thead>
@@ -47,7 +47,7 @@
 
 		});
 
-		$('#myModal .modal-footer .confirm-delete').on('click', function() {
+		$('#myModal .modal-footer .confirm').on('click', function() {
 			
 			
 			$.ajax({

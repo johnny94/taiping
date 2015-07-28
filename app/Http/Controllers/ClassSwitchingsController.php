@@ -139,7 +139,7 @@ class ClassSwitchingsController extends Controller {
 
 	public function getTeacherNames()
 	{		
-		$query = Request::input('q');
+		$query = trim(Request::input('q'));
 		return User::where('name', 'LIKE', "%{$query}%")->select('id', 'name')->get();
 	}
 

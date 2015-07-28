@@ -38,6 +38,7 @@ class CreateClassSwitchingsTable extends Migration {
 			$table->integer('to_period')->unsigned();
 			$table->integer('to_class_id')->unsigned();
 			$table->integer('checked_status_id')->unsigned();
+			$table->softDeletes();
 			$table->timestamps();			
 
 			$table->foreign('user_id')
