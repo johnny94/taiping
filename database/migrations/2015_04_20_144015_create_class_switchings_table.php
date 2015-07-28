@@ -12,7 +12,7 @@ class CreateClassSwitchingsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('classTitles', function(Blueprint $table)
+		Schema::create('classtitles', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->string('title');
