@@ -53,12 +53,12 @@ class CreateClassSwitchingsTable extends Migration {
 
 			$table->foreign('from_class_id')
 			      ->references('id')
-			      ->on('classTitles')
+			      ->on('classtitles')
 			      ->onDelete('cascade');
 
 			$table->foreign('to_class_id')
 			      ->references('id')
-			      ->on('classTitles')
+			      ->on('classtitles')
 			      ->onDelete('cascade');
 
 			$table->foreign('checked_status_id')
@@ -77,7 +77,7 @@ class CreateClassSwitchingsTable extends Migration {
 	public function down()
 	{
 		Schema::drop('class_switchings');
-		Schema::drop('classTitles');
+		Schema::drop('classtitles');
 		Schema::drop('checked_status');
 	}
 
