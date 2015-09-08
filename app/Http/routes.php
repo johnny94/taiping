@@ -47,6 +47,12 @@ Route::post('api/subjects', 'SubjectsController@fetchAllSubjects');
 Route::delete('manager/subjects/{id}', 'SubjectsController@destroy');
 Route::patch('manager/subjects/{id}', 'SubjectsController@update');
 
+Route::get('manager/periods', 'PeriodsController@index');
+Route::post('manager/periods', 'PeriodsController@store');
+Route::post('api/periods', 'PeriodsController@fetchAllPeriods');
+Route::delete('manager/periods/{id}', 'PeriodsController@destroy');
+Route::patch('manager/periods/{id}', 'PeriodsController@update');
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',

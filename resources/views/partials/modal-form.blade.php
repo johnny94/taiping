@@ -16,7 +16,7 @@
               <div class="form-group">
                 <label for="message-text" class="col-sm-2 control-label">新名稱</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control" placeholder="輸入新的科目名稱">
+                <input type="text" class="form-control" placeholder="輸入新的名稱">
                 </div>
               </div>              
              </form>

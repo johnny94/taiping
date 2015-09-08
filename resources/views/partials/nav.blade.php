@@ -19,6 +19,7 @@
                         <li {{ Request::is('manager/switchings') ? 'class=active' : '' }}><a href="/manager/switchings">調課列表</a></li>
                         <li {{ Request::is('manager/users') ? 'class=active' : '' }}><a href="/manager/users">使用者名單</a></li>
                         <li {{ Request::is('manager/subjects') ? 'class=active' : '' }}><a href="/manager/subjects">科目列表</a></li>
+                        <li {{ Request::is('manager/periods') ? 'class=active' : '' }}><a href="/manager/periods">節次列表</a></li>
                         <li class="divider"></li>
                         <li {{ Request::is('manager/setManager') ? 'class=active' : '' }}><a href="/manager/setManager">設定管理者權限</a></li>
                         <li class="divider"></li>
