@@ -41,6 +41,12 @@ Route::get('manager/export/userDeletionLog', 'ManagerController@exportUserDeleti
 Route::get('manager/export/switchingDeletionLog', 'ManagerController@exportSwitchingDeletionLog');
 Route::get('teachers', 'ClassSwitchingsController@getTeacherNames');
 
+Route::get('manager/subjects', 'SubjectsController@index');
+Route::post('manager/subjects', 'SubjectsController@store');
+Route::post('api/subjects', 'SubjectsController@fetchAllSubjects');
+Route::delete('manager/subjects/{id}', 'SubjectsController@destroy');
+Route::patch('manager/subjects/{id}', 'SubjectsController@update');
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
