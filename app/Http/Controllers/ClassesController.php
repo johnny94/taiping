@@ -8,30 +8,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 
-use App\Leave;
-use Carbon\Carbon;
+use App\Taiping\Repositories\ClassSwitchingRepository;
 
 class ClassesController extends Controller {
 
-	public function __construct()
+	protected $classSwitchingRepo;
+
+	public function __construct(ClassSwitchingRepository $repository)
 	{
 		$this->middleware('auth');
+		$this->classSwitchingRepo = $repository;
 	}
 
 	public function index()
 	{		
-		$CHECK_STATUS_PASS = 2;
-		$passedSwitchingsFromOthers = Auth::user()->withClassSwitching
-												  ->where('checked_status_id', $CHECK_STATUS_PASS)
-												  ->filter(function($item){
-												  	return $item->to >= Carbon::now()->subMonth();
-								   				  })->sortByDesc('to');
-
-		$passedSwitchings = Auth::user()->classSwitching
-										->where('checked_status_id', $CHECK_STATUS_PASS)
-										->filter(function($item){
-								   			return $item->from >= Carbon::now()->subMonth();
-								   		})->sortByDesc('from');
+		$passedSwitchingsFromOthers = $this->classSwitchingRepo->getPassedFromOthersLastMonthByUser(Auth::user());
+		$passedSwitchings = $this->classSwitchingRepo->getPassedLastMonthByUser(Auth::user());
 
 		return view('classes.index', compact('passedSwitchingsFromOthers', 'passedSwitchings'));		
 	}

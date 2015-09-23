@@ -7,7 +7,7 @@
                     <label class="col-md-3 control-label">申請老師</label>
                     <div class="col-md-9">
                         <p class="form-control-static">{{ $switching->switchingTeacher->name }}</p>
-                    </div>
+                    </div>                    
                 </div>
                 <div class="form-group">
                     {!! Form::label('from_date', '日期', ['class'=>'col-md-3 control-label']) !!}

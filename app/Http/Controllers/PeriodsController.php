@@ -9,20 +9,19 @@ use App\Period;
 
 class PeriodsController extends Controller {
 
-	public function __construct() {
+	private $period;
+
+	public function __construct(Period $p) {
 		$this->middleware('manager');
-	}
+		$this->period = $p;
+	}	
 
-	public function index() {
-		return view('manager.periods');
-	}
-
-	public function fetchAllPeriods() {
+	public function search() {
 		$currentPage = intval(Request::input('current'));
 		$rowCount = intval(Request::input('rowCount'));
 		$searchPhrase = Request::input('searchPhrase');
 
-		$subject = Period::where('name', 'like', '%' . $searchPhrase . '%');
+		$subject = $this->period->where('name', 'like', '%' . $searchPhrase . '%');
 		$total = $subject->count();
 		$result = $subject->skip($currentPage*$rowCount - $rowCount)
 						->take($rowCount)						
@@ -39,7 +38,7 @@ class PeriodsController extends Controller {
 			return abort(403, 'Invalid input.');
 		}
 		
-		Period::create(['name' => $period]);
+		$this->period->create(['name' => $period]);
 
 		return 'success';
 	}
@@ -51,7 +50,7 @@ class PeriodsController extends Controller {
 			return abort(403, 'Invalid input.');
 		}
 
-		$period = Period::findOrFail($id);
+		$period = $this->period->findOrFail($id);
 		$period->name = $newPeriod;
 		$period->save();
 
@@ -59,7 +58,7 @@ class PeriodsController extends Controller {
 	}
 
 	public function destroy($id) {
-		$period = Period::findOrFail($id);
+		$period = $this->period->findOrFail($id);
 		$period->delete();
 
 		return 'success';

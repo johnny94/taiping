@@ -13,7 +13,7 @@
   	  <div class="col-md-3"><a id="add-period" class="btn btn-primary" role="button">新增</a></div>
 	</div>
 
-	<table id="grid-basic" class="table table-condensed table-hover table-striped" data-ajax="true" data-url="/api/periods">
+	<table id="grid-basic" class="table table-condensed table-hover table-striped" data-ajax="true" data-url="/api/periods/search">
     <thead>
         <tr>            
             <th data-column-id="name">節次</th>    
@@ -30,7 +30,7 @@
 		$('#add-period').on('click', function() {
 			$.ajax({
 				method: 'POST',
-  				url: '/manager/periods',
+  				url: '/periods',
   				data: {
   					_token: "{{ csrf_token() }}",
   					period: $('#period').val()
@@ -55,19 +55,17 @@
 			});
 		});
 		
-		$('#grid-basic').bootgrid({			
+		$('#grid-basic').bootgrid({
+			ajaxSettings: {
+        		method: 'GET'
+    		},	
 			labels: {
 				refresh: '重新載入',
 				loading: '載入中...',
 				search: '搜尋節次',
 				noResults: '無搜尋結果！',
 				infos: '第 @{{ctx.start}} 筆 至 第 @{{ctx.end}} 筆，共 @{{ctx.total}} 筆'
-			},
-		  	post: function() {
-				return {
-					_token: "{{ csrf_token() }}"
-				};
-			},
+			},		  	
 			formatters: {				
 				commands: function(column, row) {
 					return '<button type="button" class="btn btn-default btn-sm command-edit" data-row-id="' + row.id + '"><span class="glyphicon glyphicon-pencil"></span></button> ' + 
@@ -96,7 +94,7 @@
 			
 			$.ajax({
 				method: 'DELETE',
-  				url: '/manager/periods/' + $('#myModal').data('target-id'),
+  				url: '/periods/' + $('#myModal').data('target-id'),
   				data: {
   					_token: "{{ csrf_token() }}"
   				},
@@ -118,7 +116,7 @@
 			
 			$.ajax({
 				method: 'PATCH',
-  				url: '/manager/periods/' + $('#modal-edit-form').data('target-id'),
+  				url: '/periods/' + $('#modal-edit-form').data('target-id'),
   				data: {
   					_token: "{{ csrf_token() }}",  					
   					newPeriod: $('#modal-edit-form input').val().trim()

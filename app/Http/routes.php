@@ -16,42 +16,46 @@ Route::get('/', ['middleware' => 'auth',
 
 Route::get('classes', 'ClassesController@index');
 
-Route::get('classSwitchings/create', 'ClassSwitchingsController@create');
+// TODO:
+//   1. Controller method: notChecked -> not-checked
+Route::get('class-switchings/create', 'ClassSwitchingsController@create');
 Route::get('classSwitchings/notChecked', 'ClassSwitchingsController@notChecked');
 Route::get('classSwitchings/{id}', 'ClassSwitchingsController@show');
 Route::get('classSwitchings/{id}/edit', 'ClassSwitchingsController@edit');
 Route::post('classSwitchings', 'ClassSwitchingsController@store');
 Route::patch('classSwitchings/{id}', 'ClassSwitchingsController@update');
-Route::patch('classSwitchings/{id}/pass', 'ClassSwitchingsController@pass');
-Route::patch('classSwitchings/{id}/reject', 'ClassSwitchingsController@reject');
+Route::patch('class-switchings/{id}/status', 'ClassSwitchingsController@updateStatus');
 Route::delete('classSwitchings/{id}', 'ClassSwitchingsController@destroy');
 
 Route::get('manager/switchings', 'ManagerController@switchings');
-Route::post('manager/fetchSwitchings', 'ManagerController@fetchSwitchings');
-Route::delete('manager/deleteSwitching/{id}', 'ManagerController@deleteSwitching');
-Route::get('manager/export/switchingLog', 'ManagerController@exportSwitchingLog');
-
 Route::get('manager/users', 'ManagerController@users');
-Route::post('manager/fetchRegisteredUser', 'ManagerController@fetchRegisteredUser');
-Route::delete('manager/deleteUser/{id}', 'ManagerController@deleteUser');
-Route::get('manager/setManager', 'ManagerController@setManager');
-Route::post('manager/setManager', 'ManagerController@setAsManager');
+Route::get('manager/subjects', 'ManagerController@subjects');
+Route::get('manager/periods', 'ManagerController@periods');
+Route::get('manager/settings', 'ManagerController@settings');
 Route::get('manager/exportLog', 'ManagerController@exportLog');
-Route::get('manager/export/userDeletionLog', 'ManagerController@exportUserDeletionLog');
-Route::get('manager/export/switchingDeletionLog', 'ManagerController@exportSwitchingDeletionLog');
-Route::get('teachers', 'ClassSwitchingsController@getTeacherNames');
 
-Route::get('manager/subjects', 'SubjectsController@index');
-Route::post('manager/subjects', 'SubjectsController@store');
-Route::post('api/subjects', 'SubjectsController@fetchAllSubjects');
-Route::delete('manager/subjects/{id}', 'SubjectsController@destroy');
-Route::patch('manager/subjects/{id}', 'SubjectsController@update');
+Route::get('logs/download/switching-log', 'LogsController@exportSwitchingLog');
+Route::get('logs/download/user-deletion-log', 'LogsController@exportUserDeletionLog');
+Route::get('logs/download/switching-deletion-log', 'LogsController@exportSwitchingDeletionLog');
+// TODO: Move export method
+Route::delete('manager/deleteSwitching/{id}', 'ClassSwitchingsController@destroyByAdmin');
 
-Route::get('manager/periods', 'PeriodsController@index');
-Route::post('manager/periods', 'PeriodsController@store');
-Route::post('api/periods', 'PeriodsController@fetchAllPeriods');
-Route::delete('manager/periods/{id}', 'PeriodsController@destroy');
-Route::patch('manager/periods/{id}', 'PeriodsController@update');
+Route::delete('users/{id}', 'UsersController@destroy');
+Route::put('users/manager', 'UsersController@setAsManager');
+
+Route::post('subjects', 'SubjectsController@store');
+Route::delete('subjects/{id}', 'SubjectsController@destroy');
+Route::patch('subjects/{id}', 'SubjectsController@update');
+
+Route::post('periods', 'PeriodsController@store');
+Route::delete('periods/{id}', 'PeriodsController@destroy');
+Route::patch('periods/{id}', 'PeriodsController@update');
+
+Route::get('api/class-switchings/search', 'ClassSwitchingsController@search');
+Route::get('api/users/names', 'UsersController@searchByName');
+Route::get('api/users/search', 'UsersController@search');
+Route::get('api/periods/search', 'PeriodsController@search');
+Route::get('api/subjects/search', 'SubjectsController@search');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

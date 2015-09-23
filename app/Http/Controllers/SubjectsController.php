@@ -9,20 +9,18 @@ use App\ClassTitle;
 
 class SubjectsController extends Controller {
 
-	public function __construct() {
+	private $classTitle;
+	public function __construct(ClassTitle $title) {
 		$this->middleware('manager');
+		$this->classTitle = $title;
 	}
 
-	public function index() {
-		return view('manager.subjects');
-	}
-
-	public function fetchAllSubjects() {
+	public function search() {
 		$currentPage = intval(Request::input('current'));
 		$rowCount = intval(Request::input('rowCount'));
 		$searchPhrase = Request::input('searchPhrase');
 
-		$subject = ClassTitle::where('title', 'like', '%' . $searchPhrase . '%');
+		$subject = $this->classTitle->where('title', 'like', '%' . $searchPhrase . '%');
 		$total = $subject->count();
 		$result = $subject->skip($currentPage*$rowCount - $rowCount)
 						->take($rowCount)						
@@ -39,7 +37,7 @@ class SubjectsController extends Controller {
 		}
 
 		$subject = trim(Request::input('subject'));
-		ClassTitle::create(['title' => $subject]);
+		$this->classTitle->create(['title' => $subject]);
 
 		return 'success';
 	}
@@ -50,7 +48,7 @@ class SubjectsController extends Controller {
 			return abort(403, 'Invalid input.');
 		}
 
-		$subject = ClassTitle::findOrFail($id);
+		$subject = $this->classTitle->findOrFail($id);
 		$subject->title = trim(Request::input('newSubject'));
 		$subject->save();
 
@@ -58,7 +56,7 @@ class SubjectsController extends Controller {
 	}
 
 	public function destroy($id) {
-		$subject = ClassTitle::findOrFail($id);
+		$subject = $this->classTitle->findOrFail($id);
 		$subject->delete();
 
 		return 'success';

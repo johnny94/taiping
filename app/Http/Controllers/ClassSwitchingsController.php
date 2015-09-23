@@ -1,146 +1,171 @@
 <?php namespace App\Http\Controllers;
 
-use \Auth;
-use Session;
-use Request;
-use DB;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateClassSwitchingRequest;
 
+use \Auth;
 use Carbon\Carbon;
+use DB;
+use Request;
 
 use App\ClassSwitching;
 use App\ClassTitle;
 use App\Period;
 use App\User;
 
-use App\Taiping\LeaveProcedure\ClassSwitchingProcedure;
+use App\Taiping\Repositories\ClassSwitchingRepository;
+use App\Taiping\Helper\Helper;
 
-class ClassSwitchingsController extends Controller {
-	
-	public function __construct()
+class ClassSwitchingsController extends Controller 
+{
+	private $classSwitchingRepo;
+
+	public function __construct(ClassSwitchingRepository $repository)
 	{		
-		$this->middleware('auth');		
+		$this->middleware('auth');
+		$this->classSwitchingRepo = $repository;
 	}
 
 	public function show($id)
-	{
-		// Ugly Implementation: Why should I covert 'an' object 
-		// to an 'array' just for representation.
-		$switchings = array(ClassSwitching::findOrFail($id));
-		return view('classSwitchings.show', compact('switchings'));
-	}
-
-	public function create()
 	{		
-		$periods = Period::lists('name', 'id');
-		$classes = ClassTitle::lists('title', 'id');
-
-		return view('classSwitchings.create', compact('periods', 'classes'));
-	}
-
-	public function edit($id)
-	{		
-		$switching = ClassSwitching::findOrFail($id);
-		$periods = Period::lists('name', 'id');
-		$classes = ClassTitle::lists('title', 'id');
-		return view('classSwitchings.edit', compact('switching', 'periods', 'classes'));
-	}
-
-	public function store(CreateClassSwitchingRequest $request)	
-	{			
-		//$this->leaveApplication->applyProcedure();
-		$classSwitchings = $request->input('classSwitching');
-		foreach ($classSwitchings as $switching) {
-			$class_switching = new ClassSwitching;			
-			$class_switching->with_user_id = $switching['teacher'];
-			$class_switching->from = Carbon::createFromFormat('Y-m-d', $switching['from_date']);
-			$class_switching->from_period = intval($switching['from_period']);
-			$class_switching->from_class_id = intval($switching['from_class']);
-			$class_switching->to = Carbon::createFromFormat('Y-m-d', $switching['to_date']);
-			$class_switching->to_period = intval($switching['to_period']);
-			$class_switching->to_class_id = intval($switching['to_class']);
-			$class_switching->checked_status_id = DB::table('checked_status')->where('title', 'pending')->first()->id;
-			Auth::user()->classSwitching()->save($class_switching);			
-		}
-		return redirect('classes');
-	}
-
-	public function update($id)
-	{
-		$oldSwitching = ClassSwitching::findOrFail($id);
-
-		$switching = Request::input('classSwitching')[0];
-		$class_switching = new ClassSwitching;		
-		$class_switching->with_user_id = $switching['teacher'];
-		$class_switching->from = Carbon::createFromFormat('Y-m-d', $switching['from_date']);
-		$class_switching->from_period = intval($switching['from_period']);
-		$class_switching->from_class_id = intval($switching['from_class']);
-		$class_switching->to = Carbon::createFromFormat('Y-m-d', $switching['to_date']);
-		$class_switching->to_period = intval($switching['to_period']);
-		$class_switching->to_class_id = intval($switching['to_class']);
-		$class_switching->checked_status_id = DB::table('checked_status')->where('title', 'pending')->first()->id;
-
-		$oldSwitching->update($class_switching->toArray());
-
-		return redirect('classes');
-
-	}
-
-	public function destroy($id)
-	{
-		$classSwitching = ClassSwitching::findOrFail($id);
-		if ($classSwitching->user_id === Auth::user()->id) {
-			$classSwitching->delete();			
-		}
-
-		return redirect('classSwitchings/notChecked');
-
-	}
-
-	public function pass($id)
-	{
-		$switching = ClassSwitching::findOrFail($id);
-		$switching->checked_status_id = DB::table('checked_status')->where('title', 'pass')->first()->id;
-		$switching->save();
-
-		return redirect('classes');
-	}
-
-	public function reject($id)
-	{
-		$switching = ClassSwitching::findOrFail($id);
-		$switching->checked_status_id = DB::table('checked_status')->where('title', 'reject')->first()->id;
-		$switching->save();
-
-		return redirect('classes');
+		$switching = $this->classSwitchingRepo->findOrFail($id);
+		return view('classSwitchings.show', compact('switching'));
 	}
 
 	public function notChecked()
 	{
-		$rejectedSwitchings = Auth::user()->classSwitching->filter(function($item){
-			return $item->checked_status_id == 3; //id = 3 reject by other teacher.
-		});
-
-		$pendingSwitchings = Auth::user()->classSwitching->filter(function($item){
-			return $item->checked_status_id == 1; //id = 1 pending.
-		});		
-
-		$pendingSwitchingsFromOthers = Auth::user()->withClassSwitching->filter(function($item){
-			return $item->checked_status_id == 1; //id = 1 pending.
-		});
+		$rejectedSwitchings = $this->classSwitchingRepo->getRejected(Auth::user());
+		$pendingSwitchings = $this->classSwitchingRepo->getPending(Auth::user());
+		$pendingSwitchingsFromOthers = $this->classSwitchingRepo->getPendingFromOthers(Auth::user());
 
 		$notPassSwitchings = compact('pendingSwitchings','rejectedSwitchings','pendingSwitchingsFromOthers');
 
 		return view('classSwitchings.notChecked', $notPassSwitchings);
 	}
 
-	public function getTeacherNames()
+	public function create()
 	{		
-		$query = trim(Request::input('q'));
-		return User::where('name', 'LIKE', "%{$query}%")->select('id', 'name')->get();
+		$periods = Period::lists('name', 'id');
+		$classes = ClassTitle::lists('title', 'id');
+		// TODO: $this->app->make['App\ClassSwitching'] ?
+		$switching = new ClassSwitching(['user_id' => Auth::user()->id]);
+		
+		return view('classSwitchings.create', compact('periods', 'classes', 'switching'));
 	}
 
+	public function edit($id)
+	{		
+		$switching = $this->classSwitchingRepo->findOrFail($id);
+		$periods = Period::lists('name', 'id');
+		$classes = ClassTitle::lists('title', 'id');
+
+		return view('classSwitchings.edit', compact('switching', 'periods', 'classes'));
+	}
+
+	public function store(CreateClassSwitchingRequest $request)	
+	{		
+		$classSwitchings = $request->input('classSwitching');
+		
+		foreach ($classSwitchings as $switching) {			
+			$classSwitching = $this->createClassSwitchingFromRequest($switching);
+			Auth::user()->classSwitching()->save($classSwitching);
+		}
+
+		return redirect('classes');
+	}
+
+	public function update($id)
+	{
+		$switching = $this->createClassSwitchingFromRequest(Request::input('classSwitching')[0]);
+		$this->classSwitchingRepo->findOrFail($id)->update($switching->toArray());
+		
+		return redirect('classes');
+	}
+
+	private function createClassSwitchingFromRequest($request)
+	{
+		$switching = new ClassSwitching;
+		$switching->with_user_id = $request['teacher'];
+		$switching->from = $request['from_date'];		
+		$switching->from_period = $request['from_period'];
+		$switching->from_class_id = $request['from_class'];
+		$switching->to = $request['to_date'];
+		$switching->to_period = $request['to_period'];
+		$switching->to_class_id = $request['to_class'];
+		$switching->checked_status_id = ClassSwitching::CHECKING_STATUS_PENDING;
+
+		return $switching;
+	}
+
+	public function updateStatus($id)
+	{
+		if (!Request::has('status')) {
+			return redirect('classes');
+		}
+
+		$status = Request::input('status');
+		$newStatus = $status === 'pass' ? ClassSwitching::CHECKING_STATUS_PASS : ClassSwitching::CHECKING_STATUS_REJECT;
+		$this->classSwitchingRepo->findOrFail($id)->update(['checked_status_id' => $newStatus]);
+
+		return redirect('classes');
+	}	
+
+	public function destroy($id)
+	{
+		$classSwitching = $this->classSwitchingRepo->findOrFail($id);
+		if ($classSwitching->user_id === Auth::user()->id) {
+			$classSwitching->delete();			
+		}
+
+		return redirect('classSwitchings/notChecked');
+	}
+
+	public function destroyByAdmin($id)
+	{
+		$switching = $this->classSwitchingRepo->findOrFail($id);
+		if ($switching->delete()) {
+			$this->logSwitchingDeletion(Auth::user()->id, $id);
+			return ['message' => true];
+		}
+
+		return abort(500);
+	}
+
+	private function logSwitchingDeletion($managerID, $switchingID)
+	{
+		DB::table('delete_switching_log')->insert([
+				'manager_id' => $managerID,
+				'switching_id' => $switchingID,
+				'created_at' => Carbon::now(),
+				'updated_at' => Carbon::now()
+			]);
+	}
+
+	public function search()
+	{
+		$currentPage = intval(Request::input('current'));
+		$rowCount = intval(Request::input('rowCount'));		
+
+		$query = Helper::buildClassSwitchingQuery(
+							Request::input('searchPhrase'), 
+							Request::input('filterByDate'), 
+							Request::input('filterFrom'), 
+							Request::input('filterTo'));
+
+		$total = $query->count();
+		$result = $query->skip($currentPage*$rowCount - $rowCount)
+						->take($rowCount)
+						->get();
+
+		// -1 indicates that the user want to fetch all data without pagination.
+		if($rowCount == -1) {
+			$result = $query->get();
+		}		
+
+		$response = ['current' => $currentPage, 'rowCount' => $rowCount, 'rows' => $result, 'total' => $total];
+
+		return $response;
+
+	}
 }

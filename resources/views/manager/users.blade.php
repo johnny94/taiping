@@ -3,7 +3,7 @@
 @section('content')
 	<h1>使用者名單</h1>
 	<hr>
-	<table id="grid-basic" class="table table-condensed table-hover table-striped" data-ajax="true" data-url="fetchRegisteredUser">
+	<table id="grid-basic" class="table table-condensed table-hover table-striped" data-ajax="true" data-url="/api/users/search">
     <thead>
         <tr>            
             <th data-column-id="name">姓名</th>
@@ -20,7 +20,10 @@
 	<script type="text/javascript">
 	$(document).ready(function() {
 		
-		$('#grid-basic').bootgrid({			
+		$('#grid-basic').bootgrid({
+			ajaxSettings: {
+        		method: 'GET'
+    		},
 			labels: {
 				refresh: '重新載入',
 				loading: '載入中...',
@@ -30,7 +33,7 @@
 			},
 		  	post: function() {
 				return {
-					_token: "{{ csrf_token() }}"
+					//_token: "{{ csrf_token() }}"
 				};
 			},
 			formatters: {				
@@ -47,12 +50,10 @@
 
 		});
 
-		$('#myModal .modal-footer .confirm').on('click', function() {
-			
-			
+		$('#myModal .modal-footer .confirm').on('click', function() {			
 			$.ajax({
 				method: 'DELETE',
-  				url: '/manager/deleteUser/' + $('#myModal').data('target-id'),
+  				url: '/users/' + $('#myModal').data('target-id'),
   				data: {
   					_token: "{{ csrf_token() }}"
   				},

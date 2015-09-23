@@ -13,8 +13,7 @@
         </div>
     @endif
 
-    {!! Form::model($switching = new App\ClassSwitching(['user_id' => Auth::user()->id]), ['action'=>['ClassSwitchingsController@store'], 'class'=> 'form-horizontal']) !!}
-        
+    {!! Form::model($switching, ['action'=>['ClassSwitchingsController@store'], 'class'=> 'form-horizontal']) !!}
         <div class="panel panel-default classSwitchingForm">   
             <div class="panel-body">                
                 <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -96,7 +95,7 @@ $(document).ready(function() {
 
         $(".teacher_list").select2({
             ajax: {
-                url: "/teachers",
+                url: "/api/users/names",
                 dataType: "json",
                 delay: 250,
                 processResults: function(data, page) {
@@ -129,7 +128,7 @@ $(document).ready(function() {
     $(".teacher_list").select2({
         placeholder:'請輸入老師姓名',
         ajax: {
-            url: "/teachers",
+            url: "/api/users/names",
             dataType: "json",
             delay: 250,
             processResults: function(data, page) {

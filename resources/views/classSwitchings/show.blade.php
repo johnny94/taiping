@@ -2,12 +2,10 @@
 
 @section('content')
 	<h1>調課內容</h1>		
-	<hr>
-	@foreach($switchings as $switching)
+	<hr>	
 	<div class="panel panel-default">  	
   		<div class="panel-body">
-        	@include('leaves.switchingPanelBody')
+        	@include('leaves.switchingPanelBody', ['switching' => $switching])
   		</div>
-	</div>
-	@endforeach	
+	</div>	
 @stop

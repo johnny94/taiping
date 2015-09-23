@@ -13,7 +13,7 @@
   	  <div class="col-md-3"><a id="add-subject" class="btn btn-primary" role="button">新增</a></div>
 	</div>
 
-	<table id="grid-basic" class="table table-condensed table-hover table-striped" data-ajax="true" data-url="/api/subjects">
+	<table id="grid-basic" class="table table-condensed table-hover table-striped" data-ajax="true" data-url="/api/subjects/search">
     <thead>
         <tr>            
             <th data-column-id="title">科目</th>    
@@ -30,7 +30,7 @@
 		$('#add-subject').on('click', function() {
 			$.ajax({
 				method: 'POST',
-  				url: '/manager/subjects',
+  				url: '/subjects',
   				data: {
   					_token: "{{ csrf_token() }}",
   					subject: $('#subject').val()
@@ -56,7 +56,10 @@
 
 		});
 		
-		$('#grid-basic').bootgrid({			
+		$('#grid-basic').bootgrid({
+			ajaxSettings: {
+        		method: 'GET'
+    		},
 			labels: {
 				refresh: '重新載入',
 				loading: '載入中...',
@@ -96,7 +99,7 @@
 			
 			$.ajax({
 				method: 'DELETE',
-  				url: '/manager/subjects/' + $('#myModal').data('target-id'),
+  				url: '/subjects/' + $('#myModal').data('target-id'),
   				data: {
   					_token: "{{ csrf_token() }}"
   				},
@@ -116,7 +119,7 @@
 		$('#modal-edit-form .modal-footer .confirm').on('click', function() {			
 			$.ajax({
 				method: 'PATCH',
-  				url: '/manager/subjects/' + $('#modal-edit-form').data('target-id'),
+  				url: '/subjects/' + $('#modal-edit-form').data('target-id'),
   				data: {
   					_token: "{{ csrf_token() }}",  					
   					newSubject: $('#modal-edit-form input').val().trim()
@@ -133,6 +136,7 @@
   				}
 			});
 		});
+		
 		$('#modal-edit-form').on('hidden.bs.modal', function() {
 			$('#modal-edit-form .modal-body p.text-danger').hide();
 		});

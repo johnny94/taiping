@@ -9,6 +9,10 @@ use \Auth;
 
 class ClassSwitching extends Model {
 
+	const CHECKING_STATUS_PENDING = 1;
+	const CHECKING_STATUS_PASS = 2;
+	const CHECKING_STATUS_REJECT = 3;
+
 	use SoftDeletes;
     protected $dates = ['deleted_at'];	
 
@@ -65,6 +69,5 @@ class ClassSwitching extends Model {
 	public function isPass()
 	{
 		return $this->attributes['checked_status_id'] === DB::table('checked_status')->where('title', 'pass')->first()->id;
-	}
-	
+	}	
 }

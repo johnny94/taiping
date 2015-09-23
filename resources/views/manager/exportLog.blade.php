@@ -23,9 +23,8 @@
             {!! Form::input('date', 'end', Carbon\Carbon::now()->toDateString(), ['class'=>'form-control']) !!}        
           </div>
         
-          <span class="h3">所有調課被刪除的紀錄。</span>          
-          <a id="switching-deletion-log" class="btn btn-primary" href="export/switchingDeletionLog" role="button">確定</a>   
-
+          <span class="h3">所有調課被刪除的紀錄。</span>
+          <a id="switching-deletion-log" class="btn btn-primary">確定</a>        
         {!! Form::close() !!} 
       </div>
     </div>
@@ -37,8 +36,7 @@
       </div>
       <div class="panel-body">
         <span class="h3">匯出所有帳號被刪除的紀錄。</span>
-        <a id="user-deletion-log" class="btn btn-primary export-log" href="export/userDeletionLog">確定</a>
-
+        <button id="user-deletion-log" class="btn btn-primary">確定</button>
       </div>
     </div>
 		
@@ -50,8 +48,9 @@
 $(document).ready(function() {
 
     $('#switching-deletion-log').on('click', function(e) {
-      e.preventDefault();
-      $(this).parents('div.panel').block(
+      //e.preventdefault();
+      // TODO: Unable to unblock panel after the download pop-up appeard.
+      /*$(this).parents('div.panel').block(
         { message: '輸出中...',
           css: { 
             border: 'none', 
@@ -61,30 +60,28 @@ $(document).ready(function() {
             '-moz-border-radius': '10px', 
             opacity: .5, 
             color: '#fff' 
-      }});
+      }});*/
 
-      var startDate = $('input[name=start]').val();
-      var endDate = $('input[name=end]').val();
-      $.ajax({
-          method: 'GET',
-          url: $(this).attr('href'),
-          data: {           
-            start: startDate,
-            end: endDate
-          },
-          success: generateDownloadLinkWithDate($(this).attr('href'), startDate, endDate),
-          error: function(xhr, textStatus) {
-            console.log(xhr.responseText);            
-          }
+      var queryParam = {
+            start: $('input[name=start]').val(),
+            end: $('input[name=end]').val()
+      };
+      var dlink = '/logs/download/switching-deletion-log?' + $.param(queryParam);
+
+      var $iframe = $("<iframe style='display:none' />");
+      $iframe.attr("src", dlink);
+      $iframe.appendTo("body");
+      $iframe.on('load', function () {
+        // The load event will be triggered if the download link return a page.
+        alert('下載失敗！');
       });
+    });
 
-    })
 
-    $('#user-deletion-log').click(function(e) {
-      e.preventDefault();
-      console.log($(this).attr('href'));     
+    $('#user-deletion-log').click(function(e) {      
 
-      $(this).parents('div.panel').block(
+      // TODO: Unable to unblock panel after the download pop-up appeard.
+      /*$(this).parents('div.panel').block(
         { message: '輸出中...',
           css: { 
             border: 'none', 
@@ -94,36 +91,20 @@ $(document).ready(function() {
             '-moz-border-radius': '10px', 
             opacity: .5, 
             color: '#fff' 
-        }});
-   
-      $.ajax({
-          method: 'GET',
-          url: $(this).attr('href'),
-          data: {           
-            start: 'startDate'            
-          },          
-          success: generateDownloadLink($(this).attr('href')),
-          error: function(xhr, textStatus) {
-            console.log(xhr.responseText);            
-          }
+        }});*/
+
+      var dlink = '/logs/download/user-deletion-log';
+
+      var $iframe = $("<iframe style='display:none' />");
+      $iframe.attr("src", dlink);
+      $iframe.appendTo("body");
+      $iframe.on('load', function () {
+        // The load event will be triggered if the download link return a page.
+        alert('下載失敗！');
       });
 
     });
 	
 });
-
-function generateDownloadLink(url) {
-  return function(data){
-    window.location = url;
-    $('div.panel').unblock();
-  };
-}
-
-function generateDownloadLinkWithDate(url, start, end) {
-  return function(data){
-    window.location = url + '?start=' + start + '&end=' + end;
-    $('div.panel').unblock();
-  };
-}
 </script> 
 @stop

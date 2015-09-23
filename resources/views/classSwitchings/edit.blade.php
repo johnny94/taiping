@@ -26,7 +26,7 @@ $(document).ready(function() {
 
     $(".teacher_list").select2({        
         ajax: {
-            url: "/teachers",
+            url: "/api/users/names",
             dataType: "json",
             delay: 250,
             processResults: function(data, page) {

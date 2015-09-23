@@ -6,7 +6,7 @@
 	<p>
 	  <a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapseExample">篩選器
 	  <span class="caret"></span></a>
-	  <a id="switching-log" class="btn btn-default" href="export/switchingLog" role="button">輸出調課紀錄</a>
+	  <button id="switching-log" class="btn btn-default">輸出調課紀錄</button>
 	</p>	
 	<div class="collapse" id="collapseExample">
   	  <div class="well">
@@ -29,7 +29,7 @@
   	  </div>
 	</div>
 	
-	<table id="grid-basic" class="table table-condensed table-hover table-striped" data-ajax="true" data-url="fetchSwitchings">
+	<table id="grid-basic" class="table table-condensed table-hover table-striped" data-ajax="true" data-url="/api/class-switchings/search">
     <thead>
         <tr>            
             <th data-column-id="teacher">調課老師</th>
@@ -44,8 +44,7 @@
         	<th data-column-id="commands" data-formatter="commands" data-sortable="false">操作</th>
         </tr>
     </thead>
-	</table>	
-
+	</table>
 @stop
 
 @section('footer')
@@ -53,29 +52,29 @@
 $(document).ready(function() {
 	
 	$('#switching-log').on('click', function(e) {
-		e.preventDefault();
+		var queryParam = {
+      		filterByDate: $('input:checkbox').prop('checked'), 			
+         	filterFrom: $('input[name=filter-from]').val(),
+           	filterTo: $('input[name=filter-to]').val(),
+           	searchPhrase: $('.search-field').val()
+      	};      	
+      	var dlink = '/logs/download/switching-log?' + $.param(queryParam);
+
+      	var $iframe = $("<iframe style='display:none' />");
+      	$iframe.attr("src", dlink);
+		$iframe.appendTo("body");
+		$iframe.on('load', function () {
+			// The load event will be triggered if the download link return a page.
+			console.log($(this).contents());
+			//alert('下載失敗！');
+		});
 		
-		var filterByDate = $('input:checkbox').prop('checked');
-		var startDate = $('input[name=filter-from]').val();
-      	var endDate = $('input[name=filter-to]').val();
-      	var searchPhrase = $('.search-field').val();
-		$.ajax({
-       		method: 'GET',
-       		url: $(this).attr('href'),
-       		data: {
-       			filterByDate: filterByDate, 			
-         		filterFrom: startDate,
-           		filterTo: endDate,
-           		searchPhrase: searchPhrase
-       		},
-       		success: generateDownloadLinkWithDate($(this).attr('href'), startDate, endDate, filterByDate, searchPhrase),
-       		error: function(xhr, textStatus) {       			
-           		console.log(xhr.responseText);
-       		}
-   		});
 	});
 
-	var $grid = $('#grid-basic').bootgrid({			
+	var $grid = $('#grid-basic').bootgrid({
+			ajaxSettings: {
+        		method: 'GET'
+    		},
 			labels: {
 				refresh: '重新載入',
 				loading: '載入中...',
@@ -84,8 +83,7 @@ $(document).ready(function() {
 				infos: '第 @{{ctx.start}} 筆 至 第 @{{ctx.end}} 筆，共 @{{ctx.total}} 筆'
 			},
 		  	post: function() {
-				return {
-					_token: "{{ csrf_token() }}",
+				return {					
 					filterByDate: $('input:checkbox').prop('checked'),
 					filterFrom: $('input[name=filter-from]').val(),
 					filterTo: $('input[name=filter-to]').val()
@@ -154,12 +152,6 @@ $(document).ready(function() {
 	});
 });
 
-function generateDownloadLinkWithDate(url, start, end, filterByDate, searchPhrase) {
-  return function(data){
-    window.location = url + '?filterFrom=' + start + '&filterTo=' + end + '&filterByDate=' + filterByDate + '&searchPhrase=' + searchPhrase;
-  };
-}
-	
 </script>
 
 @include('partials.modal', 

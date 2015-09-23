@@ -7,7 +7,7 @@
 
 		@include('flash::message')
 
-		{!! Form::open(['url'=>'manager/setManager', 'class' => 'form-horizontal']) !!}
+		{!! Form::open(['method' => 'PUT', 'url'=>'/users/manager', 'class' => 'form-horizontal']) !!}
 			
 			<div class="form-group">
 				{!! Form::label('teacher', '使用者', ['class'=>'col-md-2 control-label']) !!}
@@ -33,7 +33,7 @@ $(document).ready(function() {
 
 	$(".teacher_list").select2({
             ajax: {
-                url: "/teachers",
+                url: "/api/users/names",
                 dataType: "json",
                 delay: 250,
                 processResults: function(data, page) {

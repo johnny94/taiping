@@ -21,7 +21,7 @@
                         <li {{ Request::is('manager/subjects') ? 'class=active' : '' }}><a href="/manager/subjects">科目列表</a></li>
                         <li {{ Request::is('manager/periods') ? 'class=active' : '' }}><a href="/manager/periods">節次列表</a></li>
                         <li class="divider"></li>
-                        <li {{ Request::is('manager/setManager') ? 'class=active' : '' }}><a href="/manager/setManager">設定管理者權限</a></li>
+                        <li {{ Request::is('manager/settings') ? 'class=active' : '' }}><a href="/manager/settings">設定管理者權限</a></li>
                         <li class="divider"></li>
                         <li {{ Request::is('manager/exportLog') ? 'class=active' : '' }}><a href="/manager/exportLog">匯出刪除紀錄</a></li>
                     </ul>

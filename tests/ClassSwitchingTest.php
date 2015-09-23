@@ -1,42 +1,59 @@
 <?php
 
+use \Mockery;
+
 use App\User;
-use App\Role;
-use App\Leave;
 use App\ClassSwitching;
 
-class ClassSwitchingTest extends TestCase {
+class ClassSwitchingTest extends TestCase
+{	
 
-	public function getCreateLeaveInput($type, $curriculum, $reason = 'Reason')
+	public function testVistsHomePageAfterLogin()
 	{
-		return [
-			'_token' => csrf_token(),
-			'leaveType' => $type,
-			'from_date' => Carbon\Carbon::now()->toDateString(),
-			'from_time' => Carbon\Carbon::now()->format('H:i'),
-			'to_date' => Carbon\Carbon::now()->toDateString(),
-			'to_time' => Carbon\Carbon::now()->format('H:i'),
-			'reason' => $reason,
-			'curriculum' => $curriculum
-		];
+		$user = new User(['name' => 'John']);
+		$this->be($user);		
+
+		$response = $this->call('GET', '/');
+		$this->assertViewHas('passedSwitchingsFromOthers');
+		$this->assertViewHas('passedSwitchings');
+		$this->assertResponseOk();
 	}
 
-	public function fetchUser()
-	{		
-		return User::find(1);
+	//Can't pass. I have no idea.
+	public function testVisitCreateClassSwitchingPage()
+	{
+		$user = new User(['id' => 1, 'name' => 'John']);
+		$this->be($user);
+
+		$sw = Mockery::mock('Eloquent', 'App\ClassSwitching');
+		$sw->shouldReceive('getAttribute')->withAnyArgs()->andReturn($sw);
+		$this->app->instance('App\ClassSwitching', $sw);
+		
+		$response = $this->call('GET', 'class-switchings/create');
+		$this->assertViewHas('periods');
+		$this->assertViewHas('classes');
+		$this->assertResponseOk();
 	}
 
-	public function fetchManager()
-	{	
-		$ROLE_MANAGER = 2;
-		$managers = Role::where('id', '=', $ROLE_MANAGER)
-					->first()
-					->users;
+	public function testShowClassSwitching()
+	{
+		$user = new User(['name' => 'John']);
+		$this->be($user);
 
-		return $managers->first();
+		$sw = Mockery::mock('App\ClassSwitching');
+		$sw->shouldReceive('getAttribute')->withAnyArgs()->andReturn($sw);
+		
+		$mock = Mockery::mock('App\Taiping\Repositories\ClassSwitchingRepository');		
+		$mock->shouldReceive('findOrFail')->with('1')->andReturn($sw);
+		$this->app->instance('App\Taiping\Repositories\ClassSwitchingRepository', $mock);
+
+		$response = $this->call('GET', 'classSwitchings/1');
+		$this->assertViewHas('switching');		
+		$this->assertResponseOk();
 	}
-	
-	public function testHomePageAfterLogin()
+
+
+	/*public function testHomePageAfterLogin()
 	{		
 		$user = $this->fetchUser();
 		$this->be($user);
@@ -53,103 +70,6 @@ class ClassSwitchingTest extends TestCase {
 		$this->call('GET', 'classes');
 		$this->assertResponseOk();
 	}	
-	
-	public function testCreateLeavePageAfterLogin()
-	{		
-		$user = $this->fetchUser();
-		$this->be($user);
-
-		$this->call('GET', 'leaves/create');
-		$this->assertResponseOk();
-	}
-	
-	public function testLeavesPageAfterLogin()
-	{
-		$user = $this->fetchUser();
-		$this->be($user);
-		$this->call('GET', 'leaves');
-		$this->assertRedirectedTo('classes');
-
-		$user = $this->fetchManager();
-		$this->be($user);
-		$this->call('GET', 'leaves');
-		$this->assertResponseOk();
-	}
-
-
-	public function testQueryAllUserWithLeavesFromJqueryBootGrid()
-	{
-		Session::start();
-		$user = $this->fetchManager();
-		$this->be($user);		
-		
-		$response = $this->call('POST', 'leaves/all',
-			['_token' => csrf_token(),
-			 'current' => '1',
-			 'rowCount' => '10',
-			 'searchPhrase' => '',
-			 'sort' => ['from' => 'desc'] ]);
-		
-		$this->assertResponseOk();	
-		
-	}
-
-	public function testCreateLeaveWithoutCurriculum()
-	{
-		Session::start();		
-		$user = $this->fetchUser();
-		$this->be($user);
-
-		$LEAVE_TYPE = '1';
-		$NO_CURRICULUM = '1';
-
-		$input = $this->getCreateLeaveInput($LEAVE_TYPE, $NO_CURRICULUM);
-
-		$response = $this->call('POST', 'leaves', $input);		
-		$this->assertRedirectedTo('classes');
-		$this->assertSessionHas('leave');
-	}
-
-	public function testCreateLeaveWithSwitchingClass()
-	{
-		Session::start();		
-		$user = $this->fetchUser();
-		$this->be($user);
-
-		$SWITCHING_ID = '2';		
-
-		$this->call('POST', 'leaves', $this->getCreateLeaveInput('1', $SWITCHING_ID));
-		$this->assertRedirectedToAction('ClassSwitchingsController@create');
-		$this->assertSessionHas('leave');
-	}
-
-	public function testCreateLeaveWithSubstitute()
-	{
-		Session::start();		
-		$user = $this->fetchUser();
-		$this->be($user);
-
-		$SUBSTITUTE_ID = '3';
-		
-		$this->call('POST', 'leaves', $this->getCreateLeaveInput('1', $SUBSTITUTE_ID));
-		$this->assertRedirectedTo('substitutes/create');
-		$this->assertSessionHas('leave');
-	}
-
-	// Need To move to other place.
-	public function createLeave($userId)
-	{
-		$leave = new Leave;
-		$leave->user_id = $userId;
-		$leave->from = Carbon\Carbon::now()->format('Y-m-d H:i');
-		$leave->to = Carbon\Carbon::now()->format('Y-m-d H:i');
-		$leave->type_id = 1;
-		$leave->curriculum_id = 1;
-		$leave->reason = 'Reason';
-		$leave->save();
-
-		return $leave;
-	}
 
 	public function createClassSwitching($user_id, $leave_id)
 	{
@@ -189,40 +109,8 @@ class ClassSwitchingTest extends TestCase {
 
 		$this->call('GET', 'classSwitchings/create');
 		$this->assertResponseOk();
-	}
+	}	
 
-
-	public function testStoreClassSwitchingAfterLogin()
-	{
-		Session::start();
-		$user = $this->fetchUser();
-		$this->be($user);		
-
-		$leaveInput = $this->getCreateLeaveInput('1', '1');
-		Session::put('leave', $leaveInput);
-
-		$classSwitchingInput = array([
-			'teacher' => 1,
-			'from_date' => Carbon\Carbon::now()->toDateString(),
-			'from_period' => 1,
-			'from_class' => 1,
-			'to_date' => Carbon\Carbon::now()->toDateString(),
-			'to_period' => 1,
-			'to_class' => 1,
-			'checked_status' => 1
-		]);
-
-		$response = $this->call('POST', 'classSwitchings', 
-			['_token' => csrf_token(), 'classSwitching' => $classSwitchingInput]);
-		
-		$this->assertRedirectedTo('classes');
-
-		return ClassSwitching::first();
-	}
-
-	/**
-	* @depends testStoreClassSwitchingAfterLogin
-	*/
 	public function testEditClassSwitchingAfterLogin(ClassSwitching $switching)
 	{
 		$user = $this->fetchUser();
@@ -237,9 +125,7 @@ class ClassSwitchingTest extends TestCase {
 		return $s;
 	}
 
-	/**
-	* @depends testEditClassSwitchingAfterLogin
-	*/
+
 	public function testUpdateClassSwitchingAfterLogin(ClassSwitching $switching)
 	{
 		Session::start();
@@ -268,9 +154,6 @@ class ClassSwitchingTest extends TestCase {
 
 	}
 
-	/**
-	* @depends testStoreClassSwitchingAfterLogin
-	*/
 	public function testPassClassSwitchingAfterLogin(ClassSwitching $switching)
 	{
 		Session::start();
@@ -286,9 +169,7 @@ class ClassSwitchingTest extends TestCase {
 		$this->assertEquals($PASS, ClassSwitching::first()->checked_status_id);
 	}
 
-	/**
-	* @depends testStoreClassSwitchingAfterLogin
-	*/
+
 	public function testRejectClassSwitchingAfterLogin(ClassSwitching $switching)
 	{
 		Session::start();
@@ -339,6 +220,6 @@ class ClassSwitchingTest extends TestCase {
 		$response = $this->call('GET', 'teachers', $query); 		
 		$this->assertResponseOk();
 		$this->assertInternalType('array', json_decode($response->getContent()));
-	}
+	}*/
 
 }
