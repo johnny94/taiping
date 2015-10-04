@@ -21,12 +21,12 @@ class Helper
 							$q->where('from_user.name', 'LIKE', "%{$searchPhrase}%")
 							  ->orWhere('with_user.name', 'LIKE', "%{$searchPhrase}%");
 					});
-		
+
 		if ($filterByDate === 'true') {
 			$date = self::createDatePeriod($filterFrom, $filterTo);
 
 			$query = $query->where(
-						function ($query) use($date){
+						function ($query) use ($date) {
 
 							$query->where(
 								function ($query) use ($date) {
@@ -38,7 +38,7 @@ class Helper
 					       				$query->where('class_switchings.to', '>=', $date['start'])
 					  		          	      ->where('class_switchings.to', '<=', $date['end']);
 								});
-						});		
+						});
 		}
 
 		$query = $query->select('class_switchings.id', 'from_user.name as teacher', 'from_period.name as from_period', 'from_class.title as from_class', 'class_switchings.from', 'with_user.name as with_teacher', 'to_period.name as to_period', 'to_class.title as to_class', 'class_switchings.to', 'checked_status.title as status');

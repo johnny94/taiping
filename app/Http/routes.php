@@ -37,6 +37,7 @@ Route::get('manager/exportLog', 'ManagerController@exportLog');
 Route::get('logs/download/switching-log', 'LogsController@exportSwitchingLog');
 Route::get('logs/download/user-deletion-log', 'LogsController@exportUserDeletionLog');
 Route::get('logs/download/switching-deletion-log', 'LogsController@exportSwitchingDeletionLog');
+
 // TODO: Move export method
 Route::delete('manager/deleteSwitching/{id}', 'ClassSwitchingsController@destroyByAdmin');
 

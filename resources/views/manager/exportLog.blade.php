@@ -44,7 +44,8 @@
 
 @section('footer')
 <script src="/js/jquery.blockUI.js"></script>
-<script type="text/javascript">
+<script src={{ elixir("js/app.js") }}></script>
+<script>
 $(document).ready(function() {
 
     $('#switching-deletion-log').on('click', function(e) {
@@ -61,20 +62,11 @@ $(document).ready(function() {
             opacity: .5, 
             color: '#fff' 
       }});*/
-
       var queryParam = {
             start: $('input[name=start]').val(),
             end: $('input[name=end]').val()
       };
-      var dlink = '/logs/download/switching-deletion-log?' + $.param(queryParam);
-
-      var $iframe = $("<iframe style='display:none' />");
-      $iframe.attr("src", dlink);
-      $iframe.appendTo("body");
-      $iframe.on('load', function () {
-        // The load event will be triggered if the download link return a page.
-        alert('下載失敗！');
-      });
+      TAIPING.downloadRequest.init('/logs/download/switching-deletion-log', queryParam);
     });
 
 
@@ -92,17 +84,7 @@ $(document).ready(function() {
             opacity: .5, 
             color: '#fff' 
         }});*/
-
-      var dlink = '/logs/download/user-deletion-log';
-
-      var $iframe = $("<iframe style='display:none' />");
-      $iframe.attr("src", dlink);
-      $iframe.appendTo("body");
-      $iframe.on('load', function () {
-        // The load event will be triggered if the download link return a page.
-        alert('下載失敗！');
-      });
-
+      TAIPING.downloadRequest.init('/logs/download/user-deletion-log');
     });
 	
 });

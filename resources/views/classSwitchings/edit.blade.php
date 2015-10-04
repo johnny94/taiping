@@ -20,28 +20,17 @@
 @stop
 
 @section('footer')
-<script type="text/javascript">
+<script src={{ elixir("js/app.js") }}></script>
+<script>
 $(document).ready(function() {
-    $('.class_list').select2();
-
-    $(".teacher_list").select2({        
-        ajax: {
-            url: "/api/users/names",
-            dataType: "json",
-            delay: 250,
-            processResults: function(data, page) {
-                return {
-                    results: $.map(data, function(item) {
-                        return {
-                            id: item.id,
-                            text: item.name
-                        };
-                    })
-                };
-            }
-        },
-        minimumInputLength: 1
-    });
+    var settings = {
+        ajax:{
+            url: '/api/users/names'
+        }
+    };    
+    TAIPING.select2.init('.teacher_list', true, settings);
+    TAIPING.select2.init('.period', false, {minimumResultsForSearch: Infinity});
+    TAIPING.select2.init('.class_list', false);
 });
 </script>
 

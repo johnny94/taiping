@@ -26,6 +26,9 @@ elixir(function(mix) {
     	'libs/bootstrap.min.js',
     	'libs/select2.min.js',
     	'libs/jquery.bootgrid.min.js'
-    ]);
+    ])
+    .scripts(['app.js'], 'public/js/app.js');
+
+    mix.version(['public/js/app.js']);
 
 });

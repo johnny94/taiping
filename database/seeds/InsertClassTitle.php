@@ -19,7 +19,6 @@ class InsertClassTitle extends Seeder {
 			'本土語',
 			'藝文(音樂)',
 			'藝文(美勞)',
-			'藝文(美勞)',
 			'數學',
 			'社會',
 			'自然與生活科技',

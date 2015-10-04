@@ -1,65 +1,60 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
-use Request;
+use App\Http\Controllers\Controller;
+use App;
 
 use App\ClassTitle;
+use App\Taiping\Bootgrid;
 
-class SubjectsController extends Controller {
+class SubjectsController extends Controller
+{
 
 	private $classTitle;
-	public function __construct(ClassTitle $title) {
+	public function __construct(ClassTitle $title)
+	{
 		$this->middleware('manager');
 		$this->classTitle = $title;
 	}
 
-	public function search() {
-		$currentPage = intval(Request::input('current'));
-		$rowCount = intval(Request::input('rowCount'));
-		$searchPhrase = Request::input('searchPhrase');
-
-		$subject = $this->classTitle->where('title', 'like', '%' . $searchPhrase . '%');
-		$total = $subject->count();
-		$result = $subject->skip($currentPage*$rowCount - $rowCount)
-						->take($rowCount)						
-						->get();
-
-		$response = ['current' => $currentPage, 'rowCount' => $rowCount, 'rows' => $result, 'total' => $total];
-		
+	public function search(Request $request)
+	{
+		$bootgrid = App::make('App\Taiping\Bootgrid\QueryByColumn', [$this->classTitle, $request]);
+		$response = $bootgrid->response();
 		return $response;
 	}
 
-	public function store() {		
-		if(!Request::has('subject') || trim(Request::input('subject')) === '') {
+	public function store(Request $request)
+	{
+		if(!$request->has('subject') || trim($request->input('subject')) === '') {
 			return abort(403, 'Invalid input.');
 		}
 
-		$subject = trim(Request::input('subject'));
+		$subject = trim($request->input('subject'));
 		$this->classTitle->create(['title' => $subject]);
 
-		return 'success';
+		return ['message' => 'success'];
 	}
 
-	public function update($id) {		
-		
-		if(!Request::has('newSubject') || trim(Request::input('newSubject')) === '') {
+	public function update(Request $request, $id)
+	{
+		if(!$request->has('newSubject') || trim($request->input('newSubject')) === '') {
 			return abort(403, 'Invalid input.');
 		}
 
 		$subject = $this->classTitle->findOrFail($id);
-		$subject->title = trim(Request::input('newSubject'));
+		$subject->title = trim($request->input('newSubject'));
 		$subject->save();
 
 		return 'success';
 	}
 
-	public function destroy($id) {
+	public function destroy($id)
+	{
 		$subject = $this->classTitle->findOrFail($id);
 		$subject->delete();
 
-		return 'success';
+		return ['message' => 'success'];
 	}
-
 }

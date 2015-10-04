@@ -58,7 +58,6 @@ class LogsController extends Controller {
 	public function exportSwitchingDeletionLog()
 	{		
 		$date = Helper::createDatePeriod(Request::input('start'), Request::input('end'));
-
 		$rows = DB::table('delete_switching_log as log')
 					  ->join('users as manager', 'log.manager_id', '=', 'manager.id')
 					  ->join('class_switchings as switching', 'log.switching_id', '=', 'switching.id')
@@ -89,9 +88,10 @@ class LogsController extends Controller {
 					$filename, 
 					array('管理者(刪除人)', '調課老師', '上課日期', '科目', '節次', '被調課老師', '上課日期', '科目', '節次', '調課情況', '刪除時間'),
 					$data
-				);
-
-		return $file->export('xls');		
+				);		
+		
+		
+		return $file->download('xls');	
 	}
 
 	private function generateLogFile($filename, Array $columns, $data, $sheetname = 'Excel sheet')
@@ -103,10 +103,8 @@ class LogsController extends Controller {
 				$firstRow = 'A2';
 
 				$sheet->row(1, $columns);
-
 				$sheet->fromArray($data, null, $firstRow, false, false);
-    		});
-
+			});
 		});
 	}
 

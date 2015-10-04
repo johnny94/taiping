@@ -1,53 +1,41 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App;
 use Auth;
 use Carbon\Carbon;
 use DB;
-use Request;
 
 use App\User;
 use App\Role;
 
-class UsersController extends Controller 
+class UsersController extends Controller
 {
+	private $user;
 
-	public function __construct()
+	public function __construct(User $user)
 	{
 		$this->middleware('auth');
+		$this->user = $user;
 	}
 
-	public function search()
+	public function search(Request $request)
 	{
-		$currentPage = intval(Request::input('current'));
-		$rowCount = intval(Request::input('rowCount'));
-		$searchPhrase = Request::input('searchPhrase');
-
-		$sort = Request::input('sort');
-		$sort = each($sort);
-		
-		$users = User::where('name', 'like', '%' . $searchPhrase . '%');
-		$total = $users->count();
-		$result = $users->orderBy($sort['key'], $sort['value'])->skip($currentPage*$rowCount - $rowCount)
-						->take($rowCount)						
-						->get();
-
-		$response = ['current' => $currentPage, 'rowCount' => $rowCount, 'rows' => $result, 'total' => $total];
-		
-		return $response;
+		$bootgrid = App::make('App\Taiping\Bootgrid\QueryByColumn', [$this->user, $request]);
+		return $bootgrid->response();
 	}
 
-	public function searchByName()
+	public function searchByName(Request $request)
 	{
-		$query = trim(Request::input('q'));
-		return User::where('name', 'LIKE', "%{$query}%")->select('id', 'name')->get();
+		$query = trim($request->input('q'));
+		return $this->user->where('name', 'LIKE', "%{$query}%")->select('id', 'name')->get();
 	}
 
 	public function destroy($id)
 	{
-		$user = User::findOrFail($id);
+		$user = $this->user->findOrFail($id);
 		if ($user->delete()) {
 			$this->logDeletion(Auth::user()->id, $id);
 			return ['message' => true];
@@ -56,9 +44,9 @@ class UsersController extends Controller
 		return abort(500);
 	}
 
-	public function setAsManager()
+	public function setAsManager(Request $request)
 	{
-		$user = User::find(Request::input('teacher'));
+		$user = $this->user->find($request->input('teacher'));
 
 		if (is_null($user)) {
 			flash()->error('找不到這位使用者。');
@@ -74,7 +62,7 @@ class UsersController extends Controller
 	{
 		if ($user->isManager()) {
 			flash($user->name . ' 已經是管理者。');
-		} else {			
+		} else {
 			DB::table('role_user')->insert([
 				'role_id' => Role::ADMIN,
 				'user_id' => $user->id,

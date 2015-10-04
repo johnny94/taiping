@@ -1,13 +1,13 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateClassSwitchingRequest;
 
 use \Auth;
 use Carbon\Carbon;
 use DB;
-use Request;
+use App;
 
 use App\ClassSwitching;
 use App\ClassTitle;
@@ -17,18 +17,18 @@ use App\User;
 use App\Taiping\Repositories\ClassSwitchingRepository;
 use App\Taiping\Helper\Helper;
 
-class ClassSwitchingsController extends Controller 
+class ClassSwitchingsController extends Controller
 {
 	private $classSwitchingRepo;
 
 	public function __construct(ClassSwitchingRepository $repository)
-	{		
+	{
 		$this->middleware('auth');
 		$this->classSwitchingRepo = $repository;
 	}
 
 	public function show($id)
-	{		
+	{
 		$switching = $this->classSwitchingRepo->findOrFail($id);
 		return view('classSwitchings.show', compact('switching'));
 	}
@@ -45,17 +45,16 @@ class ClassSwitchingsController extends Controller
 	}
 
 	public function create()
-	{		
+	{
 		$periods = Period::lists('name', 'id');
 		$classes = ClassTitle::lists('title', 'id');
-		// TODO: $this->app->make['App\ClassSwitching'] ?
 		$switching = new ClassSwitching(['user_id' => Auth::user()->id]);
-		
+
 		return view('classSwitchings.create', compact('periods', 'classes', 'switching'));
 	}
 
 	public function edit($id)
-	{		
+	{
 		$switching = $this->classSwitchingRepo->findOrFail($id);
 		$periods = Period::lists('name', 'id');
 		$classes = ClassTitle::lists('title', 'id');
@@ -63,11 +62,11 @@ class ClassSwitchingsController extends Controller
 		return view('classSwitchings.edit', compact('switching', 'periods', 'classes'));
 	}
 
-	public function store(CreateClassSwitchingRequest $request)	
-	{		
+	public function store(CreateClassSwitchingRequest $request)
+	{
 		$classSwitchings = $request->input('classSwitching');
-		
-		foreach ($classSwitchings as $switching) {			
+
+		foreach ($classSwitchings as $switching) {
 			$classSwitching = $this->createClassSwitchingFromRequest($switching);
 			Auth::user()->classSwitching()->save($classSwitching);
 		}
@@ -75,11 +74,11 @@ class ClassSwitchingsController extends Controller
 		return redirect('classes');
 	}
 
-	public function update($id)
+	public function update(Request $request, $id)
 	{
-		$switching = $this->createClassSwitchingFromRequest(Request::input('classSwitching')[0]);
+		$switching = $this->createClassSwitchingFromRequest($request->input('classSwitching')[0]);
 		$this->classSwitchingRepo->findOrFail($id)->update($switching->toArray());
-		
+
 		return redirect('classes');
 	}
 
@@ -87,7 +86,7 @@ class ClassSwitchingsController extends Controller
 	{
 		$switching = new ClassSwitching;
 		$switching->with_user_id = $request['teacher'];
-		$switching->from = $request['from_date'];		
+		$switching->from = $request['from_date'];
 		$switching->from_period = $request['from_period'];
 		$switching->from_class_id = $request['from_class'];
 		$switching->to = $request['to_date'];
@@ -98,24 +97,24 @@ class ClassSwitchingsController extends Controller
 		return $switching;
 	}
 
-	public function updateStatus($id)
+	public function updateStatus(Request $request, $id)
 	{
-		if (!Request::has('status')) {
+		if (!$request->has('status')) {
 			return redirect('classes');
 		}
 
-		$status = Request::input('status');
+		$status = $request->input('status');
 		$newStatus = $status === 'pass' ? ClassSwitching::CHECKING_STATUS_PASS : ClassSwitching::CHECKING_STATUS_REJECT;
 		$this->classSwitchingRepo->findOrFail($id)->update(['checked_status_id' => $newStatus]);
 
 		return redirect('classes');
-	}	
+	}
 
 	public function destroy($id)
 	{
 		$classSwitching = $this->classSwitchingRepo->findOrFail($id);
 		if ($classSwitching->user_id === Auth::user()->id) {
-			$classSwitching->delete();			
+			$classSwitching->delete();
 		}
 
 		return redirect('classSwitchings/notChecked');
@@ -142,30 +141,9 @@ class ClassSwitchingsController extends Controller
 			]);
 	}
 
-	public function search()
+	public function search(Request $request)
 	{
-		$currentPage = intval(Request::input('current'));
-		$rowCount = intval(Request::input('rowCount'));		
-
-		$query = Helper::buildClassSwitchingQuery(
-							Request::input('searchPhrase'), 
-							Request::input('filterByDate'), 
-							Request::input('filterFrom'), 
-							Request::input('filterTo'));
-
-		$total = $query->count();
-		$result = $query->skip($currentPage*$rowCount - $rowCount)
-						->take($rowCount)
-						->get();
-
-		// -1 indicates that the user want to fetch all data without pagination.
-		if($rowCount == -1) {
-			$result = $query->get();
-		}		
-
-		$response = ['current' => $currentPage, 'rowCount' => $rowCount, 'rows' => $result, 'total' => $total];
-
-		return $response;
-
+		$bootgrid = App::make('App\Taiping\Bootgrid\QueryClassSwitching', [new ClassSwitching, $request]);
+		return $bootgrid->response();
 	}
 }

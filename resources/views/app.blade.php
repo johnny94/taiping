@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Taiping</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>高市太平調課系統</title>
    
     <link rel="stylesheet" type="text/css" href="/css/all.css">
     <style type="text/css">
@@ -24,8 +24,7 @@
             margin-left: -100px;
             margin-right: 10px;           
             padding-right: 4px;
-        }
-       
+        }       
                 
         body {
             font-family: "Helvetica Neue", Helvetica, Arial, "文泉驛正黑", "WenQuanYi Zen Hei", "儷黑 Pro", "LiHei Pro", Meiryo, "Meiryo UI", "微軟正黑體", "Microsoft JhengHei", "標楷體", DFKai-SB, sans-serif;

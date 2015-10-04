@@ -1,51 +1,44 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
-use Request;
+use App\Http\Controllers\Controller;
+use App;
 
 use App\Period;
 
-class PeriodsController extends Controller {
-
+class PeriodsController extends Controller
+{
 	private $period;
 
-	public function __construct(Period $p) {
+	public function __construct(Period $p)
+	{
 		$this->middleware('manager');
 		$this->period = $p;
-	}	
+	}
 
-	public function search() {
-		$currentPage = intval(Request::input('current'));
-		$rowCount = intval(Request::input('rowCount'));
-		$searchPhrase = Request::input('searchPhrase');
-
-		$subject = $this->period->where('name', 'like', '%' . $searchPhrase . '%');
-		$total = $subject->count();
-		$result = $subject->skip($currentPage*$rowCount - $rowCount)
-						->take($rowCount)						
-						->get();
-
-		$response = ['current' => $currentPage, 'rowCount' => $rowCount, 'rows' => $result, 'total' => $total];
-		
+	public function search(Request $request)
+	{
+		$bootgrid = App::make('App\Taiping\Bootgrid\QueryByColumn', [$this->period, $request]);
+		$response = $bootgrid->response();
 		return $response;
 	}
 
-	public function store() {
-		$period = trim(Request::input('period', ''));
+	public function store(Request $request)
+	{
+		$period = trim($request->input('period', ''));
 		if($period === '') {
 			return abort(403, 'Invalid input.');
 		}
-		
+
 		$this->period->create(['name' => $period]);
 
-		return 'success';
+		return ['message' => 'success'];
 	}
 
-	public function update($id) {
-
-		$newPeriod = trim(Request::input('newPeriod', ''));
+	public function update(Request $request, $id)
+	{
+		$newPeriod = trim($request->input('newPeriod', ''));
 		if($newPeriod === '') {
 			return abort(403, 'Invalid input.');
 		}
@@ -57,10 +50,11 @@ class PeriodsController extends Controller {
 		return 'success';
 	}
 
-	public function destroy($id) {
+	public function destroy($id)
+	{
 		$period = $this->period->findOrFail($id);
 		$period->delete();
 
-		return 'success';
+		return ['message' => 'success'];
 	}
 }
