@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', ['middleware' => 'auth', 
+Route::get('/', ['middleware' => 'auth',
 	'uses' => 'ClassesController@index']);
 
 Route::get('classes', 'ClassesController@index');
@@ -43,6 +43,8 @@ Route::delete('manager/deleteSwitching/{id}', 'ClassSwitchingsController@destroy
 
 Route::delete('users/{id}', 'UsersController@destroy');
 Route::put('users/manager', 'UsersController@setAsManager');
+Route::delete('users/manager/{id}', 'UsersController@unsetManager');
+Route::patch('users/{id}/active', 'UsersController@active');
 
 Route::post('subjects', 'SubjectsController@store');
 Route::delete('subjects/{id}', 'SubjectsController@destroy');

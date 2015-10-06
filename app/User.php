@@ -8,13 +8,14 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use DB;
+use App\Role;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
 	use Authenticatable, CanResetPassword;
 
 	use SoftDeletes;
-    protected $dates = ['deleted_at'];	
+    protected $dates = ['deleted_at'];
 
 	/**
 	 * The database table used by the model.
@@ -28,14 +29,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'email', 'password'];
+	protected $fillable = ['name', 'email', 'password', 'active'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['password', 'remember_token'];
+	protected $hidden = ['password', 'remember_token', 'updated_at', 'deleted_at'];
 
 	public function classSwitching()
 	{
@@ -46,7 +47,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	{
 		return $this->hasMany('App\ClassSwitching', 'with_user_id');
 	}
-	
+
+	public function role()
+	{
+		return $this->belongsToMany('App\Role')->withTimestamps();
+	}
+
 	public function numberOfUncheckedClassSwitching()
 	{
 		$number = 0;
@@ -65,7 +71,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	public function isManager()
 	{
 		return DB::table('role_user')
-					->where('role_id', '=', 2) // Role id = 2 => manager
+					->where('role_id', '=', Role::ADMIN) // Role id = 2 => admin
 					->where('user_id', '=', $this->id)
 					->count() != 0;
 	}
@@ -74,11 +80,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         parent::boot();
 
         static::deleting(function($user) {
-        	
+
             foreach ($user->withClassSwitching as $classSwitching) {
             	$classSwitching->delete();
-            } 
-                        
+            }
+
         });
     }
 

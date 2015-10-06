@@ -2,6 +2,7 @@
 
 @section('content')
 	<h1>節次列表</h1>
+    <p class="text-danger">刪除任何節次前，請確定已經刪除目前所有的調課紀錄，避免發生錯亂。</p>
 	<hr>
 	<p class="text-danger collapse">輸入有誤，請確認輸入內容 (例：不可空白)	</p>
 	<p class="text-success collapse">節次新增成功！</p>
@@ -29,6 +30,9 @@ $(document).ready(function() {
 	var $grid = TAIPING.bootgrid.init(
 			'#grid-basic',
 			{
+                labels: {
+                    search: '搜尋節次'
+                },
                 post: function() {
                     return {
                         columnName: 'name'

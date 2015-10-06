@@ -10,7 +10,7 @@
 					@include('flash::message')
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
-							<strong>噢！</strong> 似乎發生了一點問題...<br><br>
+							<strong>噢！</strong> 似乎發生了一點問題，請嘗試以下的解決方法<br><br>
 							<ul>
 								@foreach ($errors->all() as $error)
 									<li>{{ $error }}</li>

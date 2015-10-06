@@ -9,6 +9,7 @@
             <th data-column-id="name">姓名</th>
             <th data-column-id="email" data-order="desc">E-Mail</th>
             <th data-column-id="created_at">註冊時間</th>
+            <th data-column-id="active" data-formatter="active">認證狀態</th>
         	<th data-column-id="commands" data-formatter="commands" data-sortable="false">操作</th>
         </tr>
     </thead>
@@ -28,8 +29,19 @@ $(document).ready(function() {
                     };
             },
 			formatters: {
+                active: function(column, row) {
+                    var $label = $('<span class="label label-warning">未認證</span>');
+                    if (row.active == 1) {
+                       $label = $label.html('已認證').removeClass('label-warning').addClass('label-success');
+
+                    }
+                    return $label[0].outerHTML;
+                },
 				commands: function(column, row) {
-					return '<button class="btn btn-default btn-sm command-delete" data-row-id="'+ row.id +'"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+                    var deleteButton = '<button class="btn btn-default btn-sm command-delete" data-row-id="'+ row.id +'"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>',
+                        verifyButton = '<button class="btn btn-default btn-sm command-active" data-row-id="'+ row.id +'"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> 認證</button>';
+
+					return deleteButton + ' ' + verifyButton;
 				}
 			}
 		}
@@ -41,10 +53,28 @@ $(document).ready(function() {
 			);
 
 	$grid.on('loaded.rs.jquery.bootgrid', function() {
+
 		$('.command-delete').on('click', function() {
 			$modal.show($(this).data('row-id'));
 		});
+
+        $('.command-active').on('click', function() {
+            var $label = $(this).parent().prev().children('span');
+            $.ajax({
+                url: '/users/' + $(this).data('row-id')+ '/active',
+                method: 'PATCH',
+                dataType: 'json',
+                success: function() {
+                    $label.removeClass('label-warning').addClass('label-success').html('已認證')
+                        .hide().fadeIn(300);
+                },
+                error: function(xhr, status) {
+                    alert('認證失敗');
+                }
+            });
+        });
 	});
+
 
 });
 </script>

@@ -33,6 +33,16 @@ class UsersController extends Controller
 		return $this->user->where('name', 'LIKE', "%{$query}%")->select('id', 'name')->get();
 	}
 
+	public function active($id)
+	{
+		$user = $this->user->findOrFail($id);
+		$user->active = true;
+		$user->save();
+		DB::table('account_confirm')->where('email', '=', $user->email)->delete();
+
+		return ['message' => true];
+	}
+
 	public function destroy($id)
 	{
 		$user = $this->user->findOrFail($id);
@@ -49,13 +59,39 @@ class UsersController extends Controller
 		$user = $this->user->find($request->input('teacher'));
 
 		if (is_null($user)) {
-			flash()->error('找不到這位使用者。');
-			return redirect()->back();
+			$this->noUserMessage();
+		} else {
+			$this->storeManagerRole($user);
 		}
 
-		$this->storeManagerRole($user);
+		return redirect()->back();
+	}
+
+	public function unsetManager($id)
+	{
+		$user = $this->user->find($id);
+		if (is_null($user)) {
+			$this->noUserMessage();
+		} else {
+			$this->removeManagerRole($user);
+		}
 
 		return redirect()->back();
+	}
+
+	private function removeManagerRole($user)
+	{
+		if ($user->id == Auth::user()->id) {
+			flash()->error('不可刪除自己。');
+		} else {
+			$user->role()->sync([Role::USER]);
+			flash()->success('成功移除 ' . $user->name . ' 的管理者權限。');
+		}
+	}
+
+	private function noUserMessage()
+	{
+		flash()->error('找不到這位使用者。');
 	}
 
 	private function storeManagerRole($user)
@@ -63,13 +99,7 @@ class UsersController extends Controller
 		if ($user->isManager()) {
 			flash($user->name . ' 已經是管理者。');
 		} else {
-			DB::table('role_user')->insert([
-				'role_id' => Role::ADMIN,
-				'user_id' => $user->id,
-				'created_at' => Carbon::now(),
-				'updated_at' => Carbon::now()
-			]);
-
+			$user->role()->attach(Role::ADMIN);
 			flash()->success('成功將 ' . $user->name . ' 設為管理者。');
 		}
 	}

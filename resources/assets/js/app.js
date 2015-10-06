@@ -59,7 +59,8 @@ TAIPING.createClassSwitching = (function ($) {
             var settings = {
                 ajax: {
                     url: '/api/users/names'
-                }
+                },
+                placeholder: "請輸入老師的姓名"
             };
 
             TAIPING.select2.init('.class_list', false);

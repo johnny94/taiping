@@ -4,17 +4,11 @@ use \Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use Carbon\Carbon;
+use App\Role;
 
-use DB;
-use Request;
+class ManagerController extends Controller
+{
 
-use App\User;
-use App\ClassSwitching;
-
-class ManagerController extends Controller {
-
-	
 	public function __construct()
 	{
 		$this->middleware('manager');
@@ -24,11 +18,12 @@ class ManagerController extends Controller {
 	{
 		return view('manager.users');
 	}
-	
+
 	public function settings()
 	{
-		return view('manager.settings');
-	}	
+		$managers = \App\Role::find(Role::ADMIN)->users;
+		return view('manager.settings', compact('managers'));
+	}
 
 	public function switchings()
 	{

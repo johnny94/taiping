@@ -74,7 +74,7 @@ class AuthController extends Controller {
 		    $message->to($email, $name)
 		    	    ->subject('帳號認證連結');
 		});
-		
+
 		$user = new User;
 		$user->name = $name;
 		$user->email = $email;
@@ -83,19 +83,19 @@ class AuthController extends Controller {
 
 		DB::table('role_user')->insert(
     		[
-    			'role_id' => Role::USER, 
+    			'role_id' => Role::USER,
     			'user_id' => $user->id,
     			'created_at' => new Carbon,
 				'updated_at' => new Carbon
     		]
 		);
-		
-		$payLoad = ['email' => $email, 
-		            'activation_code' => $activationCode, 
+
+		$payLoad = ['email' => $email,
+		            'activation_code' => $activationCode,
 		            'created_at' => new Carbon];
 
 		DB::table('account_confirm')->insert($payLoad);
-		
+
 		flash()->success('註冊成功！認證信已寄送至：' . $email);
 
 		return redirect('/auth/login');
@@ -108,7 +108,7 @@ class AuthController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function postLogin(Request $request)
-	{		
+	{
 		$this->validate($request, [
 			'email' => 'required|email|exists:users', 'password' => 'required',
 		]);
@@ -121,10 +121,13 @@ class AuthController extends Controller {
 			return redirect()->intended($this->redirectPath());
 		}
 
+		//dd($this->validate->errors());
+
 		return redirect($this->loginPath())
 					->withInput($request->only('email', 'remember'))
-					->withErrors([						
-						'active'=> '此帳號尚未通過認證，請至 E-Mail 收取認證信。'
+					->withErrors([
+						'account'=> '您所輸入的電子郵件和密碼不相符，請確認輸入是否有誤。',
+						'active'=> '確認是否已通過認證。'
 					]);
 	}
 
@@ -146,14 +149,17 @@ class AuthController extends Controller {
 		}
 
 		$user = User::findOrFail($activateUser->id);
-		
+
 		if (!$user->active) {
 			$user->active = true;
 			$user->save();
 			flash('認證成功！');
 		}
 
-		$this->auth->login($user);	
+		DB::table('account_confirm')->where('activation_code', '=', $code)
+									->where('email', '=', $user->email)->delete();
+
+		$this->auth->login($user);
 
 		return redirect('/classes');
 	}
