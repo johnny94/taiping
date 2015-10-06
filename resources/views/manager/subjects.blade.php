@@ -32,20 +32,19 @@ $(document).ready(function() {
 	var $grid = TAIPING.bootgrid.init(
 				'#grid-basic',
 				{
-						labels: {
-										search: '搜尋科目'
-						},
-						post: function() {
-								return {
-										columnName: 'title'
-								};
-						},
-						formatters: {
-								commands: function(column, row) {
-										return '<button type="button" class="btn btn-default btn-sm command-edit" data-row-id="' + row.id + '"><span class="glyphicon glyphicon-pencil"></span></button> ' +
-										'<button class="btn btn-default btn-sm command-delete" data-row-id="'+ row.id +'"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-								}
+					labels: {
+						search: '搜尋科目'
+					},
+					post: function() {
+						return {
+							columnName: 'title'
+						};
+					},
+					formatters: {
+						commands: function(column, row) {
+							return '<button class="btn btn-default btn-sm command-delete" data-row-id="'+ row.id +'"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
 						}
+					}
 				}
 		),
 
@@ -56,55 +55,21 @@ $(document).ready(function() {
 			);
 
 	$grid.on('loaded.rs.jquery.bootgrid', function() {
-		$('.command-edit').on('click', function() {
-			var oldSubject = $(this).parent().siblings('td').text();
-			$('#modal-edit-form').data('target-id', $(this).data('row-id'));
-			$('#modal-edit-form .form-group p').text(oldSubject);
-			$('#modal-edit-form .form-group input').val('');
-			$('#modal-edit-form').modal('show');
-		});
-
 		$('.command-delete').on('click', function(event) {
 			$modal.show($(this).data('row-id'));
 		});
 	});
 
-				$('#add-subject').on('click', function() {
+	$('#add-subject').on('click', function() {
+		TAIPING.postResourceRequest.send(
+				'/subjects',
+				{ subject:$('#content').val() }
+			);
+		$grid.bootgrid('reload');
+	});
 
-			TAIPING.postResourceRequest.send(
-					'/subjects',
-					{ subject:$('#content').val() }
-				);
-				$grid.bootgrid('reload');
-				});
-
-				$('#modal-edit-form .modal-footer .confirm').on('click', function() {
-						$.ajax({
-								method: 'PATCH',
-								url: '/subjects/' + $('#modal-edit-form').data('target-id'),
-								data: {
-										newSubject: $('#modal-edit-form input').val().trim()
-								},
-								dataType: 'text',
-								success: function(data) {
-										$('#modal-edit-form').modal('hide');
-										$('#modal-edit-form').data('target-id', '-1');
-										$grid.bootgrid('reload');
-								},
-								error: function(xhr, textStatus) {
-										$('#modal-edit-form .modal-body p.text-danger').fadeIn(150);
-										console.log(xhr.responseText);
-								}
-						});
-				});
-
-				$('#modal-edit-form').on('hidden.bs.modal', function() {
-						$('#modal-edit-form .modal-body p.text-danger').hide();
-				});
-		});
-		</script>
-		@include('partials.modal',
-				['message' => '你確定要刪除這個科目？ (若是有老師的調課是這個科目，可能會造成無法預期的結果)'])
-		@include('partials.modal-form',
-				['title' => '修改科目名稱'])
+});
+</script>
+@include('partials.modal',
+		['message' => '你確定要刪除這個科目？ (若是有老師的調課是這個科目，可能會造成無法預期的結果)'])
 @stop
