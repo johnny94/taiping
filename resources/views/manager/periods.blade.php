@@ -105,10 +105,10 @@ $(document).ready(function() {
 	});
 
 
-	});
+});
 </script>
 @include('partials.modal',
-		['message' => '你確定要刪除這個節次？ (若是目前有老師調這節課，可能會造成無法預期的結果)'])
+		['message' => '你確定要刪除這個節次？ (若是目前有老師調這節課，可能會造成異常)'])
 @include('partials.modal-form',
 		['title' => '修改節次名稱'])
 @stop

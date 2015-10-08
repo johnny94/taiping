@@ -71,5 +71,5 @@ $(document).ready(function() {
 });
 </script>
 @include('partials.modal',
-		['message' => '你確定要刪除這個科目？ (若是有老師的調課是這個科目，可能會造成無法預期的結果)'])
+		['message' => '你確定要刪除這個科目？ (若是有老師的調課是這個科目，可能會造成異常)'])
 @stop

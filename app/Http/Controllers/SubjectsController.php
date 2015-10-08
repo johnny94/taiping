@@ -7,6 +7,7 @@ use App;
 
 use App\ClassTitle;
 use App\Taiping\Bootgrid;
+use App\Taiping\Helper\Helper;
 
 class SubjectsController extends Controller
 {
@@ -53,6 +54,13 @@ class SubjectsController extends Controller
 	public function destroy($id)
 	{
 		$subject = $this->classTitle->findOrFail($id);
+
+		// Mark the deleted subject.
+		// To distinguish the subjects from those which have not been deleted yet
+		// when fetching the record from database.
+		$subject->title = $subject->title . ' (已刪除)';
+		$subject->save();
+
 		$subject->delete();
 
 		return ['message' => 'success'];

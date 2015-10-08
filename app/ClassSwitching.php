@@ -14,7 +14,7 @@ class ClassSwitching extends Model {
 	const CHECKING_STATUS_REJECT = 3;
 
 	use SoftDeletes;
-    protected $dates = ['deleted_at'];	
+    protected $dates = ['deleted_at'];
 
 	protected $fillable = [
 		'user_id',
@@ -51,23 +51,23 @@ class ClassSwitching extends Model {
 	}
 
 	public function fromClass() {
-		return $this->belongsTo('App\ClassTitle', 'from_class_id');
+		return $this->belongsTo('App\ClassTitle', 'from_class_id')->withTrashed();
 	}
 
 	public function fromPeriod() {
-		return $this->belongsTo('App\Period', 'from_period');
+		return $this->belongsTo('App\Period', 'from_period')->withTrashed();
 	}
 
 	public function toClass() {
-		return $this->belongsTo('App\ClassTitle', 'to_class_id');
+		return $this->belongsTo('App\ClassTitle', 'to_class_id')->withTrashed();
 	}
 
 	public function toPeriod() {
-		return $this->belongsTo('App\Period', 'to_period');
+		return $this->belongsTo('App\Period', 'to_period')->withTrashed();
 	}
 
 	public function isPass()
 	{
 		return $this->attributes['checked_status_id'] === DB::table('checked_status')->where('title', 'pass')->first()->id;
-	}	
+	}
 }

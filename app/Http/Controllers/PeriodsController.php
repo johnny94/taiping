@@ -53,6 +53,13 @@ class PeriodsController extends Controller
 	public function destroy($id)
 	{
 		$period = $this->period->findOrFail($id);
+
+		// Mark the deleted period.
+		// To distinguish the periods from those which have not been deleted yet
+		// when fetching the record from database.
+		$period->name = $period->name . ' (已刪除)';
+		$period->save();
+
 		$period->delete();
 
 		return ['message' => 'success'];

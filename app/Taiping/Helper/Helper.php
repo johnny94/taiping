@@ -6,7 +6,8 @@ use Carbon\Carbon;
 
 class Helper
 {
-	public static function buildClassSwitchingQuery($searchPhrase, $filterByDate, $filterFrom, $filterTo) {
+	public static function buildClassSwitchingQuery($searchPhrase, $filterByDate, $filterFrom, $filterTo)
+	{
 		$query = DB::table('class_switchings')
 				    ->join('users as from_user', 'class_switchings.user_id', '=', 'from_user.id')
 					->join('periods as from_period', 'class_switchings.from_period', '=', 'from_period.id')
@@ -53,5 +54,10 @@ class Helper
 		$end = Carbon::createFromFormat('Y-m-d H', sprintf('%s 0', $end))->addDay()->subSecond();
 
 		return ['start'=>$start, 'end'=>$end];
+	}
+
+	public static function appendDeleteString($str)
+	{
+		return $str . '(已刪除)';
 	}
 }
