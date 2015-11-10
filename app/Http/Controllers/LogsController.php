@@ -17,18 +17,18 @@ class LogsController extends Controller {
 		$this->middleware('manager');
 	}
 
-	public function exportSwitchingLog() {	
+	public function exportSwitchingLog() {
 		$rows = Helper::buildClassSwitchingQuery(
 							Request::input('searchPhrase'),
-							Request::input('filterByDate'), 
-							Request::input('filterFrom'), 
+							Request::input('filterByDate'),
+							Request::input('filterFrom'),
 							Request::input('filterTo'))->get();
 
 		$data = $this->queryResultToExportData($rows);
 
 		$filename = '調課紀錄日誌_產生於_' . Carbon::now()->format('Y_m_d');
 		$file = $this->generateLogFile(
-					$filename, 
+					$filename,
 					array('ID', '調課老師', '上課日期', '科目', '節次', '被調課老師', '上課日期', '科目', '節次', '調課情況'),
 					$data
 				);
@@ -47,7 +47,7 @@ class LogsController extends Controller {
 
 		$filename = '刪除帳號日誌_產生於_' . Carbon::now()->format('Y_m_d');
 		$file = $this->generateLogFile(
-					$filename, 
+					$filename,
 					array('管理者', '使用者姓名', 'E-Mail', '註冊時間', '刪除時間'),
 					$data
 				);
@@ -56,7 +56,7 @@ class LogsController extends Controller {
 	}
 
 	public function exportSwitchingDeletionLog()
-	{		
+	{
 		$date = Helper::createDatePeriod(Request::input('start'), Request::input('end'));
 		$rows = DB::table('delete_switching_log as log')
 					  ->join('users as manager', 'log.manager_id', '=', 'manager.id')
@@ -79,25 +79,25 @@ class LogsController extends Controller {
 					  		      ->where('switching.to', '<=', $date['end']);
 
 					  })
-					  ->select('manager.name', 'from_user.name as teacher', 'switching.from', 'from_class.title as from_class', 'from_period.name as from_period', 'with_user.name as with_teacher', 'switching.to', 'to_class.title as to_class', 'to_period.name as to_period', 'checked_status.title as status', 'switching.deleted_at')->get();
+					  ->select('log.id', 'manager.name', 'from_user.name as teacher', 'switching.from', 'from_class.title as from_class', 'from_period.name as from_period', 'with_user.name as with_teacher', 'switching.to', 'to_class.title as to_class', 'to_period.name as to_period', 'checked_status.title as status', 'switching.deleted_at')->get();
 
 		$data = $this->queryResultToExportData($rows);
 
 		$filename = '刪除調課日誌_產生於_' . Carbon::now()->format('Y_m_d');
 		$file = $this->generateLogFile(
-					$filename, 
-					array('管理者(刪除人)', '調課老師', '上課日期', '科目', '節次', '被調課老師', '上課日期', '科目', '節次', '調課情況', '刪除時間'),
+					$filename,
+					array('ID', '管理者(刪除人)', '調課老師', '上課日期', '科目', '節次', '被調課老師', '上課日期', '科目', '節次', '調課情況', '刪除時間'),
 					$data
-				);		
-		
-		
-		return $file->download('xls');	
+				);
+
+
+		return $file->download('xls');
 	}
 
 	private function generateLogFile($filename, Array $columns, $data, $sheetname = 'Excel sheet')
 	{
 		return \Excel::create($filename, function ($excel) use ($data, $columns, $sheetname) {
-			
+
 			$excel->sheet($sheetname, function ($sheet) use ($data, $columns) {
 
 				$firstRow = 'A2';
@@ -112,7 +112,7 @@ class LogsController extends Controller {
 	{
 		$data = [];
 		foreach ($rows as $row) {
-			$data[] = array_values((array)$row);			
+			$data[] = array_values((array)$row);
 		}
 
 		return $data;

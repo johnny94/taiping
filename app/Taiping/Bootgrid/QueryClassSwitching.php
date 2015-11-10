@@ -14,7 +14,7 @@ class QueryClassSwitching extends Response
         $this->result = Helper::buildClassSwitchingQuery(
                             $this->searchPhrase,
                             $filterByDate,
-                            $filterByDate,
-                            $filterByDate);
+                            $filterFrom,
+                            $filterTo);
     }
 }

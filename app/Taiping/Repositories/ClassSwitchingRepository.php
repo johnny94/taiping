@@ -18,6 +18,11 @@ class ClassSwitchingRepository
 		return $this->classSwitching->findOrFail($id);
 	}
 
+	public function deleteAll()
+	{
+		$this->classSwitching->whereNull('deleted_at')->delete();
+	}
+
 	public function getPassedLastMonthByUser(User $user)
 	{
 		$switchings = $user->classSwitching

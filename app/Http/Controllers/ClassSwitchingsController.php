@@ -113,8 +113,10 @@ class ClassSwitchingsController extends Controller
 	public function destroy($id)
 	{
 		$classSwitching = $this->classSwitchingRepo->findOrFail($id);
+		// The user only can delete a switching when its status is pending.
+		// We don't want to soft delete a switching which is not conformed.
 		if ($classSwitching->user_id === Auth::user()->id) {
-			$classSwitching->delete();
+			$classSwitching->forceDelete();
 		}
 
 		return redirect('classSwitchings/notChecked');
@@ -131,14 +133,40 @@ class ClassSwitchingsController extends Controller
 		return abort(500);
 	}
 
+	public function destroyAll()
+	{
+		if (!Auth::user()->isManager()) {
+			return abort(403);
+		}
+
+		$switchingIDs = DB::table('class_switchings')->whereNull('deleted_at')->lists('id');
+		$this->classSwitchingRepo->deleteAll();
+		$this->logSwitchingDeletion(Auth::user()->id, $switchingIDs);
+
+
+		return ['message' => true];
+	}
+
 	private function logSwitchingDeletion($managerID, $switchingID)
 	{
-		DB::table('delete_switching_log')->insert([
+		$created_at = Carbon::now();
+		$updated_at = Carbon::now();
+		$log = [];
+
+		if (!is_array($switchingID)) {
+			$switchingID = [$switchingID];
+		}
+
+		foreach ($switchingID as $id) {
+			$log[] = [
 				'manager_id' => $managerID,
-				'switching_id' => $switchingID,
-				'created_at' => Carbon::now(),
-				'updated_at' => Carbon::now()
-			]);
+				'switching_id' => $id,
+				'created_at' => $created_at,
+				'updated_at' => $updated_at
+			];
+		}
+
+		DB::table('delete_switching_log')->insert($log);
 	}
 
 	public function search(Request $request)

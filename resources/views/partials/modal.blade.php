@@ -1,4 +1,4 @@
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-target-id="-1">
+<div class="modal fade" id="{{ $id or 'myModal' }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-target-id="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

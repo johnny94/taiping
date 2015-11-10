@@ -26,6 +26,7 @@ Route::post('classSwitchings', 'ClassSwitchingsController@store');
 Route::patch('classSwitchings/{id}', 'ClassSwitchingsController@update');
 Route::patch('class-switchings/{id}/status', 'ClassSwitchingsController@updateStatus');
 Route::delete('classSwitchings/{id}', 'ClassSwitchingsController@destroy');
+Route::delete('classSwitchings', 'ClassSwitchingsController@destroyAll');
 
 Route::get('manager/switchings', 'ManagerController@switchings');
 Route::get('manager/users', 'ManagerController@users');

@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder {
 		$this->call('InsertTestAccount');
 		$this->call('InsertPeriod');
 		$this->call('InsertClassTitle');
-		$this->call('CheckedStatusSeeder');			
+		$this->call('CheckedStatusSeeder');
 	}
 
 }

@@ -42,7 +42,7 @@ class Helper
 						});
 		}
 
-		$query = $query->select('class_switchings.id', 'from_user.name as teacher', 'from_period.name as from_period', 'from_class.title as from_class', 'class_switchings.from', 'with_user.name as with_teacher', 'to_period.name as to_period', 'to_class.title as to_class', 'class_switchings.to', 'checked_status.title as status');
+		$query = $query->select('class_switchings.id', 'from_user.name as teacher', 'class_switchings.from', 'from_class.title as from_class', 'from_period.name as from_period', 'with_user.name as with_teacher', 'class_switchings.to', 'to_class.title as to_class', 'to_period.name as to_period', 'checked_status.title as status');
 
 		return $query;
 	}
